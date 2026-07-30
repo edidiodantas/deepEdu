@@ -1,0 +1,5 @@
+01_deepEdu — CODIGO-FONTE OFICIAL
+Edite aqui no Cursor.
+Destino de producao local: PC Ubuntu LTS com GPU.
+Nao misture experimentos aqui (veja 04_experimentos).
+Mapa geral: ~/Projects/00_LEIA-ME_MAPA_PROJECTS.md

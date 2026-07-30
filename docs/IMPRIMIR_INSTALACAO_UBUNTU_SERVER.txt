@@ -1,0 +1,172 @@
+================================================================================
+deepEdu — INSTALAÇÃO NO UBUNTU SERVER (disco 2) — IMPRIMIR E LEVAR
+Projeto: ~/Projects/deepEdu  |  LLM: Ollama + qwen2.5-math:1.5b-instruct
+Fonte: docs/INSTALACAO_INFRAESTRUTURA.md (Fases 2→12)
+================================================================================
+
+ANTES (ainda no Deepin, com interface):
+  [ ] Copiar deepEdu para o PENDRIVE
+  [ ] Anotar usuário do Ubuntu Server: ________________
+  [ ] Anotar senha (não escreva se for compartilhar esta folha)
+  [ ] Reiniciar → GRUB → escolher Ubuntu Server
+  [ ] Login em texto (usuário + senha)
+
+--------------------------------------------------------------------------------
+CHECKLIST (marque com caneta)
+--------------------------------------------------------------------------------
+  [ ] 0. Internet (ping)
+  [ ] 1. apt update / upgrade + pacotes base
+  [ ] 2. Python 3.11 + venv + poppler
+  [ ] 3. Projeto em ~/Projects/deepEdu (pendrive ou disco Deepin)
+  [ ] 4. .venv + pip install -r requirements.txt (LangChain)
+  [ ] 5. Ollama + modelo Qwen2.5-Math
+  [ ] 6. Arquivo .env (ADMIN_API_KEY + Ollama)
+  [ ] 7. PDFs em data/materials/ + python scripts/run_indexing.py
+  [ ] 8. uvicorn + curl /health OK
+
+NÃO FAZER AGORA: Nginx, domínio, WhatsApp.
+
+================================================================================
+0) INTERNET
+================================================================================
+ping -c 2 8.8.8.8
+sudo apt update
+sudo apt upgrade -y
+
+================================================================================
+1) PACOTES BASE
+================================================================================
+sudo apt install -y \
+  curl wget git vim htop unzip \
+  ca-certificates gnupg lsb-release \
+  software-properties-common apt-transport-https
+
+sudo timedatectl set-timezone America/Sao_Paulo
+
+# Firewall (recomendado)
+sudo ufw allow OpenSSH
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw enable
+
+================================================================================
+2) PYTHON 3.11
+================================================================================
+# Ubuntu 24.04:
+sudo apt install -y \
+  python3.11 python3.11-venv python3.11-dev python3-pip \
+  build-essential pkg-config libffi-dev libssl-dev poppler-utils
+
+python3.11 --version
+
+# Se for Ubuntu 22.04, use ANTES:
+# sudo add-apt-repository -y ppa:deadsnakes/ppa
+# sudo apt update
+# (depois o mesmo apt install acima)
+
+================================================================================
+3) TRAZER O PROJETO
+================================================================================
+# Ver discos / pendrive:
+lsblk
+
+# --- Opção A: PENDRIVE ---
+sudo mkdir -p /mnt/usb
+sudo mount /dev/sdX1 /mnt/usb
+#          ^^^^^^ troque sdX1 pelo dispositivo do pendrive (lsblk)
+
+mkdir -p ~/Projects
+cp -a /mnt/usb/deepEdu-PENDRIVE/deepEdu ~/Projects/deepEdu
+# Se a pasta no pendrive for só "deepEdu":
+# cp -a /mnt/usb/deepEdu ~/Projects/deepEdu
+
+cd ~/Projects/deepEdu
+ls
+
+# --- Opção B: montar disco do Deepin ---
+# sudo mkdir -p /mnt/deepin
+# sudo mount /dev/sdYN /mnt/deepin
+# mkdir -p ~/Projects
+# cp -a /mnt/deepin/home/Edidio/Projects/deepEdu ~/Projects/deepEdu
+# cd ~/Projects/deepEdu
+
+================================================================================
+4) VENV + LANGCHAIN (requirements)
+================================================================================
+cd ~/Projects/deepEdu
+python3.11 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip wheel setuptools
+pip install -r requirements.txt
+
+# Conferir (pode demorar vários minutos no pip):
+python -c "import langchain; print('langchain', langchain.__version__)"
+python -c "import fastapi, chromadb; print('fastapi+chroma OK')"
+
+================================================================================
+5) OLLAMA + QWEN 2.5 MATH
+================================================================================
+cd ~/Projects/deepEdu
+bash scripts/install_ollama_model.sh
+
+sudo systemctl enable --now ollama
+ollama list
+ollama run qwen2.5-math:1.5b-instruct "2+2=?"
+
+================================================================================
+6) ARQUIVO .env
+================================================================================
+cd ~/Projects/deepEdu
+cp .env.example .env
+chmod 600 .env
+
+openssl rand -hex 32
+# anote = ADMIN_API_KEY: ________________________________
+
+openssl rand -hex 32
+# anote = AUDIT_PHONE_SALT: _____________________________
+
+nano .env
+# Confira / ajuste:
+#   ENV=development
+#   LLM_PROVIDER=ollama
+#   LLM_MODEL=qwen2.5-math:1.5b-instruct
+#   OLLAMA_BASE_URL=http://127.0.0.1:11434
+#   ADMIN_API_KEY=...
+#   AUDIT_PHONE_SALT=...
+#   LANGCHAIN_TRACING_V2=false
+#   BILLING_ENFORCE_SUBSCRIPTION=false
+#
+# Salvar: Ctrl+O  Enter
+# Sair:   Ctrl+X
+
+================================================================================
+7) PDFS + INDEXAÇÃO (RAG)
+================================================================================
+cd ~/Projects/deepEdu
+source .venv/bin/activate
+mkdir -p data/materials data/chroma data/audit data/chat_history data/billing
+
+# Copie PDFs para data/materials/ (do pendrive, se precisar)
+# cp /mnt/usb/*.pdf data/materials/
+
+python scripts/run_indexing.py
+ls data/chroma/
+
+================================================================================
+8) SUBIR API E TESTAR
+================================================================================
+cd ~/Projects/deepEdu
+source .venv/bin/activate
+uvicorn app.api.main:app --host 0.0.0.0 --port 8000
+
+# Outro terminal (TTY): Ctrl+Alt+F2 → login →
+curl http://127.0.0.1:8000/health
+
+# Voltar ao uvicorn: Ctrl+Alt+F1 (ou F3)
+
+================================================================================
+SE TRAVAR — anote o comando e a mensagem de erro
+Comando: _______________________________________________
+Erro: __________________________________________________
+================================================================================

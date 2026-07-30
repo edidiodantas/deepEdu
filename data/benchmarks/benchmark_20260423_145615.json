@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "timestamp": "20260423_145615",
+    "deepseek_project": "/home/Edidio/Projects/deepEdu",
+    "phi_project": "/home/Edidio/Projects/deepEdu/deepedu_phi_compare",
+    "runs": 0,
+    "warmup": 0,
+    "prompts_count": 5
+  },
+  "rows": [],
+  "summary": {
+    "deepseek": {
+      "success_count": 0
+    },
+    "phi": {
+      "success_count": 0
+    },
+    "comparison": {
+      "note": "Sem dados suficientes para comparar medias."
+    }
+  }
+}

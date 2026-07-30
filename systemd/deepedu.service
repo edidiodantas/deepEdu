@@ -1,0 +1,16 @@
+[Unit]
+Description=deepEdu FastAPI Service
+After=network.target
+
+[Service]
+User=SEU_USUARIO
+Group=SEU_USUARIO
+WorkingDirectory=/home/SEU_USUARIO/Projects/deepEdu
+EnvironmentFile=/home/SEU_USUARIO/Projects/deepEdu/.env
+ExecStart=/home/SEU_USUARIO/Projects/deepEdu/.venv/bin/gunicorn -k uvicorn.workers.UvicornWorker -w 2 -b 0.0.0.0:8000 app.api.main:app
+Restart=always
+RestartSec=5
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

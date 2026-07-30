@@ -1,0 +1,32 @@
+# Ambiente e caches Python
+.venv/
+venv/
+docs/.pdf-venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Segredos e config local (nunca versionar)
+.env
+control_panel/.env
+
+# Dados gerados em runtime (índice vetorial, SQLite, auditoria)
+data/chroma/*
+!data/chroma/.gitkeep
+data/chat_history/*
+!data/chat_history/.gitkeep
+data/billing/*
+!data/billing/.gitkeep
+data/audit/*
+!data/audit/.gitkeep
+
+# Streamlit
+control_panel/.streamlit/
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
