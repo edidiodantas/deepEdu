@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, SystemMessage
+from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
 
 from app.core.config import settings
 from app.core.token_budget import count_tokens, truncate_to_tokens
@@ -11,6 +11,14 @@ def _message_text(message: BaseMessage) -> str:
     if isinstance(content, str):
         return content
     return str(content)
+
+
+def _role_label(message: BaseMessage) -> str:
+    if isinstance(message, HumanMessage):
+        return "Aluno"
+    if isinstance(message, SystemMessage):
+        return "Sistema"
+    return "Tutor"
 
 
 def compact_chat_history(messages: list[BaseMessage]) -> list[BaseMessage]:
@@ -37,7 +45,7 @@ def compact_chat_history(messages: list[BaseMessage]) -> list[BaseMessage]:
     older = messages[:-keep_tail]
     summary_parts: list[str] = []
     for msg in older:
-        role = "Aluno" if isinstance(msg, HumanMessage) else "Tutor"
+        role = _role_label(msg)
         excerpt = truncate_to_tokens(_message_text(msg), 80)
         summary_parts.append(f"- {role}: {excerpt}")
 

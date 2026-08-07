@@ -4,10 +4,28 @@ from app.audit.hashing import phone_hash, pseudonymize_session_id
 from app.audit.repository import get_enrollment
 from app.audit.service import log_event
 from app.core.config import settings
-from app.core.token_budget import truncate_to_tokens
+from app.core.token_budget import count_tokens, truncate_to_tokens
 from app.rag.abstinence import evaluate_retrieval
 from app.rag.chain import build_tutor_chain
 from app.rag.sympy_tool import verify_numeric_answer
+
+
+def _content_to_text(content) -> str:
+    if content is None:
+        return ""
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        parts = []
+        for item in content:
+            if isinstance(item, str):
+                parts.append(item)
+            elif isinstance(item, dict) and "text" in item:
+                parts.append(str(item["text"]))
+            else:
+                parts.append(str(item))
+        return "\n".join(parts)
+    return str(content)
 
 
 def answer_question(
@@ -28,7 +46,7 @@ def answer_question(
         action="rag.started",
         resource="rag_pipeline",
         outcome="success",
-        metadata={"question_tokens": len(trimmed_question)},
+        metadata={"question_tokens": count_tokens(trimmed_question)},
         fail_closed=True,
     )
 
@@ -76,9 +94,22 @@ def answer_question(
             )
         if runs_cb.traced_runs:
             langsmith_run_id = str(runs_cb.traced_runs[0].id)
-        answer = response.content
+        answer = _content_to_text(getattr(response, "content", response))
 
         verification = verify_numeric_answer(trimmed_question, answer)
+        if verification.get("verified") is False and verification.get("expected"):
+            log_event(
+                correlation_id=correlation_id,
+                actor_type="system",
+                actor_id="sympy",
+                session_id=session_id,
+                action="sympy.divergence",
+                resource="sympy",
+                outcome="success",
+                metadata=verification,
+                langsmith_run_id=langsmith_run_id,
+            )
+
         log_event(
             correlation_id=correlation_id,
             actor_type="student",

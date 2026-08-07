@@ -1,0 +1,351 @@
+================================================================================
+deepEdu — INSTALAÇÃO NO UBUNTU SERVER LTS — FOLHA PARA IMPRIMIR
+Data: 07/08/2026
+SO: Ubuntu Server 24.04 LTS (também vale 22.04 com as notas no final)
+Pasta no servidor: ~/deepEdu
+LLM: Ollama + qwen2.5-math:1.5b-instruct
+NÃO FAZER NESTA FOLHA: Nginx, domínio, HTTPS, WhatsApp, Cockpit, GPU
+================================================================================
+
+ANTES DE LIGAR O TERMINAL (anote com caneta)
+  Usuário Linux: ____________________
+  Senha: (não escreva se for compartilhar a folha)
+  Como o código chega ao servidor (marque 1):
+    [ ] A) GitHub (gh clone) — precisa de internet + celular
+    [ ] B) Copiar pasta do outro PC (scp / pendrive) — mais simples
+
+CHECKLIST (marque ao concluir)
+  [ ] 0  Login no Ubuntu Server
+  [ ] 1  Internet
+  [ ] 2  Pacotes base (apt)
+  [ ] 3  Trazer o projeto para ~/deepEdu
+  [ ] 4  venv + pip (dependências)
+  [ ] 5  Ollama + modelo Qwen
+  [ ] 6  Arquivo .env
+  [ ] 7  PDF + indexação
+  [ ] 8  API + curl /health OK
+
+REGRA: digite UM comando por vez. Espere terminar. Não cole blocos enormes.
+
+================================================================================
+0) LOGIN
+================================================================================
+Ligue o servidor (ou escolha Ubuntu no GRUB).
+Login em texto: usuário + senha.
+Confirme o sistema:
+
+lsb_release -a
+uname -m
+
+Deve aparecer Ubuntu 24.04 (ou 22.04) e x86_64.
+
+================================================================================
+1) INTERNET
+================================================================================
+ping -c 3 8.8.8.8
+
+Se falhar: confira cabo/Wi-Fi. Sem internet não continua.
+
+sudo timedatectl set-timezone America/Sao_Paulo
+timedatectl
+
+sudo apt update
+sudo apt upgrade -y
+
+(Pode pedir confirmação. Digite Y se pedir.)
+
+================================================================================
+2) PACOTES BASE (Ubuntu 24.04 — use python3, NÃO python3.11)
+================================================================================
+sudo apt install -y python3 python3-venv python3-dev python3-pip
+
+sudo apt install -y build-essential pkg-config libffi-dev libssl-dev
+
+sudo apt install -y poppler-utils curl wget git unzip zstd ca-certificates
+
+python3 --version
+# Esperado: Python 3.12.x (24.04) ou 3.10.x (22.04)
+
+curl --version
+git --version
+
+Firewall (recomendado; NÃO feche o SSH):
+
+sudo ufw allow OpenSSH
+sudo ufw allow 8000/tcp
+sudo ufw enable
+sudo ufw status
+
+================================================================================
+3) TRAZER O PROJETO → ~/deepEdu
+================================================================================
+Escolha A ou B. Só uma.
+
+---------- OPÇÃO A — GitHub (repo privado) ----------
+Instalar GitHub CLI:
+
+sudo apt install -y gh
+
+Se "Unable to locate package gh", use:
+
+sudo apt install -y curl
+curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /usr/share/keyrings/githubcli-archive-keyring.gpg > /dev/null
+sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+sudo apt update
+sudo apt install -y gh
+
+Login (use o CELULAR — servidor sem navegador):
+
+gh auth login
+
+Escolha com as setas + Enter:
+  GitHub.com
+  HTTPS
+  Login with a web browser
+
+Anote o código one-time que aparecer.
+No celular abra: https://github.com/login/device
+Cole o código e autorize.
+
+gh auth status
+
+Clone:
+
+gh repo clone edidiodantas/deepEdu ~/deepEdu
+
+cd ~/deepEdu
+ls
+
+OBRIGATÓRIO ver na lista: app   requirements.txt   scripts
+
+
+---------- OPÇÃO B — Copiar do outro PC (sem gh) ----------
+No PC com o código (Deepin/Cursor), a pasta oficial é:
+  /home/Edidio/Projects/01_deepEdu
+
+No SERVIDOR, prepare a pasta:
+
+mkdir -p ~/deepEdu
+
+Com PENDRIVE:
+  lsblk
+  sudo mkdir -p /mnt/usb
+  sudo mount /dev/sdX1 /mnt/usb
+  (troque sdX1 pelo dispositivo do pendrive visto no lsblk)
+  cp -a /mnt/usb/deepEdu/. ~/deepEdu/
+  (ou o nome da pasta que estiver no pendrive)
+  sync
+  sudo umount /mnt/usb
+
+Com rede (do OUTRO PC, NÃO do servidor):
+  scp -r /home/Edidio/Projects/01_deepEdu/* USUARIO@IP_DO_SERVIDOR:~/deepEdu/
+
+No servidor:
+
+cd ~/deepEdu
+ls
+
+OBRIGATÓRIO ver: app   requirements.txt   scripts
+
+================================================================================
+4) AMBIENTE PYTHON (venv) — obrigatório no Ubuntu 24.04
+================================================================================
+NÃO use: sudo pip install ...
+NÃO use: pip install ... fora do venv
+(Isso gera erro "externally-managed-environment")
+
+cd ~/deepEdu
+python3 -m venv .venv
+source .venv/bin/activate
+
+(O prompt deve mostrar (.venv) no início.)
+
+python -m pip install --upgrade pip wheel setuptools
+pip install -r requirements.txt
+
+ATENÇÃO: demora vários minutos (baixa torch etc.). Espere sem cancelar.
+
+Conferir:
+
+python -c "import fastapi, chromadb, langchain, torch; print('OK')"
+
+Se der erro de import: ainda está sem venv ativo. Rode de novo:
+  source .venv/bin/activate
+
+================================================================================
+5) OLLAMA + QWEN2.5-MATH
+================================================================================
+(Pode sair do venv; Ollama é programa do sistema.)
+
+curl -fsSL https://ollama.com/install.sh -o /tmp/ollama-install.sh
+sh /tmp/ollama-install.sh
+rm -f /tmp/ollama-install.sh
+
+ollama --version
+
+sudo systemctl enable --now ollama
+systemctl is-active ollama
+# Esperado: active
+
+Baixar o modelo (1ª vez demora; precisa de internet):
+
+ollama pull qwen2.5-math:1.5b-instruct
+
+ollama list
+
+Teste rápido:
+
+ollama run qwen2.5-math:1.5b-instruct "Quanto e 2+2? Responda so o numero."
+
+(Para sair do chat do ollama, se ficar aberto: digite /bye ou Ctrl+D)
+
+================================================================================
+6) ARQUIVO .env (segredos)
+================================================================================
+cd ~/deepEdu
+source .venv/bin/activate
+cp .env.example .env
+chmod 600 .env
+
+Gere as chaves (copie cada saída para a folha):
+
+openssl rand -hex 32
+# ADMIN_API_KEY = ________________________________
+
+openssl rand -hex 32
+# AUDIT_PHONE_SALT = ______________________________
+
+python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+# PHONE_ENCRYPTION_KEY = __________________________
+
+Editar:
+
+nano .env
+
+Confira / ajuste estas linhas (as outras podem ficar como estão por enquanto):
+
+ENV=development
+LLM_PROVIDER=ollama
+LLM_MODEL=qwen2.5-math:1.5b-instruct
+LLM_TOKENIZER_ID=Qwen/Qwen2.5-Math-1.5B-Instruct
+OLLAMA_BASE_URL=http://127.0.0.1:11434
+ADMIN_API_KEY=(cole a chave gerada)
+AUDIT_PHONE_SALT=(cole a chave gerada)
+PHONE_ENCRYPTION_KEY=(cole a chave Fernet)
+LANGCHAIN_TRACING_V2=false
+BILLING_ENFORCE_SUBSCRIPTION=false
+
+Salvar no nano: Ctrl+O  → Enter
+Sair: Ctrl+X
+
+================================================================================
+7) PDF + INDEXAÇÃO (sem PDF o RAG não funciona)
+================================================================================
+cd ~/deepEdu
+source .venv/bin/activate
+mkdir -p data/materials data/chroma data/audit data/chat_history data/billing
+
+Coloque PELO MENOS 1 PDF (ou .txt / .md) em data/materials/
+
+Exemplos:
+  # do pendrive montado:
+  # cp /mnt/usb/*.pdf data/materials/
+
+  # de URL:
+  # wget -P data/materials/ "https://endereco-do-arquivo.pdf"
+
+ls data/materials/
+# Tem que listar arquivo(s). Se vazio, NÃO indexe ainda.
+
+python scripts/run_indexing.py
+
+ls data/chroma/
+# Deve aparecer conteúdo após indexar.
+
+================================================================================
+8) SUBIR A API E TESTAR
+================================================================================
+Terminal 1 (deixe rodando):
+
+cd ~/deepEdu
+source .venv/bin/activate
+uvicorn app.api.main:app --host 0.0.0.0 --port 8000
+
+Deve aparecer algo como: Uvicorn running on http://0.0.0.0:8000
+
+Terminal 2 (outro TTY):
+  Ctrl+Alt+F2  → login de novo
+  (ou abra outro SSH)
+
+curl -s http://127.0.0.1:8000/health
+
+Resposta esperada (JSON):
+  {"status":"ok","service":"deepEdu"}
+
+Voltar ao uvicorn: Ctrl+Alt+F1 (ou a tecla do 1º terminal)
+Para parar a API: Ctrl+C
+
+================================================================================
+DEPOIS DO /health (fluxo diário)
+================================================================================
+Desenvolver no PC (Cursor): pasta ~/Projects/01_deepEdu
+Atualizar o servidor:
+  cd ~/deepEdu
+  git pull
+  (se usou cópia manual: copie de novo os arquivos alterados)
+
+Sempre antes de rodar:
+  cd ~/deepEdu
+  source .venv/bin/activate
+
+================================================================================
+ERROS COMUNS → SOLUÇÃO
+================================================================================
+ping falha
+  → cabo/rede/DNS; sem net não instala nada
+
+externally-managed-environment
+  → source .venv/bin/activate  e use o pip DO venv
+
+python3.11: command not found
+  → use python3 (é o certo no 24.04)
+
+Unable to locate package gh
+  → use o bloco curl do passo 3A ou a Opção B (copiar pasta)
+
+gh: 404 / repo private
+  → gh auth login de novo; autorize no celular
+
+ollama: connection refused
+  → sudo systemctl enable --now ollama
+  → systemctl status ollama
+
+Nenhum material encontrado
+  → coloque PDF em data/materials/ e rode run_indexing.py
+
+curl /health falha
+  → confira se uvicorn está rodando no outro terminal
+  → source .venv/bin/activate antes do uvicorn
+
+pip demora / trava em torch
+  → normal na 1ª vez; aguarde (pode passar de 10–20 min)
+
+disco cheio
+  → df -h   e libere espaço antes de pip/ollama
+
+================================================================================
+NOTAS UBUNTU 22.04 (se for o seu caso)
+================================================================================
+python3 será 3.10 — continue com python3 (não precisa python3.11).
+Demais passos iguais.
+Se faltar pacote de build: sudo apt install -y build-essential
+
+================================================================================
+PRÓXIMO (outra folha — NÃO agora)
+================================================================================
+Nginx + domínio + Certbot + WhatsApp + systemd de produção.
+Só depois do /health estável e 1 pergunta testada.
+
+FIM — deepEdu instalação Ubuntu LTS (imprimir)
+================================================================================

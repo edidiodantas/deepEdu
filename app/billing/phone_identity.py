@@ -1,9 +1,12 @@
+import re
 import sqlite3
 from pathlib import Path
 
 from app.audit.hashing import phone_hash
 from app.core.config import settings
 from app.core.phone_vault import decrypt_phone, encrypt_phone
+
+_PHONE_HASH_RE = re.compile(r"^[0-9a-f]{32}$", re.IGNORECASE)
 
 
 def _connect():
@@ -57,8 +60,15 @@ def resolve_phone(phone_hash_value: str) -> str | None:
     return decrypt_phone(row[0])
 
 
+def looks_like_phone_hash(value: str) -> bool:
+    return bool(_PHONE_HASH_RE.fullmatch((value or "").strip()))
+
+
 def phone_key(phone_or_hash: str) -> str:
+    """Aceita telefone E.164 ou hash de 32 hex — nunca re-hasheia um hash."""
     raw = phone_or_hash.strip().replace("whatsapp:", "")
-    if raw.startswith("+") or raw.isdigit():
+    if looks_like_phone_hash(raw):
+        return raw.lower()
+    if raw.startswith("+") or (raw.isdigit() and len(raw) >= 8):
         return store_phone(raw)
     return raw

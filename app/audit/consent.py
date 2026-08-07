@@ -1,17 +1,14 @@
-import unicodedata
-
 from app.audit.hashing import phone_hash, pseudonymize_session_id
 from app.audit.repository import get_enrollment
 from app.audit.repository import append_consent_log, get_latest_consent
 from app.audit.service import log_event
 from app.core.config import settings
+from app.core.text_normalize import normalize_text
 from app.memory.history import clear_session_history
 
 
 def _normalize(text: str) -> str:
-    normalized = unicodedata.normalize("NFKD", text)
-    without_accents = "".join(ch for ch in normalized if not unicodedata.combining(ch))
-    return without_accents.lower().strip()
+    return normalize_text(text)
 
 
 def consent_prompt() -> str:
@@ -42,7 +39,10 @@ def optout_confirmation() -> str:
 
 def has_active_consent(phone: str) -> bool:
     latest = get_latest_consent(phone_hash(phone))
-    return latest is not None and latest.status == "granted"
+    if latest is None or latest.status != "granted":
+        return False
+    # Nova versão dos termos exige novo ACEITO.
+    return (latest.terms_version or "") == settings.CONSENT_TERMS_VERSION
 
 
 def is_consent_accept_command(text: str) -> bool:

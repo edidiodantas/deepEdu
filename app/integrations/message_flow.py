@@ -16,16 +16,21 @@ from app.audit.enrollment import (
     verify_enrollment,
 )
 from app.billing.service import has_active_access, payment_instructions_with_link
+from app.integrations.commands import (
+    build_checkout_message,
+    extract_billing_type_from_text,
+    handle_professor_command,
+    help_message,
+    is_help_command,
+    is_payment_command,
+    is_professor_command,
+    is_status_command,
+)
 from app.services.tutor_service import answer_question
-from app.integrations.twilio_webhook import (
-    _build_checkout_message,
-    _extract_billing_type_from_text,
-    _handle_professor_command,
-    _help_message,
-    _is_help_command,
-    _is_payment_command,
-    _is_professor_command,
-    _is_status_command,
+
+_FRIENDLY_ERROR = (
+    "Nao consegui processar sua pergunta agora. "
+    "Tente novamente em instantes ou fale com a escola."
 )
 
 
@@ -39,8 +44,8 @@ def build_answer_for_message(
     if is_optout_command(question):
         revoke_consent(phone=phone, correlation_id=correlation_id, session_id=session_id)
         return optout_confirmation()
-    if _is_professor_command(question):
-        return _handle_professor_command(phone=phone, question=question)
+    if is_professor_command(question):
+        return handle_professor_command(phone=phone, question=question)
     if is_enrollment_command(question):
         code = parse_enrollment_code(question)
         if not code:
@@ -63,27 +68,30 @@ def build_answer_for_message(
     if not has_active_consent(phone):
         return consent_prompt() if question else consent_denied_message()
     if not question:
-        return _help_message()
-    if _is_help_command(question):
-        return _help_message()
+        return help_message()
+    if is_help_command(question):
+        return help_message()
 
     has_access, _ = has_active_access(phone)
-    requested_method = _extract_billing_type_from_text(question)
-    if _is_payment_command(question):
+    requested_method = extract_billing_type_from_text(question)
+    if is_payment_command(question):
         try:
-            return _build_checkout_message(phone=phone, requested_method=requested_method)
+            return build_checkout_message(phone=phone, requested_method=requested_method)
         except Exception:
             return payment_instructions_with_link(checkout_url=None)
-    if _is_status_command(question) and not has_access:
+    if is_status_command(question) and not has_access:
         try:
-            return _build_checkout_message(phone=phone, requested_method=None)
+            return build_checkout_message(phone=phone, requested_method=None)
         except Exception:
             return payment_instructions_with_link(checkout_url=None)
-    if _is_status_command(question) and has_access:
+    if is_status_command(question) and has_access:
         return "Seu acesso esta ativo.\nPode enviar sua pergunta da materia que eu te ajudo agora."
     if not has_access:
         try:
-            return _build_checkout_message(phone=phone, requested_method=None)
+            return build_checkout_message(phone=phone, requested_method=None)
         except Exception:
             return payment_instructions_with_link(checkout_url=None)
-    return answer_question(phone=phone, question=question, correlation_id=correlation_id)
+    try:
+        return answer_question(phone=phone, question=question, correlation_id=correlation_id)
+    except Exception:
+        return _FRIENDLY_ERROR

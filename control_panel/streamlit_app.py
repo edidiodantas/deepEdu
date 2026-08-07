@@ -38,10 +38,18 @@ tab1, tab2, tab3, tab4 = st.tabs(["Aluno", "Escola", "ECA / Auditoria", "Operaca
 with tab1:
     st.subheader("Assinatura individual")
     phone = st.text_input("Telefone do aluno (E.164)", value="+5511999999999")
+    paid_until = st.text_input(
+        "paid_until (ISO, opcional — vazio = +BILLING_PLAN_DAYS)",
+        value="",
+        key="student_paid_until",
+    )
     col1, col2 = st.columns(2)
     with col1:
         if st.button("Ativar assinatura (manual)"):
-            code, body = _post("/admin/billing/activate", {"phone": phone})
+            params = {"phone": phone}
+            if paid_until.strip():
+                params["paid_until_iso"] = paid_until.strip()
+            code, body = _post("/admin/billing/activate", params)
             st.code(f"{code}\n{body}")
     with col2:
         if st.button("Gerar checkout do aluno"):
@@ -56,6 +64,11 @@ with tab2:
     school_id = st.text_input("ID da escola", value="escola-alpha")
     school_name = st.text_input("Nome da escola", value="Escola Alpha")
     school_phone = st.text_input("Telefone do aluno para vincular", value="+5511888888888")
+    school_paid_until = st.text_input(
+        "paid_until escola (ISO, opcional)",
+        value="",
+        key="school_paid_until",
+    )
     c1, c2, c3, c4 = st.columns(4)
     with c1:
         if st.button("Criar escola"):
@@ -77,7 +90,10 @@ with tab2:
             st.code(f"{code}\n{body}")
     with c4:
         if st.button("Ativar plano escola (manual)"):
-            code, body = _post("/admin/schools/activate", {"school_id": school_id})
+            params = {"school_id": school_id}
+            if school_paid_until.strip():
+                params["paid_until_iso"] = school_paid_until.strip()
+            code, body = _post("/admin/schools/activate", params)
             st.code(f"{code}\n{body}")
 
 with tab3:
@@ -120,12 +136,15 @@ with tab3:
             headers=_headers(),
             timeout=30,
         )
-        st.download_button(
-            "Baixar audit_export.csv",
-            data=resp.text,
-            file_name="audit_export.csv",
-            mime="text/csv",
-        )
+        if resp.status_code == 200:
+            st.download_button(
+                "Baixar audit_export.csv",
+                data=resp.text,
+                file_name="audit_export.csv",
+                mime="text/csv",
+            )
+        else:
+            st.error(f"Erro {resp.status_code}: {resp.text}")
 
     st.divider()
     st.subheader("Incidentes")

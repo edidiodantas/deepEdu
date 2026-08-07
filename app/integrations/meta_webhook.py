@@ -32,9 +32,9 @@ async def handle_meta_verification(request: Request):
     raise HTTPException(status_code=403, detail="Verificacao Meta invalida")
 
 
-async def _send_meta_text(to_phone: str, text: str) -> None:
+async def _send_meta_text(to_phone: str, text: str) -> bool:
     if not settings.META_ACCESS_TOKEN or not settings.META_PHONE_NUMBER_ID:
-        return
+        return False
     url = f"https://graph.facebook.com/v20.0/{settings.META_PHONE_NUMBER_ID}/messages"
     headers = {"Authorization": f"Bearer {settings.META_ACCESS_TOKEN}"}
     payload = {
@@ -44,7 +44,8 @@ async def _send_meta_text(to_phone: str, text: str) -> None:
         "text": {"body": text[:4096]},
     }
     async with httpx.AsyncClient(timeout=20) as client:
-        await client.post(url, headers=headers, json=payload)
+        response = await client.post(url, headers=headers, json=payload)
+    return response.is_success
 
 
 async def handle_meta_webhook(request: Request):
@@ -75,6 +76,8 @@ async def handle_meta_webhook(request: Request):
     for entry in payload.get("entry", []):
         for change in entry.get("changes", []):
             for message in change.get("value", {}).get("messages", []):
+                if message.get("type") not in (None, "text"):
+                    continue
                 phone = f"+{message.get('from', '')}"
                 question = (message.get("text", {}) or {}).get("body", "").strip()
                 message_id = message.get("id", "")
@@ -100,6 +103,14 @@ async def handle_meta_webhook(request: Request):
                         correlation_id=correlation_id,
                         session_id=session_id,
                     )
+                except AuditLogError:
+                    answer = (
+                        "Servico temporariamente indisponivel por motivos de seguranca.\n"
+                        "Tente novamente em alguns minutos."
+                    )
+
+                sent = await _send_meta_text(phone, answer)
+                if sent:
                     log_event(
                         correlation_id=correlation_id,
                         actor_type="student",
@@ -111,12 +122,18 @@ async def handle_meta_webhook(request: Request):
                         metadata={"answer_length": len(answer)},
                         fail_closed=settings.AUDIT_FAIL_CLOSED,
                     )
-                except AuditLogError:
-                    answer = (
-                        "Servico temporariamente indisponivel por motivos de seguranca.\n"
-                        "Tente novamente em alguns minutos."
+                    if message_id:
+                        mark_message_processed(message_id)
+                else:
+                    log_event(
+                        correlation_id=correlation_id,
+                        actor_type="student",
+                        actor_id=hashed,
+                        session_id=session_id,
+                        action="message.send_failed",
+                        resource="whatsapp_meta",
+                        outcome="failure",
+                        metadata={"message_id": message_id or None},
+                        fail_closed=False,
                     )
-                await _send_meta_text(phone, answer)
-                if message_id:
-                    mark_message_processed(message_id)
     return {"ok": True}

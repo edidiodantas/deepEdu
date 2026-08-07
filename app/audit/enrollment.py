@@ -2,14 +2,13 @@ from __future__ import annotations
 
 import uuid
 
-from app.audit.hashing import phone_hash, pseudonymize_session_id
+from app.audit.hashing import phone_hash
 from app.audit.repository import (
     ensure_enrollment_tables,
     get_enrollment,
     upsert_enrollment,
 )
 from app.audit.service import log_event
-from app.core.config import settings
 
 
 def enrollment_prompt() -> str:
@@ -47,7 +46,7 @@ def verify_enrollment(
     hashed = phone_hash(phone)
     record = get_enrollment(hashed)
     if not record:
-        return False, "Matricula nao encontrada. Pecao a escola para cadastrar seu codigo."
+        return False, "Matricula nao encontrada. Peca a escola para cadastrar seu codigo."
     if record["student_code"].upper() != student_code.upper():
         return False, "Codigo de matricula invalido. Tente novamente ou fale com a secretaria."
     upsert_enrollment(

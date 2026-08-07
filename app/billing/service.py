@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from app.billing.repository import (
     School,
@@ -25,6 +25,19 @@ def _parse_iso(dt: str | None):
     return datetime.fromisoformat(dt)
 
 
+def _default_student_paid_until() -> str:
+    return (datetime.now(timezone.utc) + timedelta(days=settings.BILLING_PLAN_DAYS)).isoformat()
+
+
+def _default_school_paid_until() -> str:
+    return (datetime.now(timezone.utc) + timedelta(days=settings.SCHOOL_PLAN_DAYS)).isoformat()
+
+
+def _is_still_valid(paid_until_iso: str | None) -> bool:
+    paid_until = _parse_iso(paid_until_iso)
+    return bool(paid_until and paid_until > datetime.now(timezone.utc))
+
+
 def has_active_access(phone: str) -> tuple[bool, StudentSubscription]:
     student = get_or_create_student(phone)
 
@@ -32,14 +45,11 @@ def has_active_access(phone: str) -> tuple[bool, StudentSubscription]:
         return True, student
 
     school = get_student_school(phone)
-    if school and school.status == "active":
-        paid_until_school = _parse_iso(school.paid_until)
-        if paid_until_school is None or paid_until_school > datetime.now(timezone.utc):
-            return True, student
+    if school and school.status == "active" and _is_still_valid(school.paid_until):
+        return True, student
 
     if student.status == "active":
-        paid_until = _parse_iso(student.paid_until)
-        if paid_until is None or paid_until > datetime.now(timezone.utc):
+        if _is_still_valid(student.paid_until):
             return True, student
         return False, student
 
@@ -72,7 +82,11 @@ def payment_instructions_with_link(checkout_url: str | None) -> str:
 
 
 def activate_student_subscription(phone: str, paid_until_iso: str | None = None):
-    return update_subscription_status(phone=phone, status="active", paid_until=paid_until_iso)
+    return update_subscription_status(
+        phone=phone,
+        status="active",
+        paid_until=paid_until_iso or _default_student_paid_until(),
+    )
 
 
 def create_school(school_id: str, name: str) -> School:
@@ -84,7 +98,11 @@ def add_student_to_school(phone: str, school_id: str) -> None:
 
 
 def activate_school_plan(school_id: str, paid_until_iso: str | None = None) -> School:
-    return update_school_status(school_id=school_id, status="active", paid_until=paid_until_iso)
+    return update_school_status(
+        school_id=school_id,
+        status="active",
+        paid_until=paid_until_iso or _default_school_paid_until(),
+    )
 
 
 def get_school_for_student(phone: str) -> School | None:

@@ -5,12 +5,30 @@ from functools import lru_cache
 from app.core.config import settings
 
 
+# Tags Ollama → ids HuggingFace do tokenizer (orçamento real de tokens).
+_OLLAMA_TO_HF_TOKENIZER = {
+    "qwen2.5-math:1.5b-instruct": "Qwen/Qwen2.5-Math-1.5B-Instruct",
+    "qwen2.5-math:7b-instruct": "Qwen/Qwen2.5-Math-7B-Instruct",
+    "qwen2.5:1.5b": "Qwen/Qwen2.5-1.5B",
+    "qwen2.5:3b": "Qwen/Qwen2.5-3B",
+    "qwen2.5:7b": "Qwen/Qwen2.5-7B",
+}
+
+
+def _tokenizer_model_id() -> str:
+    explicit = (settings.LLM_TOKENIZER_ID or "").strip()
+    if explicit:
+        return explicit
+    model = settings.LLM_MODEL.strip()
+    return _OLLAMA_TO_HF_TOKENIZER.get(model, model)
+
+
 @lru_cache(maxsize=1)
 def _tokenizer():
     try:
         from transformers import AutoTokenizer
 
-        return AutoTokenizer.from_pretrained(settings.LLM_MODEL)
+        return AutoTokenizer.from_pretrained(_tokenizer_model_id(), trust_remote_code=True)
     except Exception:
         return None
 
@@ -49,6 +67,12 @@ def trim_context_chunks(chunks: list[str], max_tokens: int) -> list[str]:
 def format_rag_context(docs: list, max_tokens: int | None = None) -> str:
     limit = max_tokens or settings.RAG_CONTEXT_MAX_TOKENS
     top_k = min(settings.RETRIEVAL_TOP_K, len(docs))
-    parts = [doc.page_content for doc in docs[:top_k]]
+    parts: list[str] = []
+    for doc in docs[:top_k]:
+        meta = getattr(doc, "metadata", {}) or {}
+        source = meta.get("source_file") or meta.get("source") or "acervo"
+        page = meta.get("page")
+        header = f"Fonte: {source}" + (f", p.{page}" if page not in (None, "") else "")
+        parts.append(f"{header}\n{doc.page_content}")
     parts = trim_context_chunks(parts, limit)
     return "\n\n---\n\n".join(parts)

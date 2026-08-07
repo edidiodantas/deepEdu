@@ -18,7 +18,8 @@ class Settings(BaseSettings):
     LLM_DEVICE_MAP: str = "auto"
     LLM_TEMPERATURE: float = 0.3
     LLM_MAX_NEW_TOKENS: int = 1024
-    LLM_MAX_TOKENS: int = 1024
+    # Id HuggingFace do tokenizer (se vazio, deriva do LLM_MODEL / mapa Ollama).
+    LLM_TOKENIZER_ID: str = ""
 
     # Legado DeepSeek (fallback openai_compatible)
     DEEPSEEK_API_KEY: str = ""
@@ -37,7 +38,6 @@ class Settings(BaseSettings):
     RERANK_ENABLED: bool = True
     RERANK_MODEL: str = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1"
     CHUNK_CHILD_TOKENS: int = 400
-    CHUNK_PARENT_MAX_TOKENS: int = 400
 
     # LangSmith (RF31)
     LANGCHAIN_TRACING_V2: bool = False

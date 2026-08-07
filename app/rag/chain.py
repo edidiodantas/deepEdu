@@ -22,6 +22,23 @@ def _retrieve_with_budget(inputs: dict) -> str:
     return format_rag_context(docs, settings.RAG_CONTEXT_MAX_TOKENS)
 
 
+def _prepare_system_template() -> str:
+    """Trunca o prompt sem destruir o placeholder {context}."""
+    system_template = load_system_prompt()
+    placeholder = "{context}"
+    reserve = 8
+    budget = max(32, settings.PROMPT_MAX_TOKENS - reserve)
+
+    if placeholder in system_template:
+        without = system_template.replace(placeholder, "")
+        without = truncate_to_tokens(without, budget)
+        system_template = f"{without}\n\n<context>\n{placeholder}\n</context>"
+    else:
+        body = truncate_to_tokens(system_template, budget)
+        system_template = f"{body}\n\n<context>\n{placeholder}\n</context>"
+    return system_template
+
+
 def build_tutor_chain(
     *,
     correlation_id: str | None = None,
@@ -41,11 +58,7 @@ def build_tutor_chain(
         )
 
     llm = build_chat_model()
-    system_template = load_system_prompt()
-    if "{context}" not in system_template:
-        system_template = f"{system_template}\n\n<context>\n{{context}}\n</context>"
-
-    system_template = truncate_to_tokens(system_template, settings.PROMPT_MAX_TOKENS)
+    system_template = _prepare_system_template()
     prompt = ChatPromptTemplate.from_messages(
         [
             ("system", system_template),

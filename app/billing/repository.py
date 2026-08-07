@@ -94,10 +94,14 @@ def ensure_billing_tables() -> None:
 
 
 def _looks_like_plain_phone(value: str) -> bool:
+    from app.billing.phone_identity import looks_like_phone_hash
+
     normalized = value.strip().replace("whatsapp:", "")
+    if looks_like_phone_hash(normalized):
+        return False
     if normalized.startswith("+") or (normalized.isdigit() and len(normalized) >= 8):
         return True
-    return len(normalized) != 32
+    return False
 
 
 def _migrate_legacy_plain_phones() -> None:

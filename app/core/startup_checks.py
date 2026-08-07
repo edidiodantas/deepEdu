@@ -26,6 +26,10 @@ def run_startup_checks() -> list[str]:
             raise ProductionConfigError("ADMIN_API_KEY forte é obrigatória em produção.")
         if settings.AUDIT_FAIL_CLOSED is not True:
             raise ProductionConfigError("AUDIT_FAIL_CLOSED deve ser true em produção.")
+        if settings.BILLING_ENFORCE_SUBSCRIPTION and not settings.ASAAS_WEBHOOK_TOKEN.strip():
+            raise ProductionConfigError(
+                "ASAAS_WEBHOOK_TOKEN é obrigatório em produção com billing ativo."
+            )
     else:
         if not settings.AUDIT_PHONE_SALT:
             notes.append("AUDIT_PHONE_SALT ausente — usando fallback de desenvolvimento.")

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Form, Header, HTTPException, Request
+from fastapi import FastAPI, Header, HTTPException, Request
 
 from app.audit import init_audit
 from app.api.admin import router as admin_router
@@ -28,15 +28,8 @@ def health():
 
 
 @app.post("/webhook/whatsapp")
-async def whatsapp_webhook(
-    request: Request,
-    From: str = Form(...),
-    Body: str = Form(...),
-    MessageSid: str = Form(default=""),
-):
-    return await handle_incoming_whatsapp(
-        request=request, From=From, Body=Body, MessageSid=MessageSid
-    )
+async def whatsapp_webhook(request: Request):
+    return await handle_incoming_whatsapp(request)
 
 
 @app.get("/webhook/meta")
@@ -51,7 +44,11 @@ async def meta_webhook(request: Request):
 
 @app.post("/webhook/asaas")
 async def asaas_webhook(request: Request, asaas_access_token: str | None = Header(default=None)):
-    if settings.ASAAS_WEBHOOK_TOKEN and asaas_access_token != settings.ASAAS_WEBHOOK_TOKEN:
+    token = settings.ASAAS_WEBHOOK_TOKEN.strip()
+    if settings.ENV.lower() == "production":
+        if not token or asaas_access_token != token:
+            raise HTTPException(status_code=403, detail="Webhook token invalido")
+    elif token and asaas_access_token != token:
         raise HTTPException(status_code=403, detail="Webhook token invalido")
     payload = await request.json()
     result = process_asaas_webhook(payload)
