@@ -2,115 +2,70 @@
 
 | Campo | Valor |
 |-------|-------|
-| **Objetivo** | Validar o **RAG** deepEdu **aqui** antes do servidor dedicado com GPU |
-| **LLM oficial** | **Qwen2.5-Math** via **Ollama** (`LLM_PROVIDER=ollama`) — **não** DeepSeek |
-| **Data** | 23/07/2026 |
+| **Objetivo** | Validar o **RAG** deepEdu **aqui** antes do servidor dedicado |
+| **LLM oficial** | **Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct** via **Hugging Face** (`LLM_PROVIDER=huggingface`) |
+| **Data** | 07/08/2026 |
 | **Ordem oficial** | `docs/SEQUENCIA_IMPLEMENTACAO.md` (S0→S9) |
 
 ---
 
-## 0. O que é o RAG neste projeto (para não confundir)
-
-O deepEdu **não** é “só um chat com Qwen”. É um **RAG**:
+## 0. O que é o RAG neste projeto
 
 ```
 Pergunta do aluno
        │
        ▼
 ┌──────────────────┐
-│ 1. RETRIEVAL     │  PDFs em data/materials/ → pedaços (chunks)
-│    (busca)       │  → embeddings → Chroma → trechos relevantes
+│ 1. RETRIEVAL     │  PDFs → chunks → embeddings → Chroma
 └────────┬─────────┘
-         │ contexto (citações do material)
+         │ contexto
          ▼
 ┌──────────────────┐
-│ 2. GERAÇÃO       │  Qwen2.5-Math (Ollama) + prompt + SymPy
-│    (LLM)         │  → resposta com base no material
+│ 2. GERAÇÃO       │  Amadeus-Verbo (PT-BR) + prompt + SymPy
 └──────────────────┘
 ```
-
-| Peça | O que faz | Onde roda (Fase A) |
-|------|-----------|---------------------|
-| PDFs / corpus | Material didático | `data/materials/` |
-| Indexação (M06) | Quebra PDF e grava no banco vetorial | Deepin, `run_indexing.py` |
-| Chroma (M07) | Guarda vetores | `data/chroma/` |
-| Retriever (M04) | Acha trechos certos | Código Python local |
-| **Qwen2.5-Math (M05)** | Escreve a resposta usando o contexto | **Ollama local** |
-| API FastAPI | Junta tudo e expõe HTTP | `uvicorn` no Deepin |
-
-Sem indexação + Chroma, **não é RAG** — seria só o Qwen “do zero”.  
-Sem Qwen, a busca existe mas **não gera** a resposta tutora.
 
 **Padrão do projeto (`.env.example`):**
 
 ```env
-LLM_PROVIDER=ollama
-LLM_MODEL=qwen2.5-math:1.5b-instruct
-OLLAMA_BASE_URL=http://127.0.0.1:11434
+LLM_PROVIDER=huggingface
+LLM_MODEL=amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
+LLM_TOKENIZER_ID=amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
+LLM_DEVICE_MAP=auto
 ```
 
-DeepSeek era só uma alternativa opcional de API. **Você não usa.** Esquecemos isso neste plano.
+Modelo no Hugging Face:  
+https://huggingface.co/amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
+
+Ollama / Qwen2.5-Math e APIs externas ficam como **alternativas** no `.env`, não como padrão.
 
 ---
 
-## 1. Três fases (mesmo PC → servidor GPU)
-
-```
-FASE A — AGORA                    FASE B — opcional              FASE C — destino
-─────────────────────────────     ─────────────────────          ────────────────────
-Deepin (disco 1)                  Ubuntu Server (disco 2)        Servidor com GPU
-RAG completo + Ollama + Qwen      Repetir o mesmo RAG            Mesmo RAG, mais rápido
-Teste: curl /health + 1 pergunta  (sem GUI, só terminal)         + HTTPS + WhatsApp
-```
-
-| Disco | Agora | Depois |
-|-------|--------|--------|
-| **Deepin** | Onde **sobe e testa o RAG** | Docs, Cursor, painel Streamlit |
-| **Ubuntu Server** | SO limpo — **ainda não** | Ensaio “tipo servidor” se quiser |
-| **Servidor + GPU** | Não | Produção com o **mesmo** Qwen/Ollama |
-
-Em dual boot, Deepin e Ubuntu **não rodam juntos**. Por isso o 1º teste do RAG é **tudo no Deepin**.
-
----
-
-## 2. Fase A — Deepin + Ollama + Qwen (FAÇA ISTO)
-
-Objetivo: RAG de ponta a ponta até **S5**.
+## 1. Fase A — Deepin + Amadeus-Verbo (FAÇA ISTO)
 
 | # | Etapa | Critério |
 |---|--------|----------|
-| A1 | `bash scripts/bootstrap_deepin_rag.sh` | `.venv` + deps + `.env` (ollama/Qwen) |
-| A2 | `bash scripts/install_ollama_model.sh` | `ollama list` mostra `qwen2.5-math` |
+| A1 | `bash scripts/bootstrap_deepin_rag.sh` | `.venv` + deps + `.env` (huggingface/Amadeus) |
+| A2 | `bash scripts/install_hf_model.sh` | modelo em cache Hugging Face |
 | A3 | PDFs em `data/materials/` | ≥ 1 PDF |
-| A4 | `python scripts/run_indexing.py` | `data/chroma/` existe (**retrieval**) |
+| A4 | `python scripts/run_indexing.py` | `data/chroma/` existe |
 | A5 | `uvicorn app.api.main:app --host 127.0.0.1 --port 8000` | API no ar |
 | A6 | `curl http://127.0.0.1:8000/health` | OK |
 | A7 | 1 pergunta de matemática | Resposta **com citação** do material |
 
-Isso prova o **RAG** (busca + Qwen), não só o modelo.
+---
+
+## 2. Fase B / C
+
+- **B:** no Ubuntu Server, mesma pasta + mesma folha `IMPRIMIR_AGORA.txt`.
+- **C:** servidor com GPU acelera o Amadeus-Verbo (`LLM_DEVICE_MAP=auto`).
 
 ---
 
-## 3. Fase B / C (resumo)
-
-- **B:** no Ubuntu do disco 2, repetir A1–A6 (mesmo código, Ollama + Qwen).
-- **C:** no servidor com GPU, mesmo `.env` ollama; depois Nginx/WhatsApp (`INSTALACAO_INFRAESTRUTURA.md`).
-
----
-
-## 4. Comandos (Deepin)
+## 3. Comandos rápidos
 
 ```bash
-cd ~/Projects/deepEdu
+cd ~/Projects/01_deepEdu
 bash scripts/bootstrap_deepin_rag.sh
-bash scripts/install_ollama_model.sh
-
-# PDFs → data/materials/
-source .venv/bin/activate
-python scripts/run_indexing.py
-uvicorn app.api.main:app --host 127.0.0.1 --port 8000
-# outro terminal:
-curl http://127.0.0.1:8000/health
+bash scripts/install_hf_model.sh
 ```
-
-Status vivo: `docs/CONTROLE_MODULOS.md`.

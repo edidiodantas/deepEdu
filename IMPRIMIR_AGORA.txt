@@ -3,8 +3,8 @@ deepEdu — INSTALAÇÃO NO UBUNTU SERVER LTS — FOLHA PARA IMPRIMIR
 Data: 07/08/2026
 SO: Ubuntu Server 24.04 LTS (também vale 22.04 com as notas no final)
 Pasta no servidor: ~/deepEdu
-LLM: Ollama + qwen2.5-math:1.5b-instruct
-NÃO FAZER NESTA FOLHA: Nginx, domínio, HTTPS, WhatsApp, Cockpit, GPU
+LLM: Hugging Face — amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
+NÃO FAZER NESTA FOLHA: Nginx, domínio, HTTPS, WhatsApp, Cockpit
 ================================================================================
 
 ANTES DE LIGAR O TERMINAL (anote com caneta)
@@ -20,12 +20,13 @@ CHECKLIST (marque ao concluir)
   [ ] 2  Pacotes base (apt)
   [ ] 3  Trazer o projeto para ~/deepEdu
   [ ] 4  venv + pip (dependências)
-  [ ] 5  Ollama + modelo Qwen
+  [ ] 5  Baixar modelo Amadeus-Verbo (Hugging Face)
   [ ] 6  Arquivo .env
   [ ] 7  PDF + indexação
   [ ] 8  API + curl /health OK
 
 REGRA: digite UM comando por vez. Espere terminar. Não cole blocos enormes.
+RAM: recomendado 8 GB+ (modelo 1.5B + embeddings + API).
 
 ================================================================================
 0) LOGIN
@@ -79,74 +80,62 @@ sudo ufw status
 ================================================================================
 3) TRAZER O PROJETO → ~/deepEdu
 ================================================================================
-Escolha A ou B. Só uma.
+Em linguagem simples:
+  No PC (Deepin) o código está em:  /home/Edidio/Projects/01_deepEdu
+  No servidor ele deve ficar em:    ~/deepEdu
+  Você NÃO cria o programa do zero — você COPIA ou BAIXA a pasta pronta.
 
----------- OPÇÃO A — GitHub (repo privado) ----------
-Instalar GitHub CLI:
+★ MÉTODO MAIS SIMPLES = PENDRIVE (Opção B)
+  Folha detalhada para leigo (IMPRIMIR ESTA TAMBÉM):
+    IMPRIMIR_COPIAR_PASTA_DEEPEDU.txt
 
-sudo apt install -y gh
+Abaixo está o resumo. Se travar, use a folha IMPRIMIR_COPIAR_PASTA_DEEPEDU.txt.
 
-Se "Unable to locate package gh", use:
+---------- ★ OPÇÃO B — PENDRIVE (recomendada) ----------
+NO PC (Deepin), antes:
+  1) Abra /home/Edidio/Projects/01_deepEdu
+  2) No pendrive crie a pasta deepEdu
+  3) Copie TODO o conteúdo de 01_deepEdu para dentro de pendrive/deepEdu
+  4) Ejecte o pendrive e leve ao servidor
 
-sudo apt install -y curl
-curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /usr/share/keyrings/githubcli-archive-keyring.gpg > /dev/null
-sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-sudo apt update
-sudo apt install -y gh
-
-Login (use o CELULAR — servidor sem navegador):
-
-gh auth login
-
-Escolha com as setas + Enter:
-  GitHub.com
-  HTTPS
-  Login with a web browser
-
-Anote o código one-time que aparecer.
-No celular abra: https://github.com/login/device
-Cole o código e autorize.
-
-gh auth status
-
-Clone:
-
-gh repo clone edidiodantas/deepEdu ~/deepEdu
-
-cd ~/deepEdu
-ls
-
-OBRIGATÓRIO ver na lista: app   requirements.txt   scripts
-
-
----------- OPÇÃO B — Copiar do outro PC (sem gh) ----------
-No PC com o código (Deepin/Cursor), a pasta oficial é:
-  /home/Edidio/Projects/01_deepEdu
-
-No SERVIDOR, prepare a pasta:
+NO SERVIDOR (digite um por vez):
 
 mkdir -p ~/deepEdu
+lsblk
+# Anote a partição do pendrive (ex.: sdb1). NÃO use o disco que tem /
 
-Com PENDRIVE:
-  lsblk
-  sudo mkdir -p /mnt/usb
-  sudo mount /dev/sdX1 /mnt/usb
-  (troque sdX1 pelo dispositivo do pendrive visto no lsblk)
-  cp -a /mnt/usb/deepEdu/. ~/deepEdu/
-  (ou o nome da pasta que estiver no pendrive)
-  sync
-  sudo umount /mnt/usb
+sudo mkdir -p /mnt/usb
+sudo mount /dev/sdb1 /mnt/usb
+#          ^^^^ troque sdb1 pelo nome que o lsblk mostrou
 
-Com rede (do OUTRO PC, NÃO do servidor):
-  scp -r /home/Edidio/Projects/01_deepEdu/* USUARIO@IP_DO_SERVIDOR:~/deepEdu/
+ls /mnt/usb/deepEdu
+# Tem que ver: app  requirements.txt  scripts
 
-No servidor:
-
+cp -a /mnt/usb/deepEdu/. ~/deepEdu/
+sync
 cd ~/deepEdu
 ls
+# Tem que ver: app  requirements.txt  scripts
 
-OBRIGATÓRIO ver: app   requirements.txt   scripts
+cd ~
+sudo umount /mnt/usb
+# Agora pode remover o pendrive
+
+---------- OPÇÃO A — GitHub (alternativa) ----------
+Só se não puder usar pendrive. Precisa internet + celular.
+
+sudo apt install -y gh
+# Se falhar o pacote gh, veja o bloco completo na folha
+# IMPRIMIR_COPIAR_PASTA_DEEPEDU.txt (Opção A)
+
+gh auth login
+# GitHub.com → HTTPS → Login with a web browser
+# Código no celular: https://github.com/login/device
+
+gh repo clone edidiodantas/deepEdu ~/deepEdu
+cd ~/deepEdu
+ls
+# Tem que ver: app  requirements.txt  scripts
 
 ================================================================================
 4) AMBIENTE PYTHON (venv) — obrigatório no Ubuntu 24.04
@@ -168,37 +157,39 @@ ATENÇÃO: demora vários minutos (baixa torch etc.). Espere sem cancelar.
 
 Conferir:
 
-python -c "import fastapi, chromadb, langchain, torch; print('OK')"
+python -c "import fastapi, chromadb, langchain, torch, transformers; print('OK')"
 
 Se der erro de import: ainda está sem venv ativo. Rode de novo:
   source .venv/bin/activate
 
 ================================================================================
-5) OLLAMA + QWEN2.5-MATH
+5) MODELO AMADEUS-VERBO (Hugging Face) — LLM oficial
 ================================================================================
-(Pode sair do venv; Ollama é programa do sistema.)
+Modelo:
+  amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
+Página: https://huggingface.co/amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
 
-curl -fsSL https://ollama.com/install.sh -o /tmp/ollama-install.sh
-sh /tmp/ollama-install.sh
-rm -f /tmp/ollama-install.sh
+cd ~/deepEdu
+source .venv/bin/activate
+chmod +x scripts/install_hf_model.sh
+bash scripts/install_hf_model.sh
 
-ollama --version
+ATENÇÃO: 1º download ~2–4 GB. Precisa de internet. Pode demorar.
 
-sudo systemctl enable --now ollama
-systemctl is-active ollama
-# Esperado: active
+Teste rápido (opcional):
 
-Baixar o modelo (1ª vez demora; precisa de internet):
+python - <<'PY'
+from transformers import pipeline
+pipe = pipeline(
+    "text-generation",
+    model="amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct",
+    max_new_tokens=32,
+    do_sample=False,
+)
+print(pipe("Pergunta: quanto e 2+2? Resposta:", return_full_text=False))
+PY
 
-ollama pull qwen2.5-math:1.5b-instruct
-
-ollama list
-
-Teste rápido:
-
-ollama run qwen2.5-math:1.5b-instruct "Quanto e 2+2? Responda so o numero."
-
-(Para sair do chat do ollama, se ficar aberto: digite /bye ou Ctrl+D)
+NÃO precisa instalar Ollama para o fluxo padrão.
 
 ================================================================================
 6) ARQUIVO .env (segredos)
@@ -226,10 +217,10 @@ nano .env
 Confira / ajuste estas linhas (as outras podem ficar como estão por enquanto):
 
 ENV=development
-LLM_PROVIDER=ollama
-LLM_MODEL=qwen2.5-math:1.5b-instruct
-LLM_TOKENIZER_ID=Qwen/Qwen2.5-Math-1.5B-Instruct
-OLLAMA_BASE_URL=http://127.0.0.1:11434
+LLM_PROVIDER=huggingface
+LLM_MODEL=amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
+LLM_TOKENIZER_ID=amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
+LLM_DEVICE_MAP=auto
 ADMIN_API_KEY=(cole a chave gerada)
 AUDIT_PHONE_SALT=(cole a chave gerada)
 PHONE_ENCRYPTION_KEY=(cole a chave Fernet)
@@ -272,7 +263,8 @@ cd ~/deepEdu
 source .venv/bin/activate
 uvicorn app.api.main:app --host 0.0.0.0 --port 8000
 
-Deve aparecer algo como: Uvicorn running on http://0.0.0.0:8000
+Na 1ª subida o modelo pode demorar a carregar na RAM.
+Deve aparecer: Uvicorn running on http://0.0.0.0:8000
 
 Terminal 2 (outro TTY):
   Ctrl+Alt+F2  → login de novo
@@ -317,9 +309,12 @@ Unable to locate package gh
 gh: 404 / repo private
   → gh auth login de novo; autorize no celular
 
-ollama: connection refused
-  → sudo systemctl enable --now ollama
-  → systemctl status ollama
+erro Hugging Face / baixar modelo
+  → confira internet; rode de novo: bash scripts/install_hf_model.sh
+  → disco: df -h
+
+CUDA / GPU
+  → sem GPU use LLM_DEVICE_MAP=auto (CPU). Fica mais lento, mas funciona.
 
 Nenhum material encontrado
   → coloque PDF em data/materials/ e rode run_indexing.py
@@ -327,12 +322,14 @@ Nenhum material encontrado
 curl /health falha
   → confira se uvicorn está rodando no outro terminal
   → source .venv/bin/activate antes do uvicorn
+  → espere o modelo carregar na 1ª vez
 
 pip demora / trava em torch
   → normal na 1ª vez; aguarde (pode passar de 10–20 min)
 
-disco cheio
-  → df -h   e libere espaço antes de pip/ollama
+disco cheio / pouca RAM
+  → df -h   e   free -h
+  → modelo 1.5B + torch precisam de espaço e memória
 
 ================================================================================
 NOTAS UBUNTU 22.04 (se for o seu caso)
@@ -347,5 +344,5 @@ PRÓXIMO (outra folha — NÃO agora)
 Nginx + domínio + Certbot + WhatsApp + systemd de produção.
 Só depois do /health estável e 1 pergunta testada.
 
-FIM — deepEdu instalação Ubuntu LTS (imprimir)
+FIM — deepEdu instalação Ubuntu LTS + Amadeus-Verbo (imprimir)
 ================================================================================

@@ -1,0 +1,285 @@
+================================================================================
+deepEdu — COMO COLOCAR A PASTA NO SERVIDOR LINUX
+FOLHA PARA LEIGO — IMPRIMIR E SEGUIR COM CANETA
+Data: 10/08/2026
+================================================================================
+
+O QUE É ISTO (leia antes de digitar)
+--------------------------------------------------------------------------------
+No seu PC com Deepin/Cursor, o programa deepEdu já existe nesta pasta:
+
+  /home/Edidio/Projects/01_deepEdu
+
+No servidor Ubuntu (só texto, sem janelas), o programa deve ficar em:
+
+  /home/SEU_USUARIO/deepEdu
+  (atalho: ~/deepEdu)
+
+"~/deepEdu" significa: pasta deepEdu DENTRO da sua casa no Linux.
+
+Você NÃO cria o programa do zero no servidor.
+Você COPIA (ou baixa) a pasta pronta do PC para o servidor.
+
+Qual método usar?
+  ★ RECOMENDADO (mais simples): OPÇÃO B — PENDRIVE
+  ○ Alternativa:                OPÇÃO A — GitHub (internet + celular)
+
+Marque só UMA:
+  [ ] Vou usar OPÇÃO B (pendrive)  ← escolha esta se puder
+  [ ] Vou usar OPÇÃO A (GitHub)
+
+================================================================================
+ANTES — NO PC COM DEEPIN (interface gráfica)
+================================================================================
+Isto é no computador COM mouse e janelas (onde está o Cursor).
+
+1) Abra o Gerenciador de Arquivos.
+2) Vá em:  Início → Projects → 01_deepEdu
+   Caminho completo: /home/Edidio/Projects/01_deepEdu
+
+3) Confira se DENTRO de 01_deepEdu existem pastas/arquivos:
+     app
+     requirements.txt
+     scripts
+   Se não tiver, a pasta está errada — pare e peça ajuda.
+
+4) Se for usar PENDRIVE (Opção B):
+   - Plugue o pendrive.
+   - Crie no pendrive uma pasta chamada:  deepEdu
+   - Copie TODO o conteúdo de 01_deepEdu PARA dentro de deepEdu no pendrive.
+     (selecione tudo: Ctrl+A → copiar → colar no pendrive/deepEdu)
+   - Espere a cópia terminar.
+   - Remova o pendrive com segurança (ejetar).
+
+   No pendrive deve ficar assim:
+     PENDRIVE/
+       deepEdu/
+         app/
+         requirements.txt
+         scripts/
+         ... (resto dos arquivos)
+
+5) Desconecte o pendrive e leve para o servidor.
+
+================================================================================
+OPÇÃO B — PENDRIVE (★ RECOMENDADA — mais simples)
+================================================================================
+Agora você está no SERVIDOR Ubuntu (tela preta, só teclado).
+Faça login (usuário + senha).
+
+----- B1) Criar a pasta vazia no servidor -----
+
+Digite (um comando por vez) e aperte Enter:
+
+mkdir -p ~/deepEdu
+
+O que isso faz?
+  Cria a pasta deepEdu na sua casa, se ainda não existir.
+
+Confira:
+
+ls ~/deepEdu
+
+(Pode aparecer vazio. Isso é normal agora.)
+
+----- B2) Ver o nome do pendrive no Linux -----
+
+Plugue o pendrive na USB do servidor.
+Espere 5 segundos.
+Digite:
+
+lsblk
+
+Você verá uma lista parecida com:
+
+  NAME   SIZE TYPE MOUNTPOINT
+  sda    ...  disk
+  ├─sda1 ...  part /
+  sdb    ...  disk
+  └─sdb1 ...  part
+
+O pendrive costuma ser sdb1 ou sdc1 (NÃO é o disco do sistema, que já tem /).
+Anote o nome da PARTIÇÃO do pendrive (exemplo: sdb1):
+
+  Meu pendrive é: /dev/________
+  (exemplo: /dev/sdb1)
+
+----- B3) Montar o pendrive (abrir para o Linux ler) -----
+
+sudo mkdir -p /mnt/usb
+
+sudo mount /dev/sdb1 /mnt/usb
+
+  ↑ Troque sdb1 pelo nome que você anotou.
+
+Se pedir senha, digite a senha do Linux (não aparece na tela) e Enter.
+
+Se der erro "wrong fs type" ou "already mounted", anote a mensagem e pare.
+
+----- B4) Ver se a pasta deepEdu está no pendrive -----
+
+ls /mnt/usb
+
+Deve aparecer algo como: deepEdu
+
+ls /mnt/usb/deepEdu
+
+Deve aparecer: app   requirements.txt   scripts
+(e outros arquivos)
+
+Se NÃO aparecer deepEdu:
+  - Olhe o que tem em /mnt/usb (talvez o nome seja 01_deepEdu).
+  - Use o nome real que aparecer no próximo comando.
+
+----- B5) Copiar tudo para ~/deepEdu -----
+
+Se a pasta no pendrive se chama deepEdu:
+
+cp -a /mnt/usb/deepEdu/. ~/deepEdu/
+
+Se a pasta no pendrive se chama 01_deepEdu:
+
+cp -a /mnt/usb/01_deepEdu/. ~/deepEdu/
+
+O que isso faz?
+  Copia TODOS os arquivos do pendrive para ~/deepEdu no servidor.
+  O ponto no final (. ) significa "o conteúdo da pasta".
+
+Espere terminar (pode demorar um pouco).
+
+sync
+
+(O sync garante que gravou tudo antes de remover o pendrive.)
+
+----- B6) Conferir se copiou certo -----
+
+cd ~/deepEdu
+ls
+
+OBRIGATÓRIO ver na tela:
+  app
+  requirements.txt
+  scripts
+
+Se viu os três → pasta OK. Marque: [ ] pasta deepEdu pronta
+
+----- B7) Desmontar e remover o pendrive -----
+
+cd ~
+sudo umount /mnt/usb
+
+Agora pode puxar o pendrive com segurança.
+
+FIM DA OPÇÃO B.
+Volte para a folha IMPRIMIR_AGORA.txt no passo 4 (venv + pip).
+
+================================================================================
+OPÇÃO A — GITHUB (alternativa — precisa internet + celular)
+================================================================================
+Use só se NÃO puder usar pendrive.
+O GitHub é um "armário na internet" onde o código do deepEdu já está guardado.
+O servidor baixa uma cópia para ~/deepEdu.
+
+----- A1) Instalar a ferramenta gh -----
+
+sudo apt update
+sudo apt install -y gh
+
+Se aparecer "Unable to locate package gh", digite estes comandos
+(um por um, com cuidado):
+
+sudo apt install -y curl
+
+curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /usr/share/keyrings/githubcli-archive-keyring.gpg > /dev/null
+
+sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+
+sudo apt update
+sudo apt install -y gh
+
+Confira:
+
+gh --version
+
+----- A2) Entrar na sua conta GitHub (com o celular) -----
+
+O servidor não tem navegador. Por isso o login usa um CÓDIGO no celular.
+
+gh auth login
+
+Use as SETAS do teclado e Enter:
+
+  1) GitHub.com
+  2) HTTPS
+  3) Login with a web browser
+
+Vai aparecer um código (exemplo: ABCD-1234).
+Anote: ____________________
+
+No CELULAR:
+  1) Abra: https://github.com/login/device
+  2) Faça login na sua conta GitHub
+  3) Digite o código
+  4) Autorize
+
+No servidor, confirme:
+
+gh auth status
+
+Deve dizer que está logado.
+
+----- A3) Baixar (clonar) o projeto -----
+
+IMPORTANTE: se já existir ~/deepEdu com lixo, apague só se tiver certeza:
+
+# ls ~/deepEdu
+# (se estiver vazia ou errada e você quiser recomeçar:)
+# rm -rf ~/deepEdu
+
+Baixar:
+
+gh repo clone edidiodantas/deepEdu ~/deepEdu
+
+O que isso faz?
+  Cria ~/deepEdu e baixa o código do GitHub para dentro dela.
+
+----- A4) Conferir -----
+
+cd ~/deepEdu
+ls
+
+OBRIGATÓRIO ver:
+  app
+  requirements.txt
+  scripts
+
+Se viu os três → pasta OK. Marque: [ ] pasta deepEdu pronta
+
+FIM DA OPÇÃO A.
+Volte para a folha IMPRIMIR_AGORA.txt no passo 4 (venv + pip).
+
+================================================================================
+RESUMO EM UMA FRASE
+================================================================================
+Opção B (pendrive): no PC copia 01_deepEdu → pendrive/deepEdu;
+                    no servidor monta o pendrive e copia para ~/deepEdu.
+
+Opção A (GitHub):   no servidor baixa direto para ~/deepEdu com gh.
+
+Depois disso, a pasta ~/deepEdu no servidor é o programa.
+Os próximos passos (pip, modelo Amadeus, .env, PDF, health) estão na
+folha IMPRIMIR_AGORA.txt.
+
+================================================================================
+SE DER ERRADO — o que anotar
+================================================================================
+Comando que digitou: _______________________________________________
+Mensagem na tela: __________________________________________________
+Opção (A ou B): ____
+Nome do pendrive (lsblk): /dev/________
+
+================================================================================
+FIM — folha "como colocar a pasta deepEdu no servidor"
+================================================================================

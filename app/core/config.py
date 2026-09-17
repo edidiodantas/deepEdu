@@ -9,17 +9,17 @@ class Settings(BaseSettings):
     HOST: str = "0.0.0.0"
     PORT: int = 8000
 
-    # LLM — padrao Qwen2.5-Math via Ollama (RNF09)
-    LLM_PROVIDER: str = "ollama"
-    LLM_MODEL: str = "qwen2.5-math:1.5b-instruct"
+    # LLM — padrao Amadeus-Verbo (Qwen2.5 PT-BR) via Hugging Face
+    LLM_PROVIDER: str = "huggingface"
+    LLM_MODEL: str = "amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct"
     LLM_API_KEY: str = ""
     LLM_BASE_URL: str = ""
     OLLAMA_BASE_URL: str = "http://127.0.0.1:11434"
     LLM_DEVICE_MAP: str = "auto"
     LLM_TEMPERATURE: float = 0.3
     LLM_MAX_NEW_TOKENS: int = 1024
-    # Id HuggingFace do tokenizer (se vazio, deriva do LLM_MODEL / mapa Ollama).
-    LLM_TOKENIZER_ID: str = ""
+    # Id do tokenizer (vazio = usa o proprio LLM_MODEL no Hugging Face).
+    LLM_TOKENIZER_ID: str = "amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct"
 
     # Legado DeepSeek (fallback openai_compatible)
     DEEPSEEK_API_KEY: str = ""
@@ -37,7 +37,9 @@ class Settings(BaseSettings):
     RETRIEVAL_MIN_SCORE: float = 0.35
     RERANK_ENABLED: bool = True
     RERANK_MODEL: str = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1"
-    CHUNK_CHILD_TOKENS: int = 400
+    # Chunks maiores (~600 tokens) com overlap ~20% — melhor para livros didáticos.
+    CHUNK_CHILD_TOKENS: int = 600
+    CHUNK_OVERLAP_TOKENS: int = 120
 
     # LangSmith (RF31)
     LANGCHAIN_TRACING_V2: bool = False

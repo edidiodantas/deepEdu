@@ -21,7 +21,7 @@ python scripts/build_documento_pdf.py
 | Arquivo | Conteúdo |
 |---------|----------|
 | **[SEQUENCIA_IMPLEMENTACAO.md](SEQUENCIA_IMPLEMENTACAO.md)** | **★ FONTE DA VERDADE:** ordem S0→S9, chats, prompts, critérios de avanço |
-| **[PLANO_ESTE_PC.md](PLANO_ESTE_PC.md)** | **Este PC:** RAG no Deepin (Ollama + Qwen2.5-Math) → Ubuntu opcional → servidor GPU |
+| **[PLANO_ESTE_PC.md](PLANO_ESTE_PC.md)** | **Este PC:** RAG com Amadeus-Verbo (Hugging Face PT-BR) → Ubuntu Server |
 | **[CONTROLE_MODULOS.md](CONTROLE_MODULOS.md)** | **Painel vivo:** status por módulo, pendências, chat coordenador |
 | **[LOCAL_VS_NUVEM.md](LOCAL_VS_NUVEM.md)** | **Localhost × nuvem:** módulos iguais? sequência S0–S9, sem GPU |
 | **[INSTALACAO_INFRAESTRUTURA.md](INSTALACAO_INFRAESTRUTURA.md)** | **Hardware + instalação passo a passo (Ubuntu Server LTS)** — incl. **Fase 0 detalhada** (domínio, LangSmith, Twilio, Asaas, `ADMIN_API_KEY`: para que serve + como obter) |

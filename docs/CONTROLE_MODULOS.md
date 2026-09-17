@@ -62,7 +62,7 @@ Não implementar módulos novos nesta conversa — só auditar.
 
 | Ordem | Módulo | Pasta principal | Status | Teste mínimo feito? | Pendências | Última atualização |
 |-------|--------|-----------------|--------|---------------------|------------|--------------------|
-| S2 | **M05** Gerador LLM | `app/core/llm_factory.py`, `app/rag/sympy_tool.py` | 🟡 | [x] revisão de código RF14/RF35 · [ ] `ollama run` no Server | Código já existia (não reescrito). Runtime Ollama no Server ainda pendente. Gaps: log `sympy.divergence` ausente; RF09 tool `sympy_calculate` no agente não é tool LangChain (só pós-verificação em `tutor_service`) | 28/07/2026 |
+| S2 | **M05** Gerador LLM | `app/core/llm_factory.py`, `app/rag/sympy_tool.py` | 🟡 | [x] código Amadeus-Verbo HF · [ ] smoke no Server | Padrão: `LLM_PROVIDER=huggingface` + Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct | 07/08/2026 |
 | S3 | **M06** Ingestão | `app/rag/indexer.py`, `loader.py` | ⬜ | [ ] `run_indexing.py` | — | — |
 | S3 | **M07** Vetorial | `data/chroma/`, Chroma | ⬜ | [ ] pasta/índice existe | — | — |
 | S4 | **M04** Retriever | `app/rag/retriever.py`, `reranker.py` | ⬜ | [ ] busca retorna chunks | — | — |
@@ -78,9 +78,9 @@ Não implementar módulos novos nesta conversa — só auditar.
 
 | Item | Status | Nota |
 |------|--------|------|
-| Plano este PC (`PLANO_ESTE_PC.md`) | 🟡 | Fase A = Deepin + Ollama + **Qwen2.5-Math** (RAG) |
+| Plano este PC (`PLANO_ESTE_PC.md`) | 🟡 | Fase A = Amadeus-Verbo (Hugging Face PT-BR) |
 | `.env` local preenchido | ⬜ | bootstrap: `scripts/bootstrap_deepin_rag.sh` |
-| Ollama + Qwen2.5-Math | ⬜ | `install_ollama_model.sh` — **não** DeepSeek |
+| Amadeus-Verbo HF | ⬜ | `install_hf_model.sh` — padrão oficial |
 | Corpus em `data/materials/` | ⬜ | PDFs da escola |
 | Domínio + HTTPS | ⬜ | só para WhatsApp / nuvem |
 | LangSmith | ⬜ | recomendado, não bloqueia demo |
@@ -121,7 +121,8 @@ O coordenador deve anotar em **§5** o que falhou.
 
 | Data | Escopo | Resultado | Ações |
 |------|--------|-----------|-------|
-| 28/07/2026 | M05 (S2) | Código presente e alinhado ao padrão Qwen+Ollama; SymPy pós-resposta OK. Shell do agente não rodou teste runtime. | Próximo chat: M06+M07. No Server: `ollama run qwen2.5-math:1.5b-instruct` |
+| 28/07/2026 | M05 (S2) | Código alinhado a Qwen+Ollama (legado). | — |
+| 17/09/2026 | LLM oficial | Padrão = Amadeus-Verbo HF; cache do modelo; chunks 600/120; PyMuPDF | Pendrive + push GitHub |
 
 *(Exemplo de linha futura: `23/07 | S2–S5 | health OK, 2 testes falharam | corrigir M04 score`)*
 

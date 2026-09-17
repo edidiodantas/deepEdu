@@ -27,7 +27,7 @@ Siga **exatamente esta sequência**. Cada fase depende da anterior.
 | 3   | Ferramentas de build | Git, Python 3.11+, compiladores       | `python3.11 --version` OK         |
 | 4   | Projeto              | Clone do repositório deepEdu          | Pasta `~/Projects/deepEdu` existe |
 | 5   | Ambiente Python      | venv + `requirements.txt`             | `pip list` mostra langchain       |
-| 6   | LLM local            | Ollama + Qwen2.5-Math-1.5B            | `ollama run` responde             |
+| 6   | LLM local            | Amadeus-Verbo (Hugging Face)          | `install_hf_model.sh` OK          |
 | 7   | Embeddings           | Modelo sentence-transformers (1º uso) | Download concluído em cache       |
 | 8   | Configuração         | Arquivo `.env`                        | Variáveis críticas preenchidas    |
 | 9   | LangSmith            | Conta + API key                       | Tracing ativo (opcional em dev)   |
@@ -793,9 +793,28 @@ python -c "import fastapi; import chromadb; print('fastapi e chromadb OK')"
 
 ---
 
-## 9. Fase 6 — Ollama + modelo Qwen2.5-Math (LLM)
+## 9. Fase 6 — Amadeus-Verbo via Hugging Face (LLM)
 
-O projeto usa **Ollama** como provedor padrão de LLM (`LLM_PROVIDER=ollama`).
+O projeto usa **Hugging Face** como provedor padrão (`LLM_PROVIDER=huggingface`)
+com o modelo **Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct**.
+
+```bash
+chmod +x scripts/install_hf_model.sh
+./scripts/install_hf_model.sh
+```
+
+No `.env`:
+
+```env
+LLM_PROVIDER=huggingface
+LLM_MODEL=amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
+LLM_TOKENIZER_ID=amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
+LLM_DEVICE_MAP=auto
+```
+
+(Ollama + Qwen2.5-Math permanece como alternativa legado via `scripts/install_ollama_model.sh`.)
+
+### 9.1 (Legado) Ollama — só se LLM_PROVIDER=ollama
 
 ### 9.1 Instalação automática (script do projeto)
 

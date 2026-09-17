@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
-# Bootstrap deepEdu no Deepin (Fase A): venv + deps + .env com Ollama + Qwen2.5-Math (RAG).
+# Bootstrap deepEdu: venv + deps + .env com Amadeus-Verbo (Hugging Face PT-BR).
 # Uso: bash scripts/bootstrap_deepin_rag.sh
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-echo "==> deepEdu bootstrap (Deepin + Ollama + Qwen2.5-Math — RAG)"
+MODEL="amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct"
+
+echo "==> deepEdu bootstrap (Amadeus-Verbo PT-BR via Hugging Face — RAG)"
 echo "    raiz: $ROOT"
 
 python3 --version
@@ -23,7 +25,7 @@ fi
 # shellcheck disable=SC1091
 source .venv/bin/activate
 python -m pip install -U pip
-echo "==> Instalando requirements (pode demorar — inclui embeddings locais do RAG)"
+echo "==> Instalando requirements (pode demorar — inclui torch + embeddings)"
 pip install -r requirements.txt
 
 ADMIN_API_KEY="$(openssl rand -hex 32)"
@@ -34,14 +36,15 @@ PHONE_ENCRYPTION_KEY="$(
 
 if [[ -f .env ]]; then
   echo "==> .env já existe — NÃO sobrescrevendo"
-  echo "    Confira: LLM_PROVIDER=ollama e LLM_MODEL=qwen2.5-math:1.5b-instruct"
+  echo "    Confira: LLM_PROVIDER=huggingface e LLM_MODEL=${MODEL}"
 else
-  echo "==> Criando .env (padrão do projeto: Ollama + Qwen2.5-Math)"
+  echo "==> Criando .env (padrão: Amadeus-Verbo Hugging Face)"
   cp .env.example .env
   sed -i 's/^ENV=.*/ENV=development/' .env
-  sed -i 's/^LLM_PROVIDER=.*/LLM_PROVIDER=ollama/' .env
-  sed -i 's/^LLM_MODEL=.*/LLM_MODEL=qwen2.5-math:1.5b-instruct/' .env
-  sed -i 's|^OLLAMA_BASE_URL=.*|OLLAMA_BASE_URL=http://127.0.0.1:11434|' .env
+  sed -i 's/^LLM_PROVIDER=.*/LLM_PROVIDER=huggingface/' .env
+  sed -i "s|^LLM_MODEL=.*|LLM_MODEL=${MODEL}|" .env
+  sed -i "s|^LLM_TOKENIZER_ID=.*|LLM_TOKENIZER_ID=${MODEL}|" .env
+  sed -i 's/^LLM_DEVICE_MAP=.*/LLM_DEVICE_MAP=auto/' .env
   sed -i "s|^ADMIN_API_KEY=.*|ADMIN_API_KEY=${ADMIN_API_KEY}|" .env
   sed -i "s|^AUDIT_PHONE_SALT=.*|AUDIT_PHONE_SALT=${AUDIT_PHONE_SALT}|" .env
   sed -i "s|^PHONE_ENCRYPTION_KEY=.*|PHONE_ENCRYPTION_KEY=${PHONE_ENCRYPTION_KEY}|" .env
@@ -52,7 +55,7 @@ fi
 
 echo
 echo "==> Próximos passos (RAG completo):"
-echo "    1) bash scripts/install_ollama_model.sh   # baixa Qwen2.5-Math"
+echo "    1) bash scripts/install_hf_model.sh        # baixa Amadeus-Verbo"
 echo "    2) Copie PDFs para data/materials/         # corpus do RAG"
 echo "    3) source .venv/bin/activate"
 echo "    4) python scripts/run_indexing.py          # cria data/chroma/"

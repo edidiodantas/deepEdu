@@ -5,7 +5,7 @@ from functools import lru_cache
 from app.core.config import settings
 
 
-# Tags Ollama → ids HuggingFace do tokenizer (orçamento real de tokens).
+# Tags Ollama (legado) → ids HuggingFace do tokenizer.
 _OLLAMA_TO_HF_TOKENIZER = {
     "qwen2.5-math:1.5b-instruct": "Qwen/Qwen2.5-Math-1.5B-Instruct",
     "qwen2.5-math:7b-instruct": "Qwen/Qwen2.5-Math-7B-Instruct",
@@ -14,12 +14,14 @@ _OLLAMA_TO_HF_TOKENIZER = {
     "qwen2.5:7b": "Qwen/Qwen2.5-7B",
 }
 
+_DEFAULT_AMADEUS = "amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct"
+
 
 def _tokenizer_model_id() -> str:
     explicit = (settings.LLM_TOKENIZER_ID or "").strip()
     if explicit:
         return explicit
-    model = settings.LLM_MODEL.strip()
+    model = (settings.LLM_MODEL or _DEFAULT_AMADEUS).strip()
     return _OLLAMA_TO_HF_TOKENIZER.get(model, model)
 
 

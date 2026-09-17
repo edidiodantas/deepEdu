@@ -1,5 +1,8 @@
-# Dependências para instalação offline (sem torch — use Ollama para LLM)
-# Embeddings ainda usam sentence-transformers; se wheels incluírem torch, ok.
+# Dependências offline (pendrive).
+# LLM oficial = Amadeus-Verbo via Hugging Face → precisa de torch + transformers
+# (inclua wheels no prepare_pendrive --with-wheels, OU baixe o modelo com internet
+#  via scripts/install_hf_model.sh na 1ª máquina).
+# Alternativa legado: LLM_PROVIDER=ollama (aí torch grande pode ser omitido).
 
 fastapi==0.115.0
 uvicorn[standard]==0.30.6
@@ -22,8 +25,11 @@ chromadb==0.5.5
 faiss-cpu==1.8.0.post1
 sentence-transformers==3.1.1
 pypdf==5.0.1
+pymupdf==1.24.10
 sympy==1.13.2
 cryptography==43.0.1
+transformers>=4.37.0
+torch>=2.2.0
 
 twilio==9.3.2
 httpx==0.27.2

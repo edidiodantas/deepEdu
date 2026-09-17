@@ -36,7 +36,12 @@ def run_startup_checks() -> list[str]:
         if not settings.PHONE_ENCRYPTION_KEY:
             notes.append("PHONE_ENCRYPTION_KEY ausente — chave derivada do salt (somente dev).")
 
-    if settings.LLM_PROVIDER == "ollama":
+    if settings.LLM_PROVIDER == "huggingface":
+        notes.append(
+            "LLM via Hugging Face: execute scripts/install_hf_model.sh "
+            "para pré-baixar Amadeus-Verbo antes do primeiro uso."
+        )
+    elif settings.LLM_PROVIDER == "ollama":
         notes.append(
             "LLM via Ollama: execute scripts/install_ollama_model.sh antes do primeiro uso."
         )

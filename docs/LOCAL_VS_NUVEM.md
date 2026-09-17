@@ -4,7 +4,7 @@
 |-------|-------|
 | **Pergunta** | Os módulos na nuvem e no localhost são iguais? |
 | **Resposta curta** | **Sim — o código dos módulos é o mesmo.** O que muda é *onde* roda, o `.env` e (opcionalmente) o provedor de LLM. |
-| **Sem GPU?** | Sim. Use Ollama em CPU **ou** LLM via API (ex.: DeepSeek). GPU só acelera; não é obrigatória. |
+| **Sem GPU?** | Sim. Use Amadeus-Verbo em CPU (Hugging Face) **ou** LLM via API. GPU só acelera; não é obrigatória. |
 | **Versão** | 1.0 — 22/07/2026 |
 
 ---
@@ -75,7 +75,7 @@ Faça **nesta ordem**. Cada etapa tem pasta/documento de apoio.
 |-------|--------|------|-------------------------------|-------------|
 | **S0** | Pré-requisitos (chaves) | Fora do servidor | `ADMIN_API_KEY` gerada; resto pode esperar | `docs/INSTALACAO_INFRAESTRUTURA.md` §3 |
 | **S1** | SO + Python + venv | Localhost | `pip install -r requirements.txt` OK | `docs/INSTALACAO_INFRAESTRUTURA.md` Fases 1–5 |
-| **S2** | LLM **sem GPU** | Localhost | Ollama CPU **ou** DeepSeek no `.env` | `scripts/install_ollama_model.sh` / `.env.example` |
+| **S2** | LLM **sem GPU** | Localhost | Hugging Face Amadeus-Verbo **ou** API no `.env` | `scripts/install_hf_model.sh` / `.env.example` |
 | **S3** | M06 + M07 — indexar PDFs | Localhost | `python scripts/run_indexing.py` | `data/materials/`, `app/rag/` |
 | **S4** | M02–M05 — API responde | Localhost | `curl http://127.0.0.1:8000/health` | `app/api/`, `app/services/` |
 | **S5** | Demo para amigos | Localhost | Chat/API local respondendo matemática com citação | — |
@@ -92,8 +92,9 @@ Faça **nesta ordem**. Cada etapa tem pasta/documento de apoio.
 
 | Opção | Como | Prós | Contras |
 |-------|------|------|---------|
-| **A — Ollama CPU** (padrão do projeto) | `LLM_PROVIDER=ollama` + `qwen2.5-math:1.5b-instruct` | 100% local, sem chave paga de LLM | Mais lento que GPU |
-| **B — API na nuvem** (sem GPU na sua VPS) | `LLM_PROVIDER=openai_compatible` + DeepSeek (ou similar) | VPS barata, só CPU; LLM “fora” | Precisa de API key e internet |
+| **A — Hugging Face CPU/GPU** (padrão do projeto) | `LLM_PROVIDER=huggingface` + Amadeus-Verbo 1.5B PT-BR | 100% local, português BR, sem chave de LLM | CPU mais lento; 1º download ~2–4 GB |
+| **B — API na nuvem** (sem GPU / pouca RAM) | `LLM_PROVIDER=openai_compatible` + DeepSeek (ou similar) | VPS barata; LLM “fora” | Precisa de API key e internet |
+| **C — Ollama (legado)** | `LLM_PROVIDER=ollama` + Qwen2.5-Math | Alternativa antiga | Não é mais o padrão |
 
 As duas usam o **mesmo** módulo M05 (`app/core/llm_factory.py`). Só muda o `.env`.
 

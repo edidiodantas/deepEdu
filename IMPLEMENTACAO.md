@@ -34,10 +34,10 @@ Lá está:
 
 ## Neste PC (Deepin + Ubuntu no disco 2)
 
-→ **[`docs/PLANO_ESTE_PC.md`](docs/PLANO_ESTE_PC.md)** — RAG no Deepin com **Ollama + Qwen2.5-Math**; Ubuntu Server e GPU só depois.
+→ **[`docs/PLANO_ESTE_PC.md`](docs/PLANO_ESTE_PC.md)** — RAG com **Amadeus-Verbo (Hugging Face PT-BR)**; Ubuntu Server depois.
 
 ```bash
-cd ~/Projects/deepEdu
+cd ~/Projects/01_deepEdu
 bash scripts/bootstrap_deepin_rag.sh
-bash scripts/install_ollama_model.sh
+bash scripts/install_hf_model.sh
 ```

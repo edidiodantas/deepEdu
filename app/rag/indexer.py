@@ -42,10 +42,10 @@ def build_index(correlation_id: str = "index-job"):
             metadata={"chars": len(doc.page_content)},
         )
 
-    # CHUNK_CHILD_TOKENS ≈ tokens; splitter usa caracteres (~4 chars/token).
+    # CHUNK_*_TOKENS ≈ tokens; splitter usa caracteres (~4 chars/token).
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=settings.CHUNK_CHILD_TOKENS * 4,
-        chunk_overlap=80,
+        chunk_overlap=max(0, settings.CHUNK_OVERLAP_TOKENS * 4),
         separators=["\n\n", "\n", ". ", " ", ""],
     )
     chunks = splitter.split_documents(docs)

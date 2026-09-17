@@ -32,7 +32,7 @@
 | Decisão | Resposta oficial |
 |---------|------------------|
 | Módulos localhost × nuvem são iguais? | **Sim no código.** Muda só onde roda + `.env` (+ opcionalmente provedor LLM). |
-| Precisa de GPU? | **Não.** Ollama em CPU ou LLM via API (ex. DeepSeek). |
+| Precisa de GPU? | **Não.** Hugging Face em CPU (Amadeus-Verbo 1.5B) ou LLM via API. GPU só acelera. |
 | Onde mostrar aos amigos primeiro? | **Localhost até S5.** Nuvem/WhatsApp depois. |
 | Um chat por módulo? | **Sim.** Atualizar `CONTROLE_MODULOS.md` ao terminar. |
 | Quem audita tudo? | Chat **COORDENADOR** lendo `CONTROLE_MODULOS.md` + checagens §4. |
@@ -61,7 +61,7 @@ S9  Billing Asaas (opcional)           → só se for cobrar
 |-------|----------------|
 | S0→S1 | `ADMIN_API_KEY` gerada (resto das contas pode esperar) |
 | S1→S2 | `python3.11` + venv + `pip install -r requirements.txt` OK |
-| S2→S3 | `ollama run …` **ou** API LLM responde uma conta simples |
+| S2→S3 | Modelo HF responde **ou** API LLM responde uma conta simples |
 | S3→S4 | `python scripts/run_indexing.py` sem erro fatal; `data/chroma/` existe |
 | S4→S5 | Retriever devolve chunk; memória guarda turnos |
 | S5→S6 | `curl http://127.0.0.1:8000/health` OK + 1 pergunta com citação |

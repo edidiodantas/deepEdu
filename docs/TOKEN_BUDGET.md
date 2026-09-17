@@ -1,14 +1,15 @@
-# Orçamento de Tokens — Qwen2.5-Math-1.5B-Instruct
+# Orçamento de Tokens — Amadeus-Verbo (Qwen2.5 1.5B PT-BR)
 
 | Campo | Valor |
 |-------|-------|
-| **Modelo** | `Qwen2.5-Math-1.5B-Instruct` |
-| **Janela de contexto** | **4.096 tokens** (`max_position_embeddings`) |
-| **Tokenizer** | `Qwen/Qwen2.5-Math-1.5B-Instruct` (via `transformers` ou `tiktoken` compatível) |
-| **Versão** | 1.0 |
-| **Data** | 29/06/2026 |
+| **Modelo oficial** | `amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct` |
+| **Provedor** | Hugging Face (`LLM_PROVIDER=huggingface`) |
+| **Janela de contexto** | **4.096 tokens** (base Qwen2.5-1.5B) |
+| **Tokenizer** | o próprio modelo Amadeus (`LLM_TOKENIZER_ID`) |
+| **Versão** | 1.1 |
+| **Data** | 17/09/2026 |
 
-> **Importante:** A série **Qwen2.5-Math** usa janela de **4K**, não os 128K do Qwen2.5 genérico. Forçar contexto maior (`VLLM_ALLOW_LONG_MAX_MODEL_LEN`) **não é recomendado** — causa saídas incorretas ou erros CUDA.
+> **Importante:** A família Qwen2.5 **1.5B** usa janela de **4K**. Não force contexto maior.
 
 ---
 
@@ -17,7 +18,7 @@
 | Componente | Máximo (tokens) | Variável de config | Observação |
 |------------|:---------------:|-------------------|------------|
 | Prompt de sistema | 400 | `PROMPT_MAX_TOKENS` | Ver `prompts/v1_tutor_em.md` (~250–350 na prática) |
-| Contexto RAG (total) | 1.200 | `RAG_CONTEXT_MAX_TOKENS` | Soma de todos os chunks injetados |
+| Contexto RAG (total) | 1.200 | `RAG_CONTEXT_MAX_TOKENS` | Soma de todos os chunks injetados (truncados se preciso) |
 | Histórico de chat | 800 | `HISTORY_MAX_TOKENS` | Buffer + resumo (RF08) |
 | Mensagem do usuário | 400 | `USER_MESSAGE_MAX_TOKENS` | Truncar se exceder; pedir reformulação |
 | Overhead (tags, formatação) | 100 | — | Marcadores `<context>`, etc. |
@@ -33,7 +34,7 @@ Quando a entrada exceder o limite, aplicar **nesta ordem**:
 
 1. **Truncar chunks RAG** — reduzir de `top_k=3` para `top_k=2`, depois `top_k=1`
 2. **Resumir histórico** — acionar resumo automático (RF08) mantendo tema e dados do problema
-3. **Truncar chunks individualmente** — cada chunk a no máximo 400 tokens (corte por fim de parágrafo)
+3. **Truncar chunks individualmente** — cada chunk a no máximo ~400 tokens no trim final
 4. **Truncar mensagem do usuário** — apenas se > 400 tokens; avisar o usuário
 5. **Nunca truncar** o prompt de sistema abaixo de 200 tokens (persona + regras críticas)
 
@@ -45,9 +46,9 @@ Se ainda exceder após truncagem: **abstinência** (RF37) com mensagem pedindo p
 
 | Parâmetro | Valor padrão | Justificativa |
 |-----------|:------------:|---------------|
-| `RETRIEVAL_TOP_K` | 3 | 3 × 400 tokens = 1.200 tokens de contexto |
-| `CHUNK_CHILD_TOKENS` | 300–400 | Busca granular sem estourar janela |
-| `CHUNK_PARENT_MAX_TOKENS` | 400 | **Corrigido** — não 1.500 (incompatível com 4K) |
+| `RETRIEVAL_TOP_K` | 3 | Até 3 chunks; o runtime trunca para caber em 1.200 tokens de contexto |
+| `CHUNK_CHILD_TOKENS` | 600 | Livros didáticos: pedaços maiores, contexto coerente |
+| `CHUNK_OVERLAP_TOKENS` | 120 | ~20% de overlap — evita cortar no meio da explicação |
 | `LLM_MAX_NEW_TOKENS` | 1.024 | Respostas pedagógicas com passos |
 | `LLM_TEMPERATURE` | 0.3 | Menor variância em matemática |
 | `HISTORY_BUFFER_MESSAGES` | 4 | Últimas 4 trocas antes de resumir |

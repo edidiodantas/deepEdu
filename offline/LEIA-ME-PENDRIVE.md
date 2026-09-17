@@ -18,9 +18,10 @@ Leia este arquivo **no PC sem internet** antes de instalar.
 ## 2. Requisitos no PC destino
 
 - **Ubuntu 22.04+** (ou Debian similar)
-- **Python 3.11 ou 3.12**
+- **Python 3.10+** (`python3`)
 - **8 GB RAM** mínimo (16 GB recomendado)
-- **Ollama** instalado localmente (LLM roda offline via Ollama, não precisa de API na nuvem)
+- Internet na **1ª vez** para baixar Amadeus-Verbo (`scripts/install_hf_model.sh`)
+- Depois do cache, o RAG roda localmente sem API paga de LLM
 
 ---
 
@@ -46,8 +47,8 @@ pip install --no-index --find-links=offline/wheels -r offline/requirements-offli
 cp .env.example .env
 # Edite .env: AUDIT_PHONE_SALT, PHONE_ENCRYPTION_KEY, ADMIN_API_KEY
 
-# 5. Ollama + modelo matemático
-bash scripts/install_ollama_model.sh
+# 5. Modelo Amadeus-Verbo (precisa internet na 1ª vez)
+bash scripts/install_hf_model.sh
 
 # 6. Materiais didáticos
 # Coloque PDFs em data/materials/ e indexe:
@@ -86,9 +87,9 @@ curl http://127.0.0.1:8000/health
 - Webhooks WhatsApp (precisa internet + domínio público)
 - LangSmith (opcional; desligue `LANGCHAIN_TRACING_V2=false`)
 - Pagamentos Asaas
-- Download automático de modelos HuggingFace (use Ollama local)
+- 1º download do Amadeus-Verbo / embeddings (depois ficam em cache local)
 
-Para desenvolver offline: API local, testes unitários, indexação, RAG com Ollama.
+Para desenvolver offline (após cache): API local, testes, indexação, RAG com Amadeus-Verbo.
 
 ---
 

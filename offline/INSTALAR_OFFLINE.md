@@ -40,12 +40,12 @@ pip install --upgrade pip wheel setuptools
 pip install --no-index --find-links=offline/wheels -r offline/requirements-offline.txt
 ```
 
-### Passo 4 — Ollama (LLM local)
+### Passo 4 — Modelo Amadeus-Verbo (Hugging Face)
 
-Instale Ollama pelo instalador incluído ou copie do site em outro PC:
+Na 1ª máquina com internet (ou se o cache já veio no pendrive):
 
 ```bash
-bash scripts/install_ollama_model.sh
+bash scripts/install_hf_model.sh
 ```
 
 ### Passo 5 — Configurar
@@ -55,12 +55,14 @@ cp .env.example .env
 nano .env
 ```
 
-Mínimo para dev offline:
+Mínimo para dev:
 
 ```env
 ENV=development
-LLM_PROVIDER=ollama
-LLM_MODEL=qwen2.5-math:1.5b-instruct
+LLM_PROVIDER=huggingface
+LLM_MODEL=amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
+LLM_TOKENIZER_ID=amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
+LLM_DEVICE_MAP=auto
 LANGCHAIN_TRACING_V2=false
 AUDIT_PHONE_SALT=seu-salt-longo-aqui-min-16
 ADMIN_API_KEY=sua-chave-admin-forte

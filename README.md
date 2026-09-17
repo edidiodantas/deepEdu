@@ -2,12 +2,16 @@
 
 Tutor inteligente com arquitetura RAG modular para atendimento via WhatsApp.
 
+**LLM oficial:** [Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct](https://huggingface.co/amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct) via Hugging Face (`LLM_PROVIDER=huggingface`).
+
 ## Comece pela implementação (ordem oficial)
 
 | Arquivo | Função |
 |---------|--------|
 | **[IMPLEMENTACAO.md](IMPLEMENTACAO.md)** | Atalho na raiz |
 | **[docs/SEQUENCIA_IMPLEMENTACAO.md](docs/SEQUENCIA_IMPLEMENTACAO.md)** | **Fonte da verdade** — sequência S0→S9 |
+| **[IMPRIMIR_AGORA.txt](IMPRIMIR_AGORA.txt)** | Folha de instalação Ubuntu LTS (imprimir) |
+| **[IMPRIMIR_COPIAR_PASTA_DEEPEDU.txt](IMPRIMIR_COPIAR_PASTA_DEEPEDU.txt)** | Como copiar a pasta (pendrive — leigo) |
 | [docs/CONTROLE_MODULOS.md](docs/CONTROLE_MODULOS.md) | Status e pendências entre chats |
 | [docs/LOCAL_VS_NUVEM.md](docs/LOCAL_VS_NUVEM.md) | Localhost × nuvem |
 | [docs/INSTALACAO_INFRAESTRUTURA.md](docs/INSTALACAO_INFRAESTRUTURA.md) | Hardware + Ubuntu + contas (Fase 0) |
@@ -23,18 +27,37 @@ Modelo recomendado para escalar com controle simples:
 
 Assim voce evita manter logica pesada localmente e centraliza manutencao na nuvem.
 
+## LLM (Amadeus-Verbo)
+
+```bash
+cd ~/Projects/01_deepEdu   # neste PC / Deepin
+# no servidor Ubuntu: cd ~/deepEdu
+source .venv/bin/activate
+bash scripts/install_hf_model.sh
+```
+
+No `.env` (padrão do projeto):
+
+```env
+LLM_PROVIDER=huggingface
+LLM_MODEL=amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
+LLM_TOKENIZER_ID=amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
+LLM_DEVICE_MAP=auto
+```
+
 ## 1) Preparacao base do Ubuntu
 
 ```bash
 sudo apt update && sudo apt upgrade -y
-sudo apt install -y python3.11 python3.11-venv python3-pip build-essential poppler-utils
+sudo apt install -y python3 python3-venv python3-dev python3-pip build-essential poppler-utils
 ```
 
 ## 2) Ambiente Python
 
 ```bash
-cd ~/Projects/deepEdu
-python3.11 -m venv .venv
+cd ~/Projects/01_deepEdu
+# no servidor: cd ~/deepEdu
+python3 -m venv .venv
 source .venv/bin/activate
 pip install --upgrade pip wheel setuptools
 pip install -r requirements.txt
@@ -46,16 +69,13 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
-Preencha no `.env`:
-- `DEEPSEEK_API_KEY`
-- `TWILIO_ACCOUNT_SID`
-- `TWILIO_AUTH_TOKEN`
-- `TWILIO_WHATSAPP_NUMBER`
-- `TWILIO_PHONE_NUMBER_SID`
-- `PUBLIC_BASE_URL`
-- `ADMIN_API_KEY` (obrigatoria para endpoints internos)
-- `BILLING_ENFORCE_SUBSCRIPTION` (`false` no inicio, `true` quando quiser bloquear por assinatura)
-- `BILLING_TRIAL_DAYS` (dias de teste gratuito por novo aluno)
+Preencha no `.env` (mínimo para demo local):
+- `ADMIN_API_KEY`
+- `AUDIT_PHONE_SALT`
+- `PHONE_ENCRYPTION_KEY`
+- bloco LLM Amadeus (já vem no `.env.example`)
+
+Para WhatsApp depois: Twilio/Meta + `PUBLIC_BASE_URL`.
 
 ## 4) Materiais e indexacao
 
@@ -65,6 +85,25 @@ Coloque arquivos didaticos em `data/materials` (`.pdf`, `.txt`, `.md`) e rode:
 source .venv/bin/activate
 python scripts/run_indexing.py
 ```
+
+### Limites do RAG com livros (importante)
+
+O deepEdu indexa **texto** dos PDFs (via PyMuPDF). **Não entram no RAG:**
+
+- figuras, diagramas, gráficos e imagens
+- esquemas desenhados sem texto selecionável
+- PDFs só escaneados (imagem) sem OCR
+
+Tabelas e fórmulas em texto/Unicode costumam ser extraídas melhor com PyMuPDF; ainda assim, o aluno precisa de enunciado em texto. Se a dúvida depender só de uma figura, o tutor deve pedir reformulação ou indicar a página do livro.
+
+Chunks (padrão atual no `.env`):
+
+```env
+CHUNK_CHILD_TOKENS=600
+CHUNK_OVERLAP_TOKENS=120
+```
+
+Após mudar chunk/overlap, rode de novo `python scripts/run_indexing.py` (a coleção Chroma é reconstruída).
 
 ## 5) Teste local da API
 
