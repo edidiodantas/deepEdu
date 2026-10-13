@@ -62,7 +62,7 @@ Não implementar módulos novos nesta conversa — só auditar.
 
 | Ordem | Módulo | Pasta principal | Status | Teste mínimo feito? | Pendências | Última atualização |
 |-------|--------|-----------------|--------|---------------------|------------|--------------------|
-| S2 | **M05** Gerador LLM | `app/core/llm_factory.py`, `app/rag/sympy_tool.py` | 🟡 | [x] código Amadeus-Verbo HF · [ ] smoke no Server | Padrão: `LLM_PROVIDER=huggingface` + Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct | 07/08/2026 |
+| S2 | **M05** Gerador LLM | `app/core/llm_factory.py`, `app/rag/sympy_tool.py` | 🟡 | [x] código Amadeus-Verbo HF · [ ] smoke no Server | Padrão: `LLM_PROVIDER=huggingface` + Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct | 13/10/2026 |
 | S3 | **M06** Ingestão | `app/rag/indexer.py`, `loader.py` | ⬜ | [ ] `run_indexing.py` | — | — |
 | S3 | **M07** Vetorial | `data/chroma/`, Chroma | ⬜ | [ ] pasta/índice existe | — | — |
 | S4 | **M04** Retriever | `app/rag/retriever.py`, `reranker.py` | ⬜ | [ ] busca retorna chunks | — | — |

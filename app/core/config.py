@@ -6,12 +6,13 @@ class Settings(BaseSettings):
 
     APP_NAME: str = "deepEdu"
     ENV: str = "development"
-    HOST: str = "0.0.0.0"
+    HOST: str = "127.0.0.1"
     PORT: int = 8000
 
-    # LLM — padrao Amadeus-Verbo (Qwen2.5 PT-BR) via Hugging Face
+    # LLM — Amadeus-Verbo 0,5B (Qwen2.5 PT-BR) via Hugging Face.
+    # Tamanho de tese: cabe em notebook modesto. GPU acelera; CPU funciona.
     LLM_PROVIDER: str = "huggingface"
-    LLM_MODEL: str = "amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct"
+    LLM_MODEL: str = "amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct"
     LLM_API_KEY: str = ""
     LLM_BASE_URL: str = ""
     OLLAMA_BASE_URL: str = "http://127.0.0.1:11434"
@@ -19,7 +20,7 @@ class Settings(BaseSettings):
     LLM_TEMPERATURE: float = 0.3
     LLM_MAX_NEW_TOKENS: int = 1024
     # Id do tokenizer (vazio = usa o proprio LLM_MODEL no Hugging Face).
-    LLM_TOKENIZER_ID: str = "amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct"
+    LLM_TOKENIZER_ID: str = "amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct"
 
     # Legado DeepSeek (fallback openai_compatible)
     DEEPSEEK_API_KEY: str = ""
@@ -36,7 +37,8 @@ class Settings(BaseSettings):
     RETRIEVAL_TOP_K: int = 3
     RETRIEVAL_MIN_SCORE: float = 0.35
     RERANK_ENABLED: bool = True
-    RERANK_MODEL: str = "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1"
+    # monoPTT5-3B (Unicamp): reranker treinado para português. Pede GPU ou bastante RAM.
+    RERANK_MODEL: str = "unicamp-dl/monoptt5-3b"
     # Chunks maiores (~600 tokens) com overlap ~20% — melhor para livros didáticos.
     CHUNK_CHILD_TOKENS: int = 600
     CHUNK_OVERLAP_TOKENS: int = 120
@@ -72,22 +74,6 @@ class Settings(BaseSettings):
     ASAAS_WEBHOOK_TOKEN: str = ""
     ASAAS_BILLING_AMOUNT: float = 29.90
     ASAAS_DEFAULT_BILLING_TYPE: str = "UNDEFINED"
-
-    # WhatsApp
-    WHATSAPP_PROVIDER: str = "twilio"
-    TWILIO_ACCOUNT_SID: str = ""
-    TWILIO_AUTH_TOKEN: str = ""
-    TWILIO_WHATSAPP_NUMBER: str = ""
-    TWILIO_VALIDATE_SIGNATURE: bool = False
-    TWILIO_PHONE_NUMBER_SID: str = ""
-    PROFESSOR_WHATSAPP_NUMBERS: str = ""
-    PUBLIC_BASE_URL: str = ""
-
-    # Meta Cloud API (RNF04)
-    META_VERIFY_TOKEN: str = ""
-    META_APP_SECRET: str = ""
-    META_ACCESS_TOKEN: str = ""
-    META_PHONE_NUMBER_ID: str = ""
 
     ADMIN_API_KEY: str = ""
 

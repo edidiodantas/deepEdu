@@ -32,7 +32,7 @@
 | Decisão | Resposta oficial |
 |---------|------------------|
 | Módulos localhost × nuvem são iguais? | **Sim no código.** Muda só onde roda + `.env` (+ opcionalmente provedor LLM). |
-| Precisa de GPU? | **Não.** Hugging Face em CPU (Amadeus-Verbo 1.5B) ou LLM via API. GPU só acelera. |
+| Precisa de GPU? | **Não.** Hugging Face em CPU (Amadeus-Verbo 0.5B) ou LLM via API. GPU só acelera. |
 | Onde mostrar aos amigos primeiro? | **Localhost até S5.** Nuvem/WhatsApp depois. |
 | Um chat por módulo? | **Sim.** Atualizar `CONTROLE_MODULOS.md` ao terminar. |
 | Quem audita tudo? | Chat **COORDENADOR** lendo `CONTROLE_MODULOS.md` + checagens §4. |

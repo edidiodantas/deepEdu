@@ -60,8 +60,8 @@ Mínimo para dev:
 ```env
 ENV=development
 LLM_PROVIDER=huggingface
-LLM_MODEL=amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
-LLM_TOKENIZER_ID=amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
+LLM_MODEL=amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct
+LLM_TOKENIZER_ID=amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct
 LLM_DEVICE_MAP=auto
 LANGCHAIN_TRACING_V2=false
 AUDIT_PHONE_SALT=seu-salt-longo-aqui-min-16

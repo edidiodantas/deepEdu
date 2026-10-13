@@ -33,7 +33,7 @@ Definidos em `docs/REQUISITOS.md`. Vivem sob `app/` (e o painel em `control_pane
 
 | ID | Nome | Pasta no projeto | Roda no localhost? | Roda na nuvem? |
 |----|------|------------------|--------------------|----------------|
-| **M01** | Canais (WhatsApp / web) | `app/integrations/`, `app/api/` | Sim (teste local; WhatsApp real precisa HTTPS) | Sim |
+| **M01** | Canal local | `app/api/` (`POST /perguntar`, painel) | Sim | Sim |
 | **M02** | Orquestrador RAG | `app/services/`, `app/rag/chain.py` | Sim | Sim |
 | **M03** | Memória de conversa | `app/memory/` | Sim | Sim |
 | **M04** | Retriever híbrido | `app/rag/retriever.py`, `reranker.py` | Sim | Sim |
@@ -92,7 +92,7 @@ Faça **nesta ordem**. Cada etapa tem pasta/documento de apoio.
 
 | Opção | Como | Prós | Contras |
 |-------|------|------|---------|
-| **A — Hugging Face CPU/GPU** (padrão do projeto) | `LLM_PROVIDER=huggingface` + Amadeus-Verbo 1.5B PT-BR | 100% local, português BR, sem chave de LLM | CPU mais lento; 1º download ~2–4 GB |
+| **A — Hugging Face CPU/GPU** (padrão do projeto) | `LLM_PROVIDER=huggingface` + Amadeus-Verbo 0.5B PT-BR | 100% local, português BR, sem chave de LLM, cabe em notebook modesto | CPU mais lento; 1º download ~1 GB |
 | **B — API na nuvem** (sem GPU / pouca RAM) | `LLM_PROVIDER=openai_compatible` + DeepSeek (ou similar) | VPS barata; LLM “fora” | Precisa de API key e internet |
 | **C — Ollama (legado)** | `LLM_PROVIDER=ollama` + Qwen2.5-Math | Alternativa antiga | Não é mais o padrão |
 

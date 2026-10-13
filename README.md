@@ -1,8 +1,8 @@
 # deepEdu
 
-Tutor inteligente com arquitetura RAG modular para atendimento via WhatsApp.
+Tutor de Matemática do Ensino Médio. A pergunta da tese é se o pipeline pode ser auditado: consentimento, recuperação, geração e resposta ficam numa trilha verificável. O RAG é o objeto auditado, não o tema da pesquisa.
 
-**LLM oficial:** [Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct](https://huggingface.co/amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct) via Hugging Face (`LLM_PROVIDER=huggingface`).
+**LLM oficial:** [Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct](https://huggingface.co/amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct) (0,49B parâmetros, PT-BR) via Hugging Face (`LLM_PROVIDER=huggingface`). Cabe em notebook modesto; GPU só acelera.
 
 ## Comece pela implementação (ordem oficial)
 
@@ -40,8 +40,8 @@ No `.env` (padrão do projeto):
 
 ```env
 LLM_PROVIDER=huggingface
-LLM_MODEL=amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
-LLM_TOKENIZER_ID=amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
+LLM_MODEL=amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct
+LLM_TOKENIZER_ID=amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct
 LLM_DEVICE_MAP=auto
 ```
 
@@ -75,7 +75,7 @@ Preencha no `.env` (mínimo para demo local):
 - `PHONE_ENCRYPTION_KEY`
 - bloco LLM Amadeus (já vem no `.env.example`)
 
-Para WhatsApp depois: Twilio/Meta + `PUBLIC_BASE_URL`.
+A pergunta do aluno entra em `POST /perguntar` ou na aba Pergunta do painel.
 
 ## 4) Materiais e indexacao
 
@@ -154,17 +154,17 @@ sudo systemctl start deepedu
 sudo certbot --nginx -d SEU_DOMINIO
 ```
 
-## 7) Configurar webhook do Twilio
+## 7) Pergunta local
 
-Depois do dominio HTTPS estar ativo:
+Com a API no ar em `http://127.0.0.1:8000`:
 
 ```bash
-source .venv/bin/activate
-python scripts/configure_twilio_webhook.py
+curl -s http://127.0.0.1:8000/perguntar \
+  -H "Content-Type: application/json" \
+  -d '{"student_id":"aluno-local","question":"quanto e 2+2?"}'
 ```
 
-Esse script usa `PUBLIC_BASE_URL` e configura:
-`https://SEU_DOMINIO/webhook/whatsapp`.
+A resposta inclui `correlation_id`. Os eventos dessa pergunta ficam em `data/audit/audit.db`. O painel Streamlit, aba Pergunta, faz a mesma chamada.
 
 ## 8) Operacao e observabilidade
 
@@ -393,19 +393,13 @@ sudo systemctl is-active nginx
 curl -I https://SEU_DOMINIO/health
 ```
 
-### E. Twilio
-- `PUBLIC_BASE_URL` correto no `.env`.
-- Webhook configurado para `https://SEU_DOMINIO/webhook/whatsapp`.
-- Execute:
-
-```bash
-source .venv/bin/activate
-python scripts/configure_twilio_webhook.py
-```
+### E. Pergunta local
+- `POST /perguntar` responde e devolve `correlation_id`.
+- O mesmo id aparece em `data/audit/audit.db`.
 
 ### F. Teste real
-- Envie mensagem de teste para o WhatsApp conectado no Twilio.
-- Verifique resposta e confira logs:
+- Envie uma pergunta pelo painel ou pelo curl de `/perguntar`.
+- Confira a resposta e os logs:
 
 ```bash
 journalctl -u deepedu -f
@@ -427,7 +421,6 @@ Esse script verifica:
 - DNS do dominio
 - certificado TLS
 - health local e publico
-- resposta do endpoint webhook
 - logs recentes dos servicos
 
 ## 11) Benchmark DeepSeek vs Phi (comparacao)
@@ -448,5 +441,4 @@ Saidas:
 - `app/rag/retriever.py`: busca hibrida (BM25 + vetorial Chroma)
 - `app/memory/history.py`: historico por telefone em SQLite
 - `app/services/tutor_service.py`: orquestra resposta do tutor
-- `app/integrations/twilio_webhook.py`: entrada/saida WhatsApp
-- `app/api/main.py`: API FastAPI
+- `app/api/main.py`: API local (`/health`, `/perguntar`, admin)

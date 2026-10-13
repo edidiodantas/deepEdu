@@ -127,6 +127,7 @@ def evaluate_retrieval(
                 "max_score": max_score,
                 "min_score": settings.RETRIEVAL_MIN_SCORE,
                 "abstained": abstain,
+                "rerank_model": settings.RERANK_MODEL if settings.RERANK_ENABLED else "",
                 "chunk_ids": [
                     doc.metadata.get("chunk_id", doc.metadata.get("source")) for doc in docs
                 ],

@@ -1,5 +1,7 @@
 # Especificação de Requisitos — RAG de Matemática (Ensino Médio)
 
+> **Implementação em vigor (13/10/2026).** A pergunta da tese é se este pipeline pode ser auditado. O RAG é o objeto auditado. O LLM que roda é `amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct` (0,49B), não o Qwen2.5-Math 1.5B citado nos requisitos antigos abaixo. O orçamento operacional continua perto de 4.000 tokens para caber em notebook modesto; a janela nativa desse modelo é 32.768.
+
 | Campo | Valor |
 |-------|-------|
 | **Projeto** | deepEdu — Tutor RAG de Matemática para Ensino Médio |

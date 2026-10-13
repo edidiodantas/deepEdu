@@ -10,7 +10,7 @@ fi
 DOMAIN="$1"
 APP_HEALTH_URL="http://127.0.0.1:8000/health"
 PUBLIC_HEALTH_URL="https://${DOMAIN}/health"
-PUBLIC_WEBHOOK_URL="https://${DOMAIN}/webhook/whatsapp"
+PUBLIC_ASK_URL="https://${DOMAIN}/perguntar"
 
 check_cmd() {
   local cmd="$1"
@@ -93,14 +93,9 @@ else
 fi
 echo
 
-echo "== Webhook endpoint =="
-if curl -k -sS -o /tmp/deepedu_webhook_probe.txt -w "%{http_code}" -X POST "${PUBLIC_WEBHOOK_URL}" \
-  -d "From=whatsapp:+5511999999999" \
-  -d "Body=teste" | grep -qE "200|403|422"; then
-  echo "[OK] Endpoint webhook respondeu (200/403/422 esperado dependendo da assinatura Twilio)."
-else
-  echo "[ERRO] Endpoint webhook nao respondeu como esperado."
-fi
+echo "== Pergunta local =="
+echo "Rota do aluno: POST ${PUBLIC_ASK_URL}"
+echo "Nao disparada neste script: ela carrega o modelo e grava auditoria."
 echo
 
 echo "== Logs recentes =="

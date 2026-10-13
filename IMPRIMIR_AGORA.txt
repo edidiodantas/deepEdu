@@ -3,8 +3,8 @@ deepEdu — INSTALAÇÃO NO UBUNTU SERVER LTS — FOLHA PARA IMPRIMIR
 Data: 07/08/2026
 SO: Ubuntu Server 24.04 LTS (também vale 22.04 com as notas no final)
 Pasta no servidor: ~/deepEdu
-LLM: Hugging Face — amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
-NÃO FAZER NESTA FOLHA: Nginx, domínio, HTTPS, WhatsApp, Cockpit
+LLM: Hugging Face — amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct
+NÃO FAZER NESTA FOLHA: Nginx, domínio, HTTPS, Cockpit
 ================================================================================
 
 ANTES DE LIGAR O TERMINAL (anote com caneta)
@@ -26,7 +26,7 @@ CHECKLIST (marque ao concluir)
   [ ] 8  API + curl /health OK
 
 REGRA: digite UM comando por vez. Espere terminar. Não cole blocos enormes.
-RAM: recomendado 8 GB+ (modelo 1.5B + embeddings + API).
+RAM: 8 GB recomendado. O modelo 0.5B cabe em notebook modesto (CPU).
 
 ================================================================================
 0) LOGIN
@@ -166,15 +166,17 @@ Se der erro de import: ainda está sem venv ativo. Rode de novo:
 5) MODELO AMADEUS-VERBO (Hugging Face) — LLM oficial
 ================================================================================
 Modelo:
-  amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
-Página: https://huggingface.co/amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
+  amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct
+Página: https://huggingface.co/amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct
 
 cd ~/deepEdu
 source .venv/bin/activate
 chmod +x scripts/install_hf_model.sh
 bash scripts/install_hf_model.sh
 
-ATENÇÃO: 1º download ~2–4 GB. Precisa de internet. Pode demorar.
+ATENÇÃO: 1º download ~1 GB do tutor e ~6 GB do reranker monoPTT5-3B.
+O mesmo script baixa os dois. Precisa de internet. Pode demorar.
+O reranker de 3B pede GPU ou notebook com RAM folgada.
 
 Teste rápido (opcional):
 
@@ -182,7 +184,7 @@ python - <<'PY'
 from transformers import pipeline
 pipe = pipeline(
     "text-generation",
-    model="amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct",
+    model="amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct",
     max_new_tokens=32,
     do_sample=False,
 )
@@ -218,8 +220,8 @@ Confira / ajuste estas linhas (as outras podem ficar como estão por enquanto):
 
 ENV=development
 LLM_PROVIDER=huggingface
-LLM_MODEL=amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
-LLM_TOKENIZER_ID=amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
+LLM_MODEL=amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct
+LLM_TOKENIZER_ID=amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct
 LLM_DEVICE_MAP=auto
 ADMIN_API_KEY=(cole a chave gerada)
 AUDIT_PHONE_SALT=(cole a chave gerada)
@@ -261,7 +263,7 @@ Terminal 1 (deixe rodando):
 
 cd ~/deepEdu
 source .venv/bin/activate
-uvicorn app.api.main:app --host 0.0.0.0 --port 8000
+uvicorn app.api.main:app --host 127.0.0.1 --port 8000
 
 Na 1ª subida o modelo pode demorar a carregar na RAM.
 Deve aparecer: Uvicorn running on http://0.0.0.0:8000
@@ -272,8 +274,26 @@ Terminal 2 (outro TTY):
 
 curl -s http://127.0.0.1:8000/health
 
-Resposta esperada (JSON):
-  {"status":"ok","service":"deepEdu"}
+Resposta esperada (JSON) inclui:
+  "status": "ok"
+  "llm_model": "...Amadeus-Verbo-FI-Qwen2.5-0.5B..."
+
+Pergunta local (a resposta pode demorar na 1ª vez):
+
+curl -s http://127.0.0.1:8000/perguntar \
+  -H "Content-Type: application/json" \
+  -d '{"student_id":"aluno-local","question":"quanto e 2+2?"}'
+
+O JSON traz "answer" e "correlation_id".
+Esse id liga os eventos em data/audit/audit.db.
+
+Painel (outro terminal, com o venv ativo):
+
+cd ~/deepEdu/control_panel
+pip install -r requirements-control.txt
+streamlit run streamlit_app.py
+
+Abre http://127.0.0.1:8501 — aba Pergunta.
 
 Voltar ao uvicorn: Ctrl+Alt+F1 (ou a tecla do 1º terminal)
 Para parar a API: Ctrl+C
@@ -329,7 +349,7 @@ pip demora / trava em torch
 
 disco cheio / pouca RAM
   → df -h   e   free -h
-  → modelo 1.5B + torch precisam de espaço e memória
+  → modelo 0.5B + torch precisam de espaço e memória
 
 ================================================================================
 NOTAS UBUNTU 22.04 (se for o seu caso)
@@ -339,10 +359,10 @@ Demais passos iguais.
 Se faltar pacote de build: sudo apt install -y build-essential
 
 ================================================================================
-PRÓXIMO (outra folha — NÃO agora)
+INSTALAÇÃO LOCAL — FIM
 ================================================================================
-Nginx + domínio + Certbot + WhatsApp + systemd de produção.
-Só depois do /health estável e 1 pergunta testada.
+Não há canal externo. A pergunta entra em /perguntar ou no painel.
+A auditoria fica em data/audit/audit.db.
 
 FIM — deepEdu instalação Ubuntu LTS + Amadeus-Verbo (imprimir)
 ================================================================================

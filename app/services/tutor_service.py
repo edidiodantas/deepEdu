@@ -87,7 +87,7 @@ def answer_question(
                     "metadata": {
                         "session_id": session_id,
                         "phone_hash": hashed,
-                        "channel": "whatsapp",
+                        "channel": "local",
                     },
                     "tags": [settings.LANGCHAIN_PROJECT, "rag", "matematica_em"],
                 },

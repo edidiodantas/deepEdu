@@ -2,8 +2,8 @@
 
 | Campo | Valor |
 |-------|-------|
-| **Objetivo** | Validar o **RAG** deepEdu **aqui** antes do servidor dedicado |
-| **LLM oficial** | **Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct** via **Hugging Face** (`LLM_PROVIDER=huggingface`) |
+| **Objetivo** | Validar a trilha auditável **aqui** antes do servidor dedicado |
+| **LLM oficial** | **Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct** via **Hugging Face** (`LLM_PROVIDER=huggingface`) |
 | **Data** | 07/08/2026 |
 | **Ordem oficial** | `docs/SEQUENCIA_IMPLEMENTACAO.md` (S0→S9) |
 
@@ -29,13 +29,13 @@ Pergunta do aluno
 
 ```env
 LLM_PROVIDER=huggingface
-LLM_MODEL=amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
-LLM_TOKENIZER_ID=amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
+LLM_MODEL=amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct
+LLM_TOKENIZER_ID=amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct
 LLM_DEVICE_MAP=auto
 ```
 
 Modelo no Hugging Face:  
-https://huggingface.co/amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
+https://huggingface.co/amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct
 
 Ollama / Qwen2.5-Math e APIs externas ficam como **alternativas** no `.env`, não como padrão.
 

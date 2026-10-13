@@ -46,6 +46,6 @@ echo "[6/7] Emitindo certificado TLS..."
 sudo certbot --nginx -d "${DOMAIN}" --non-interactive --agree-tos --register-unsafely-without-email --redirect
 
 echo "[7/7] Finalizado."
-echo "Webhook publico: https://${DOMAIN}/webhook/whatsapp"
+echo "Pergunta local: http://127.0.0.1:8000/perguntar"
 echo "Status app: sudo systemctl status deepedu"
 echo "Status nginx: sudo systemctl status nginx"

@@ -1,5 +1,37 @@
-01_deepEdu — CODIGO-FONTE OFICIAL
-Edite aqui no Cursor.
-Destino de producao local: PC Ubuntu LTS com GPU.
-Nao misture experimentos aqui (veja 04_experimentos).
-Mapa geral: ~/Projects/00_LEIA-ME_MAPA_PROJECTS.md
+01_deepEdu — codigo-fonte da tese
+Pergunta da tese: o pipeline pode ser auditado?
+O RAG e o objeto auditado (o que o aluno perguntou, o que foi recuperado,
+o que o modelo respondeu). Nao e a pergunta da pesquisa.
+
+LLM oficial: Amadeus-Verbo 0,5B (PT-BR).
+  amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct
+  Provedor: Hugging Face (LLM_PROVIDER=huggingface)
+Reranker: monoPTT5-3B (unicamp-dl/monoptt5-3b), treinado para portugues.
+  Pede GPU ou RAM folgada. A nota fica no log de auditoria.
+
+Pastas — nao misturar
+  app/audit/         trilha de auditoria (nucleo da tese)
+  app/rag/           recuperacao e geracao auditadas
+  app/core/          config, modelo, seguranca, orcamento de tokens
+  app/api/           HTTP local (health, /perguntar, admin)
+  app/memory/        historico da conversa
+  app/services/      orquestracao da resposta
+  app/billing/       cobranca (opcional; desligada no ensaio)
+  control_panel/     painel Streamlit
+  data/              bases locais (auditoria, chroma, materiais, chat, billing)
+  prompts/           textos versionados do tutor
+  scripts/           instalar, indexar, exportar auditoria
+  docs/              requisitos, instalacao, DPIA, ECA
+  offline/           pendrive sem internet (depois do primeiro download)
+  nginx/  systemd/   servidor Ubuntu
+
+Instalacao local
+  1. Copie esta pasta inteira (sem .venv).
+  2. Siga IMPRIMIR_AGORA.txt
+  3. Confira: curl http://127.0.0.1:8000/health
+     tem de mostrar o modelo 0.5B.
+  4. Pergunta: curl -s http://127.0.0.1:8000/perguntar
+     -H 'Content-Type: application/json'
+     -d '{"student_id":"aluno-local","question":"quanto e 2+2?"}'
+  5. Painel: cd control_panel && streamlit run streamlit_app.py
+     aba Pergunta. A trilha fica em data/audit/audit.db.

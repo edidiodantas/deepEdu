@@ -1,15 +1,17 @@
-# Orçamento de Tokens — Amadeus-Verbo (Qwen2.5 1.5B PT-BR)
+# Orçamento de Tokens — Amadeus-Verbo 0,5B (PT-BR)
 
 | Campo | Valor |
 |-------|-------|
-| **Modelo oficial** | `amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct` |
+| **Modelo oficial** | `amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct` |
+| **Parâmetros** | 0,49 bilhão |
 | **Provedor** | Hugging Face (`LLM_PROVIDER=huggingface`) |
-| **Janela de contexto** | **4.096 tokens** (base Qwen2.5-1.5B) |
+| **Janela nativa do modelo** | **32.768 tokens** |
+| **Orçamento usado pelo deepEdu** | **~4.000 tokens** |
 | **Tokenizer** | o próprio modelo Amadeus (`LLM_TOKENIZER_ID`) |
-| **Versão** | 1.1 |
-| **Data** | 17/09/2026 |
+| **Versão** | 1.2 |
+| **Data** | 13/10/2026 |
 
-> **Importante:** A família Qwen2.5 **1.5B** usa janela de **4K**. Não force contexto maior.
+> O modelo aceita 32.768 tokens. O sistema não enche essa janela: em notebook modesto (CPU, 8 GB de RAM) o orçamento fica perto de 4.000 tokens. O corte é registrado e permanece auditável.
 
 ---
 
@@ -63,7 +65,9 @@ Se ainda exceder após truncagem: **abstinência** (RF37) com mensagem pedindo p
 ```python
 from transformers import AutoTokenizer
 
-tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen2.5-Math-1.5B-Instruct")
+tokenizer = AutoTokenizer.from_pretrained(
+    "amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct"
+)
 
 def count_tokens(text: str) -> int:
     return len(tokenizer.encode(text, add_special_tokens=False))
@@ -124,6 +128,6 @@ Registrar no LangSmith (RF31): `input_tokens`, `rag_tokens`, `history_tokens`, `
 
 ## 8. Referência técnica
 
-- `config.json` do modelo: `max_position_embeddings: 4096`
-- [Qwen2.5-Math Technical Report](https://arxiv.org/html/2409.12122v1) — treino com context length 4K
-- [Hugging Face — Qwen2.5-Math-1.5B-Instruct](https://huggingface.co/Qwen/Qwen2.5-Math-1.5B-Instruct)
+- Modelo: [Amadeus-Verbo 0.5B](https://huggingface.co/amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct) — `max_position_embeddings: 32768`
+- Relatório: [Amadeus-Verbo Technical Report](https://arxiv.org/html/2506.00019)
+- O teto de ~4.000 tokens é escolha do deepEdu para notebook modesto e para a trilha de auditoria, não o limite do modelo.

@@ -288,105 +288,9 @@ LANGCHAIN_PROJECT=deepedu-prod
 
 ---
 
-### 3.3 Conta Twilio (ou Meta WhatsApp Cloud API)
+### 3.3 Canal do aluno — local
 
-O deepEdu fala com o aluno pelo **WhatsApp**. O código aceita dois provedores (`WHATSAPP_PROVIDER` no `.env`):
-
-| Provedor | Quando usar | Variável |
-|----------|-------------|----------|
-| **Twilio** (padrão no projeto) | Mais simples para piloto; sandbox + número Twilio | `WHATSAPP_PROVIDER=twilio` |
-| **Meta Cloud API** | Conta Business oficial da escola / BSP | `WHATSAPP_PROVIDER=meta` |
-
-Abaixo o detalhe do **Twilio** (caminho mais usado no README atual). Meta fica resumido no final desta seção.
-
-#### Para que serve Twilio no deepEdu
-
-| Fluxo | O que acontece |
-|-------|----------------|
-| Aluno manda mensagem no WhatsApp | Twilio recebe e faz **POST** em `https://SEU_DOMINIO/webhook/whatsapp` |
-| deepEdu processa (consentimento, billing, RAG) | Gera a resposta do tutor |
-| deepEdu responde | Usa a API Twilio para enviar a mensagem de volta ao aluno |
-| Script `configure_twilio_webhook.py` | Configura automaticamente a URL do webhook no número Twilio |
-
-Credenciais usadas no `.env`:
-
-| Variável | Significado |
-|----------|-------------|
-| `TWILIO_ACCOUNT_SID` | ID da conta (`AC...`) |
-| `TWILIO_AUTH_TOKEN` | Segredo da conta |
-| `TWILIO_WHATSAPP_NUMBER` | Número no formato `whatsapp:+1...` ou BR |
-| `TWILIO_PHONE_NUMBER_SID` | SID do número (`PN...`) — usado pelo script de webhook |
-| `TWILIO_VALIDATE_SIGNATURE` | Valida se o POST veio mesmo da Twilio |
-| `PUBLIC_BASE_URL` | Base HTTPS onde está o webhook |
-
-Também: números de professor em `PROFESSOR_WHATSAPP_NUMBERS` (comandos administrativos via WhatsApp).
-
-#### Passo a passo — criar conta Twilio e WhatsApp
-
-1. Acesse https://www.twilio.com/try-twilio e crie conta (e-mail + verificação).
-2. No Console Twilio, anote em **Account → API keys & tokens** (ou dashboard inicial):
-   - **Account SID**
-   - **Auth Token** (Reveal / Show)
-3. Ative o canal WhatsApp:
-   - Vá em **Messaging → Try it out → Send a WhatsApp message** (Sandbox) **ou**
-   - **Messaging → Senders → WhatsApp senders** para número de produção.
-4. **Sandbox (piloto rápido):**
-   - Anote o número do sandbox Twilio (ex.: `whatsapp:+14155238886`).
-   - No celular, envie o código de join (ex.: `join xxxx-xxxx`) para o número indicado no console.
-   - Só números que “entraram” no sandbox recebem/enviam mensagens.
-5. **Produção:** solicite um WhatsApp Sender aprovado (documento da empresa/escola, Meta Business). Tempo e aprovação variam.
-6. Anote o **Phone Number SID** (`PN...`):
-   - Console → **Phone Numbers → Manage → Active numbers** → clique no número → copie o SID.
-7. Preencha no `.env` (depois que o HTTPS existir):
-
-```env
-WHATSAPP_PROVIDER=twilio
-TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxx
-TWILIO_AUTH_TOKEN=xxxxxxxxxxxxxxxx
-TWILIO_WHATSAPP_NUMBER=whatsapp:+14155238886
-TWILIO_PHONE_NUMBER_SID=PNxxxxxxxxxxxxxxxx
-TWILIO_VALIDATE_SIGNATURE=true
-PUBLIC_BASE_URL=https://tutor.escola.edu.br
-```
-
-8. Com o servidor e HTTPS no ar (Fase 13+):
-
-```bash
-cd ~/Projects/deepEdu
-source .venv/bin/activate
-python scripts/configure_twilio_webhook.py
-```
-
-Isso aponta o webhook para `https://SEU_DOMINIO/webhook/whatsapp`.
-
-#### Alternativa — Meta WhatsApp Cloud API (resumo)
-
-1. Conta em https://developers.facebook.com
-2. Crie um **App** tipo Business + produto **WhatsApp**.
-3. Vincule um **Meta Business Portfolio** e um número de telefone.
-4. Gere **Access Token**, anote **Phone number ID**, **App Secret** e defina um **Verify Token** seu.
-5. No `.env`:
-
-```env
-WHATSAPP_PROVIDER=meta
-META_VERIFY_TOKEN=escolha_um_token_secreto
-META_APP_SECRET=seu_app_secret
-META_ACCESS_TOKEN=seu_access_token
-META_PHONE_NUMBER_ID=seu_phone_number_id
-PUBLIC_BASE_URL=https://tutor.escola.edu.br
-```
-
-6. No painel Meta, configure o webhook para `https://SEU_DOMINIO/webhook/whatsapp` (ou rota Meta do projeto, conforme implementação).
-
-#### Checklist — anote (Twilio)
-
-```
-[ ] Account SID (AC...): ___________________
-[ ] Auth Token: (só no cofre) ______________
-[ ] WhatsApp number: whatsapp:+____________
-[ ] Phone Number SID (PN...): ______________
-[ ] Sandbox join feito no celular de teste: _
-```
+O aluno pergunta nesta máquina, em `POST /perguntar` ou na aba Pergunta do painel. Não há canal externo.
 
 ---
 
@@ -400,7 +304,7 @@ Fluxos no projeto:
 
 | Função | Como |
 |--------|------|
-| Checkout individual (PIX, boleto, cartão) | Endpoints `/admin/billing/checkout` e comando WhatsApp `pagar` |
+| Checkout individual (PIX, boleto, cartão) | Endpoint `/admin/billing/checkout` no painel local |
 | Checkout plano escola (B2B) | `/admin/schools/checkout` |
 | Ativação automática da assinatura | Webhook `POST /webhook/asaas` quando o pagamento confirma |
 | Bloqueio sem pagamento | `BILLING_ENFORCE_SUBSCRIPTION=true` no `.env` |
@@ -796,7 +700,7 @@ python -c "import fastapi; import chromadb; print('fastapi e chromadb OK')"
 ## 9. Fase 6 — Amadeus-Verbo via Hugging Face (LLM)
 
 O projeto usa **Hugging Face** como provedor padrão (`LLM_PROVIDER=huggingface`)
-com o modelo **Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct**.
+com o modelo **Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct** (0,49B, notebook modesto).
 
 ```bash
 chmod +x scripts/install_hf_model.sh
@@ -807,8 +711,8 @@ No `.env`:
 
 ```env
 LLM_PROVIDER=huggingface
-LLM_MODEL=amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
-LLM_TOKENIZER_ID=amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct
+LLM_MODEL=amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct
+LLM_TOKENIZER_ID=amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct
 LLM_DEVICE_MAP=auto
 ```
 
@@ -1159,35 +1063,15 @@ streamlit run streamlit_app.py
 
 ---
 
-## 18. Fase 15 — WhatsApp (Twilio)
-
-Após HTTPS ativo e `PUBLIC_BASE_URL` no `.env`:
+## 18. Fase 15 — Pergunta local
 
 ```bash
-cd ~/Projects/deepEdu
-source .venv/bin/activate
-python scripts/configure_twilio_webhook.py
+curl -s http://127.0.0.1:8000/perguntar \
+  -H "Content-Type: application/json" \
+  -d '{"student_id":"aluno-local","question":"quanto e 2+2?"}'
 ```
 
-Webhook público:
-
-```
-https://SEU_DOMINIO/webhook/whatsapp
-```
-
-Configure no console Twilio o mesmo URL.
-
-### Alternativa: Meta WhatsApp Cloud API
-
-No `.env`:
-
-```env
-WHATSAPP_PROVIDER=meta
-META_VERIFY_TOKEN=seu_token_verificacao
-META_APP_SECRET=seu_app_secret
-META_ACCESS_TOKEN=seu_access_token
-META_PHONE_NUMBER_ID=seu_phone_number_id
-```
+O `correlation_id` da resposta liga os eventos em `data/audit/audit.db`.
 
 ---
 

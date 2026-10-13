@@ -14,7 +14,7 @@ _OLLAMA_TO_HF_TOKENIZER = {
     "qwen2.5:7b": "Qwen/Qwen2.5-7B",
 }
 
-_DEFAULT_AMADEUS = "amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct"
+_DEFAULT_AMADEUS = "amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct"
 
 
 def _tokenizer_model_id() -> str:

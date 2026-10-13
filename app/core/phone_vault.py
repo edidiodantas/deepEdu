@@ -15,7 +15,7 @@ def _fernet() -> Fernet:
 
 
 def encrypt_phone(phone: str) -> str:
-    normalized = phone.strip().replace("whatsapp:", "")
+    normalized = phone.strip()
     return _fernet().encrypt(normalized.encode("utf-8")).decode("ascii")
 
 
@@ -24,7 +24,7 @@ def decrypt_phone(token: str) -> str:
 
 
 def mask_phone(phone: str) -> str:
-    normalized = phone.strip().replace("whatsapp:", "")
+    normalized = phone.strip()
     if len(normalized) <= 6:
         return "***"
     return f"{normalized[:4]}****{normalized[-2:]}"

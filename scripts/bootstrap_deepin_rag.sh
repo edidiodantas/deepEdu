@@ -6,7 +6,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-MODEL="amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct"
+MODEL="amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct"
 
 echo "==> deepEdu bootstrap (Amadeus-Verbo PT-BR via Hugging Face — RAG)"
 echo "    raiz: $ROOT"

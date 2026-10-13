@@ -1,4 +1,4 @@
-"""Testes das correções: comandos WhatsApp, phone_key, consent version."""
+"""Testes das correções: phone_key, consent version, SymPy."""
 
 import os
 import tempfile
@@ -15,24 +15,12 @@ from app.audit import init_audit
 from app.audit.consent import grant_consent, has_active_consent
 from app.audit.hashing import phone_hash, pseudonymize_session_id
 from app.billing.phone_identity import phone_key
-from app.integrations.commands import is_payment_command, is_status_command
 from app.rag.sympy_tool import verify_numeric_answer
 
 
 class FixRegressionTests(unittest.TestCase):
     def setUp(self):
         init_audit()
-
-    def test_payment_command_does_not_catch_math_plane(self):
-        self.assertFalse(is_payment_command("o que e plano cartesiano?"))
-        self.assertTrue(is_payment_command("pagar"))
-        self.assertTrue(is_payment_command("pagar pix"))
-        self.assertTrue(is_payment_command("plano"))
-
-    def test_status_command_exact(self):
-        self.assertTrue(is_status_command("status"))
-        self.assertTrue(is_status_command("acesso"))
-        self.assertFalse(is_status_command("quero acesso ao material de funcoes"))
 
     def test_phone_key_does_not_rehash(self):
         hashed = phone_hash("+5511999888777")

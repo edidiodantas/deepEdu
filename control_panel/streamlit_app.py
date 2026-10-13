@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
 
-BASE_URL = os.getenv("CLOUD_API_BASE_URL", "").rstrip("/")
+BASE_URL = (os.getenv("CLOUD_API_BASE_URL") or "http://127.0.0.1:8000").rstrip("/")
 ADMIN_API_KEY = os.getenv("ADMIN_API_KEY", "")
 
 
@@ -26,14 +26,40 @@ def _get(path: str, params: dict | None = None):
     return resp.status_code, resp.json() if resp.headers.get("content-type", "").startswith("application/json") else resp.text
 
 
-st.set_page_config(page_title="deepEdu Control Panel", layout="wide")
-st.title("deepEdu - Painel Local (controle da nuvem)")
+st.set_page_config(page_title="deepEdu local", layout="wide")
+st.title("deepEdu — painel local")
 
-if not BASE_URL or not ADMIN_API_KEY:
-    st.error("Configure control_panel/.env com CLOUD_API_BASE_URL e ADMIN_API_KEY.")
-    st.stop()
+tab_q, tab1, tab2, tab3, tab4 = st.tabs(
+    ["Pergunta", "Aluno", "Escola", "ECA / Auditoria", "Operacao"]
+)
 
-tab1, tab2, tab3, tab4 = st.tabs(["Aluno", "Escola", "ECA / Auditoria", "Operacao"])
+with tab_q:
+    st.subheader("Pergunta local")
+    st.caption(f"API: {BASE_URL}")
+    student_id = st.text_input("Identificador do aluno", value="aluno-local")
+    question = st.text_area("Pergunta de matematica")
+    if st.button("Perguntar"):
+        try:
+            resp = requests.post(
+                f"{BASE_URL}/perguntar",
+                json={"student_id": student_id.strip() or "aluno-local", "question": question},
+                timeout=300,
+            )
+        except requests.RequestException as exc:
+            st.error(f"API inacessivel: {exc}")
+        else:
+            if resp.headers.get("content-type", "").startswith("application/json"):
+                data = resp.json()
+            else:
+                data = {"detail": resp.text}
+            if resp.status_code == 200:
+                st.write(data.get("answer", ""))
+                st.caption(f"correlacao: {data.get('correlation_id', '')}")
+            else:
+                st.error(f"Erro {resp.status_code}: {data}")
+
+if not ADMIN_API_KEY:
+    st.warning("Sem ADMIN_API_KEY as abas administrativas nao autenticam. A aba Pergunta funciona.")
 
 with tab1:
     st.subheader("Assinatura individual")

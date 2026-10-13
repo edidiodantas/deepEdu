@@ -66,7 +66,7 @@ def looks_like_phone_hash(value: str) -> bool:
 
 def phone_key(phone_or_hash: str) -> str:
     """Aceita telefone E.164 ou hash de 32 hex — nunca re-hasheia um hash."""
-    raw = phone_or_hash.strip().replace("whatsapp:", "")
+    raw = phone_or_hash.strip()
     if looks_like_phone_hash(raw):
         return raw.lower()
     if raw.startswith("+") or (raw.isdigit() and len(raw) >= 8):

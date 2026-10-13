@@ -6,8 +6,8 @@ from langchain_core.language_models.chat_models import BaseChatModel
 
 from app.core.config import settings
 
-# Modelo oficial deepEdu (PT-BR, família Qwen2.5).
-DEFAULT_HF_MODEL = "amadeusai/Amadeus-Verbo-FI-Qwen2.5-1.5B-PT-BR-Instruct"
+# Modelo oficial deepEdu: Amadeus-Verbo 0,5B (PT-BR, família Qwen2.5).
+DEFAULT_HF_MODEL = "amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct"
 
 
 def _cache_key() -> tuple:
