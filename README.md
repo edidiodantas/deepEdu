@@ -109,6 +109,16 @@ Após mudar chunk/overlap, rode de novo `python scripts/run_indexing.py` (a cole
 
 Na aba **Materiais** do painel (`control_panel`): envie PDFs/TXT/MD, veja a lista, remova arquivos e clique em **Reindexar**. O tutor usa o índice novo já na próxima pergunta. Cada upload (com SHA-256), remoção e reindexação fica na trilha de auditoria (`admin.material.*`, `admin.index.rebuild`). Rotas usadas (exigem `X-Admin-Api-Key`): `GET/POST /admin/materials`, `DELETE /admin/materials/{arquivo}`, `POST /admin/index/rebuild`.
 
+## Atalho: ligar tudo com um clique
+
+Depois de instalar (passos 1–3), crie o atalho uma vez:
+
+```bash
+bash scripts/criar_atalho.sh
+```
+
+Aparece **DeepEdu** no menu de aplicativos e na Área de Trabalho. Ele abre uma janela que liga a API e o painel e abre o navegador; fechar a janela desliga tudo. Sem atalho: `bash scripts/iniciar.sh`. Logs em `data/logs/`.
+
 ## 5) Teste local da API
 
 ```bash

@@ -30,3 +30,6 @@ control_panel/.streamlit/
 .vscode/
 *.swp
 .DS_Store
+
+# Logs do scripts/iniciar.sh
+data/logs/
