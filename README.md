@@ -1,4 +1,4 @@
-# deepEdu
+# DeepEdu
 
 Tutor de Matemática do Ensino Médio. A pergunta da tese é se o pipeline pode ser auditado: consentimento, recuperação, geração e resposta ficam numa trilha verificável. O RAG é o objeto auditado, não o tema da pesquisa.
 
@@ -88,7 +88,7 @@ python scripts/run_indexing.py
 
 ### Limites do RAG com livros (importante)
 
-O deepEdu indexa **texto** dos PDFs (via PyMuPDF). **Não entram no RAG:**
+O DeepEdu indexa **texto** dos PDFs (via PyMuPDF). **Não entram no RAG:**
 
 - figuras, diagramas, gráficos e imagens
 - esquemas desenhados sem texto selecionável

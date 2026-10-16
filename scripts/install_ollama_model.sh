@@ -6,7 +6,7 @@ set -euo pipefail
 
 MODEL="${LLM_MODEL:-qwen2.5-math:1.5b-instruct}"
 
-echo "AVISO: o LLM padrao do deepEdu e Amadeus-Verbo (Hugging Face)."
+echo "AVISO: o LLM padrao do DeepEdu e Amadeus-Verbo (Hugging Face)."
 echo "       Este script so e necessario se LLM_PROVIDER=ollama."
 echo
 

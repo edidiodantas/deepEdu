@@ -1,4 +1,4 @@
-# Revisão de Implementação — deepEdu v3.0 (completo)
+# Revisão de Implementação — DeepEdu v3.0 (completo)
 
 | Campo | Valor |
 |-------|-------|

@@ -58,11 +58,11 @@ def strip_leading_h1(content: str) -> str:
 def build_cover() -> str:
     today = date.today().strftime("%d/%m/%Y")
     return f"""<div class="cover-page">
-  <h1>deepEdu</h1>
+  <h1>DeepEdu</h1>
   <p class="subtitle">Tutor RAG de Matemática — Ensino Médio</p>
   <p class="subtitle"><strong>Documento Final de Requisitos e Conformidade</strong></p>
   <dl class="meta">
-    <dt>Projeto</dt><dd>deepEdu — Sistema RAG modular</dd>
+    <dt>Projeto</dt><dd>DeepEdu — Sistema RAG modular</dd>
     <dt>Versão</dt><dd>1.0</dd>
     <dt>Data</dt><dd>{today}</dd>
     <dt>Status</dt><dd>Aprovado para desenvolvimento</dd>
@@ -194,7 +194,7 @@ def build_signatures() -> str:
     return """
 <div class="signature-block section-break">
   <h2>Termo de aprovação</h2>
-  <p>Declaro ter revisado o presente documento e aprovo seu uso como base para o desenvolvimento do sistema deepEdu.</p>
+  <p>Declaro ter revisado o presente documento e aprovo seu uso como base para o desenvolvimento do sistema DeepEdu.</p>
   <div class="signature-line">Product Owner — Nome / Data</div>
   <div class="signature-line">Tech Lead — Nome / Data</div>
   <div class="signature-line">Responsável pedagógico — Nome / Data</div>
@@ -209,7 +209,7 @@ def build_html() -> str:
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8"/>
-  <title>deepEdu — Documento Final de Requisitos</title>
+  <title>DeepEdu — Documento Final de Requisitos</title>
   <style>{css}</style>
 </head>
 <body>

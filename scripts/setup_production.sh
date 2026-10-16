@@ -23,7 +23,7 @@ echo "[1/7] Instalando pacotes base..."
 sudo apt update
 sudo apt install -y nginx certbot python3-certbot-nginx
 
-echo "[2/7] Configurando systemd do deepEdu..."
+echo "[2/7] Configurando systemd do DeepEdu..."
 sudo sed "s|SEU_USUARIO|${LINUX_USER}|g" "${SERVICE_FILE}" | sudo tee /etc/systemd/system/deepedu.service >/dev/null
 sudo systemctl daemon-reload
 sudo systemctl enable deepedu

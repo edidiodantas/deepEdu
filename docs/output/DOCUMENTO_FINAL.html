@@ -2,8 +2,8 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8"/>
-  <title>deepEdu — Documento Final de Requisitos</title>
-  <style>/* Estilos para impressão — deepEdu Documento Final */
+  <title>DeepEdu — Documento Final de Requisitos</title>
+  <style>/* Estilos para impressão — DeepEdu Documento Final */
 
 @page {
   size: A4;
@@ -220,11 +220,11 @@ blockquote {
 </head>
 <body>
 <div class="cover-page">
-  <h1>deepEdu</h1>
+  <h1>DeepEdu</h1>
   <p class="subtitle">Tutor RAG de Matemática — Ensino Médio</p>
   <p class="subtitle"><strong>Documento Final de Requisitos e Conformidade</strong></p>
   <dl class="meta">
-    <dt>Projeto</dt><dd>deepEdu — Sistema RAG modular</dd>
+    <dt>Projeto</dt><dd>DeepEdu — Sistema RAG modular</dd>
     <dt>Versão</dt><dd>1.0</dd>
     <dt>Data</dt><dd>29/06/2026</dd>
     <dt>Status</dt><dd>Aprovado para desenvolvimento</dd>
@@ -271,7 +271,7 @@ blockquote {
 <tbody>
 <tr class="odd">
 <td><strong>Projeto</strong></td>
-<td>deepEdu — Tutor RAG de Matemática para Ensino Médio</td>
+<td>DeepEdu — Tutor RAG de Matemática para Ensino Médio</td>
 </tr>
 <tr class="even">
 <td><strong>Versão do documento</strong></td>
@@ -1534,19 +1534,19 @@ MemoryStore            → persistência de sessão</code></pre>
 <tr class="odd">
 <td>1.0</td>
 <td>29/06/2026</td>
-<td>deepEdu</td>
+<td>DeepEdu</td>
 <td>Versão inicial revisada a partir da análise de requisitos</td>
 </tr>
 <tr class="even">
 <td>1.1</td>
 <td>29/06/2026</td>
-<td>deepEdu</td>
+<td>DeepEdu</td>
 <td>Orçamento de tokens Qwen2.5-Math 4K (RF46, TOKEN_BUDGET, prompts)</td>
 </tr>
 <tr class="odd">
 <td>1.2</td>
 <td>29/06/2026</td>
-<td>deepEdu</td>
+<td>DeepEdu</td>
 <td>RF47 auditoria integral ECA; docs/AUDITORIA_ECA.md</td>
 </tr>
 </tbody>
@@ -1834,7 +1834,7 @@ MemoryStore            → persistência de sessão</code></pre>
 <tbody>
 <tr class="odd">
 <td><strong>Sistema</strong></td>
-<td>deepEdu — Tutor RAG de Matemática (Ensino Médio)</td>
+<td>DeepEdu — Tutor RAG de Matemática (Ensino Médio)</td>
 </tr>
 <tr class="even">
 <td><strong>Base legal</strong></td>
@@ -2515,7 +2515,7 @@ LANGSMITH_API_KEY=...</code></pre>
 </tr>
 <tr class="even">
 <td><strong>Projeto</strong></td>
-<td>deepEdu — Tutor RAG Matemática EM</td>
+<td>DeepEdu — Tutor RAG Matemática EM</td>
 </tr>
 <tr class="odd">
 <td><strong>Base</strong></td>
@@ -2529,9 +2529,9 @@ LANGSMITH_API_KEY=...</code></pre>
 </table>
 <hr />
 <h2 id="visão-geral">1. Visão geral</h2>
-<p>Cada caso de uso (UC) rastreia diretamente um requisito funcional (RF) ou não funcional (RNF). Atores principais: <strong>Estudante EM</strong>, <strong>Administrador/DPO</strong>, <strong>Operador</strong>, <strong>Sistema deepEdu</strong>.</p>
+<p>Cada caso de uso (UC) rastreia diretamente um requisito funcional (RF) ou não funcional (RNF). Atores principais: <strong>Estudante EM</strong>, <strong>Administrador/DPO</strong>, <strong>Operador</strong>, <strong>Sistema DeepEdu</strong>.</p>
 <h3 id="diagrama-de-contexto">Diagrama de contexto</h3>
-<pre><code>Estudante ──WhatsApp──► deepEdu API ──► RAG (retrieval + Qwen + SymPy)
+<pre><code>Estudante ──WhatsApp──► DeepEdu API ──► RAG (retrieval + Qwen + SymPy)
                               │
 Administrador ──painel/API──►├─► audit_log / LangSmith
 DPO ──export────────────────┘</code></pre>
@@ -2560,7 +2560,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -2605,7 +2605,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -2650,7 +2650,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -2695,7 +2695,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -2740,7 +2740,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -2785,7 +2785,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -2830,7 +2830,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -2875,7 +2875,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -2920,7 +2920,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -2965,7 +2965,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -3010,7 +3010,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -3055,7 +3055,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -3100,7 +3100,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -3145,7 +3145,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -3190,7 +3190,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -3235,7 +3235,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -3280,7 +3280,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -3325,7 +3325,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -3370,7 +3370,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -3415,7 +3415,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -3460,7 +3460,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -3505,7 +3505,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -3550,7 +3550,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -3595,7 +3595,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -3640,7 +3640,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -3685,7 +3685,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -3730,7 +3730,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -3775,7 +3775,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -3820,7 +3820,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -3865,7 +3865,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -3910,7 +3910,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -3955,7 +3955,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -4000,7 +4000,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -4045,7 +4045,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -4090,7 +4090,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -4135,7 +4135,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -4180,7 +4180,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -4225,7 +4225,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -4270,7 +4270,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -4315,7 +4315,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -4360,7 +4360,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -4405,7 +4405,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -4450,7 +4450,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -4495,7 +4495,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -4540,7 +4540,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -4585,7 +4585,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -4630,7 +4630,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Estudante EM, Sistema deepEdu</td>
+<td>Estudante EM, Sistema DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -4676,7 +4676,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Sistema deepEdu, Operador, DPO</td>
+<td>Sistema DeepEdu, Operador, DPO</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -4720,7 +4720,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Sistema deepEdu, Operador, DPO</td>
+<td>Sistema DeepEdu, Operador, DPO</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -4764,7 +4764,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Sistema deepEdu, Operador, DPO</td>
+<td>Sistema DeepEdu, Operador, DPO</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -4808,7 +4808,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Sistema deepEdu, Operador, DPO</td>
+<td>Sistema DeepEdu, Operador, DPO</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -4852,7 +4852,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Sistema deepEdu, Operador, DPO</td>
+<td>Sistema DeepEdu, Operador, DPO</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -4896,7 +4896,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Sistema deepEdu, Operador, DPO</td>
+<td>Sistema DeepEdu, Operador, DPO</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -4940,7 +4940,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Sistema deepEdu, Operador, DPO</td>
+<td>Sistema DeepEdu, Operador, DPO</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -4984,7 +4984,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Sistema deepEdu, Operador, DPO</td>
+<td>Sistema DeepEdu, Operador, DPO</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -5028,7 +5028,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Sistema deepEdu, Operador, DPO</td>
+<td>Sistema DeepEdu, Operador, DPO</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -5072,7 +5072,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Sistema deepEdu, Operador, DPO</td>
+<td>Sistema DeepEdu, Operador, DPO</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -5116,7 +5116,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Sistema deepEdu, Operador, DPO</td>
+<td>Sistema DeepEdu, Operador, DPO</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -5160,7 +5160,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Sistema deepEdu, Operador, DPO</td>
+<td>Sistema DeepEdu, Operador, DPO</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -5204,7 +5204,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Sistema deepEdu, Operador, DPO</td>
+<td>Sistema DeepEdu, Operador, DPO</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -5248,7 +5248,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Sistema deepEdu, Operador, DPO</td>
+<td>Sistema DeepEdu, Operador, DPO</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -5292,7 +5292,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Sistema deepEdu, Operador, DPO</td>
+<td>Sistema DeepEdu, Operador, DPO</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -5336,7 +5336,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Sistema deepEdu, Operador, DPO</td>
+<td>Sistema DeepEdu, Operador, DPO</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -5380,7 +5380,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Atores</strong></td>
-<td>Sistema deepEdu, Operador, DPO</td>
+<td>Sistema DeepEdu, Operador, DPO</td>
 </tr>
 <tr class="even">
 <td><strong>Pré-condições</strong></td>
@@ -5747,7 +5747,7 @@ DPO ──export────────────────┘</code></pre>
 <tbody>
 <tr class="odd">
 <td><strong>Sistema</strong></td>
-<td>deepEdu — Tutor RAG de Matemática (Ensino Médio)</td>
+<td>DeepEdu — Tutor RAG de Matemática (Ensino Médio)</td>
 </tr>
 <tr class="even">
 <td><strong>Versão</strong></td>
@@ -6364,7 +6364,7 @@ DPO ──export────────────────┘</code></pre>
 <tbody>
 <tr class="odd">
 <td><strong>Sistema</strong></td>
-<td>deepEdu — Tutor RAG de Matemática (Ensino Médio)</td>
+<td>DeepEdu — Tutor RAG de Matemática (Ensino Médio)</td>
 </tr>
 <tr class="even">
 <td><strong>Versão</strong></td>
@@ -6710,7 +6710,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="even">
 <td><strong>Operador</strong></td>
-<td>_________________________ (Responsável técnico / deepEdu)</td>
+<td>_________________________ (Responsável técnico / DeepEdu)</td>
 </tr>
 <tr class="odd">
 <td><strong>Encarregado (DPO)</strong></td>
@@ -6750,7 +6750,7 @@ DPO ──export────────────────┘</code></pre>
 <tbody>
 <tr class="odd">
 <td><strong>Nome do sistema</strong></td>
-<td>deepEdu — Tutor RAG de Matemática para Ensino Médio</td>
+<td>DeepEdu — Tutor RAG de Matemática para Ensino Médio</td>
 </tr>
 <tr class="even">
 <td><strong>Finalidade</strong></td>
@@ -6899,7 +6899,7 @@ DPO ──export────────────────┘</code></pre>
 <h2 id="fluxo-de-dados">4. Fluxo de dados</h2>
 <pre><code>Estudante (WhatsApp)
     → Meta Cloud API (webhook HTTPS)
-    → deepEdu API (validação, fila)
+    → DeepEdu API (validação, fila)
     → Worker (RAG: retrieval + LLM)
     → Banco vetorial (Qdrant) — apenas corpus curricular, sem PII
     → Banco de sessões (PostgreSQL/SQLite) — histórico pseudonimizado
@@ -7154,7 +7154,7 @@ DPO ──export────────────────┘</code></pre>
 <tbody>
 <tr class="odd">
 <td><strong>Sistema</strong></td>
-<td>deepEdu — Tutor RAG de Matemática EM</td>
+<td>DeepEdu — Tutor RAG de Matemática EM</td>
 </tr>
 <tr class="even">
 <td><strong>Controlador</strong></td>
@@ -7162,7 +7162,7 @@ DPO ──export────────────────┘</code></pre>
 </tr>
 <tr class="odd">
 <td><strong>Operador técnico</strong></td>
-<td>Equipe responsável pelo deepEdu</td>
+<td>Equipe responsável pelo DeepEdu</td>
 </tr>
 <tr class="even">
 <td><strong>Versão</strong></td>
@@ -7609,7 +7609,7 @@ Quando pertinente, mencione a habilidade EM13MAT relacionada.
 
 <div class="signature-block section-break">
   <h2>Termo de aprovação</h2>
-  <p>Declaro ter revisado o presente documento e aprovo seu uso como base para o desenvolvimento do sistema deepEdu.</p>
+  <p>Declaro ter revisado o presente documento e aprovo seu uso como base para o desenvolvimento do sistema DeepEdu.</p>
   <div class="signature-line">Product Owner — Nome / Data</div>
   <div class="signature-line">Tech Lead — Nome / Data</div>
   <div class="signature-line">Responsável pedagógico — Nome / Data</div>

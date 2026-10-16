@@ -2,7 +2,7 @@
 
 | Campo | Valor |
 |-------|-------|
-| **Sistema** | deepEdu — Tutor RAG de Matemática (Ensino Médio) |
+| **Sistema** | DeepEdu — Tutor RAG de Matemática (Ensino Médio) |
 | **Base legal** | Lei 15.211/2025 (ECA Digital) + Lei 13.709/2018 (LGPD) |
 | **Versão** | 1.0 |
 | **Data** | 29/06/2026 |

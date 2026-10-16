@@ -11,8 +11,8 @@ REQ = ROOT / "docs" / "REQUISITOS.md"
 OUT = ROOT / "docs" / "CASOS_DE_USO.md"
 
 ACTORS = {
-    "RF": "Estudante EM, Sistema deepEdu",
-    "RNF": "Sistema deepEdu, Operador, DPO",
+    "RF": "Estudante EM, Sistema DeepEdu",
+    "RNF": "Sistema DeepEdu, Operador, DPO",
 }
 
 PRE = {
@@ -64,12 +64,12 @@ def flow_for(rid: str, title: str) -> str:
 
 def build_md(items: list[tuple[str, str, str, str]]) -> str:
     lines = [
-        "# Casos de Uso — deepEdu (derivados de RF e RNF)",
+        "# Casos de Uso — DeepEdu (derivados de RF e RNF)",
         "",
         "| Campo | Valor |",
         "|-------|-------|",
         "| **Versão** | 1.0 |",
-        "| **Projeto** | deepEdu — Tutor RAG Matemática EM |",
+        "| **Projeto** | DeepEdu — Tutor RAG Matemática EM |",
         "| **Base** | `docs/REQUISITOS.md` v1.2 |",
         "| **Formato** | Um caso de uso por RF/RNF |",
         "",
@@ -78,12 +78,12 @@ def build_md(items: list[tuple[str, str, str, str]]) -> str:
         "## 1. Visão geral",
         "",
         "Cada caso de uso (UC) rastreia diretamente um requisito funcional (RF) ou não funcional (RNF).",
-        "Atores principais: **Estudante EM**, **Administrador/DPO**, **Operador**, **Sistema deepEdu**.",
+        "Atores principais: **Estudante EM**, **Administrador/DPO**, **Operador**, **Sistema DeepEdu**.",
         "",
         "### Diagrama de contexto",
         "",
         "```",
-        "Estudante ──WhatsApp──► deepEdu API ──► RAG (retrieval + Qwen + SymPy)",
+        "Estudante ──WhatsApp──► DeepEdu API ──► RAG (retrieval + Qwen + SymPy)",
         "                              │",
         "Administrador ──painel/API──►├─► audit_log / LangSmith",
         "DPO ──export────────────────┘",

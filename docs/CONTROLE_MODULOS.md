@@ -1,4 +1,4 @@
-# Controle de Módulos — deepEdu
+# Controle de Módulos — DeepEdu
 
 | Campo | Valor |
 |-------|-------|

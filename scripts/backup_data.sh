@@ -21,7 +21,7 @@ copy_if_exists() {
   fi
 }
 
-echo "deepEdu backup → ${TARGET}"
+echo "DeepEdu backup → ${TARGET}"
 copy_if_exists "${ROOT}/data/audit/audit.db" "audit.db"
 copy_if_exists "${ROOT}/data/chat_history/chat_history.db" "chat_history.db"
 copy_if_exists "${ROOT}/data/billing/billing.db" "billing.db"

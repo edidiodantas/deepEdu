@@ -60,7 +60,7 @@ def summarize(results: list[dict]) -> dict:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Avaliação RAG deepEdu")
+    parser = argparse.ArgumentParser(description="Avaliação RAG DeepEdu")
     parser.add_argument(
         "--dataset",
         default=str(ROOT / "docs/eval/dataset_rag_matematica_em.csv"),
