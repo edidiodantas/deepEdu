@@ -55,7 +55,13 @@ def _build_chat_model_cached(cache_key: tuple) -> BaseChatModel:
             return_full_text=False,
             pad_token_id=tokenizer.pad_token_id,
         )
-        return ChatHuggingFace(llm=HuggingFacePipeline(pipeline=pipe))
+        # Sem model_id/tokenizer explícitos o ChatHuggingFace cai no padrão "gpt2"
+        # e aplica o chat template errado (ou falha) em vez do Amadeus/Qwen2.5.
+        return ChatHuggingFace(
+            llm=HuggingFacePipeline(pipeline=pipe, model_id=model_id),
+            model_id=model_id,
+            tokenizer=tokenizer,
+        )
 
     if provider == "ollama":
         from langchain_ollama import ChatOllama
