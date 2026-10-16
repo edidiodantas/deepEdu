@@ -1,10 +1,10 @@
-# Avaliação de Impacto à Proteção de Dados (DPIA) — deepEdu
+# Avaliação de Impacto à Proteção de Dados (DPIA) — DeepEdu
 
 | Campo | Valor |
 |-------|-------|
-| **Sistema** | deepEdu — Tutor RAG de Matemática EM |
+| **Sistema** | DeepEdu — Tutor RAG de Matemática EM |
 | **Controlador** | Instituição de Ensino contratante |
-| **Operador técnico** | Equipe responsável pelo deepEdu |
+| **Operador técnico** | Equipe responsável pelo DeepEdu |
 | **Versão** | 1.0 |
 | **Data** | 29/06/2026 |
 | **Base legal** | LGPD Art. 38 + ECA Digital (Lei 15.211/2025) |

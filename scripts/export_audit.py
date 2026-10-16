@@ -67,7 +67,7 @@ def export_csv(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Exportar auditoria deepEdu")
+    parser = argparse.ArgumentParser(description="Exportar auditoria DeepEdu")
     parser.add_argument("--from", dest="date_from", default=None, help="Data inicial ISO")
     parser.add_argument("--to", dest="date_to", default=None, help="Data final ISO")
     parser.add_argument("--output", default="reports/audit_export.csv", help="Arquivo CSV de saida")

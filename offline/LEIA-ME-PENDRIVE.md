@@ -1,4 +1,4 @@
-# deepEdu — Pacote para PC offline (pendrive)
+# DeepEdu — Pacote para PC offline (pendrive)
 
 Leia este arquivo **no PC sem internet** antes de instalar.
 
@@ -11,7 +11,7 @@ Leia este arquivo **no PC sem internet** antes de instalar.
 | `deepEdu/` | Código-fonte, documentação, testes, scripts |
 | `DOCUMENTO_FINAL_deepEdu.pdf` | Documento completo (requisitos + casos de uso) |
 | `deepEdu/offline/wheels/` | Pacotes Python (se foi gerado com `--with-wheels`) |
-| `deepEdu-offline-*.tar.gz` | Cópia compactada de backup |
+| `DeepEdu-offline-*.tar.gz` | Cópia compactada de backup |
 
 ---
 
@@ -95,5 +95,5 @@ Para desenvolver offline (após cache): API local, testes, indexação, RAG com 
 
 ## 7. Suporte
 
-Projeto: **deepEdu** — Tutor RAG Matemática Ensino Médio  
-Versão do pacote: verifique a data na pasta `deepEdu-offline-*.tar.gz`.
+Projeto: **DeepEdu** — Tutor RAG Matemática Ensino Médio  
+Versão do pacote: verifique a data na pasta `DeepEdu-offline-*.tar.gz`.

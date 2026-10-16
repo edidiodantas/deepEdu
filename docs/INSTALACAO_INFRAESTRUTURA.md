@@ -1,9 +1,9 @@
-# Instalação de Infraestrutura — deepEdu
+# Instalação de Infraestrutura — DeepEdu
 
 
 | Campo                      | Valor                                                             |
 | -------------------------- | ----------------------------------------------------------------- |
-| **Projeto**                | deepEdu — Tutor RAG de Matemática (Ensino Médio)                  |
+| **Projeto**                | DeepEdu — Tutor RAG de Matemática (Ensino Médio)                  |
 | **Versão**                 | 1.1                                                               |
 | **Data**                   | 22/07/2026                                                        |
 | **SO alvo**                | Ubuntu Server **22.04 LTS** ou **24.04 LTS**                      |
@@ -25,7 +25,7 @@ Siga **exatamente esta sequência**. Cada fase depende da anterior.
 | 1   | SO                   | Ubuntu Server LTS                     | Login SSH funcional               |
 | 2   | Sistema base         | Atualização, usuário, firewall, SSH   | `ufw` ativo, portas 22/80/443     |
 | 3   | Ferramentas de build | Git, Python 3.11+, compiladores       | `python3.11 --version` OK         |
-| 4   | Projeto              | Clone do repositório deepEdu          | Pasta `~/Projects/deepEdu` existe |
+| 4   | Projeto              | Clone do repositório DeepEdu          | Pasta `~/Projects/deepEdu` existe |
 | 5   | Ambiente Python      | venv + `requirements.txt`             | `pip list` mostra langchain       |
 | 6   | LLM local            | Amadeus-Verbo (Hugging Face)          | `install_hf_model.sh` OK          |
 | 7   | Embeddings           | Modelo sentence-transformers (1º uso) | Download concluído em cache       |
@@ -157,7 +157,7 @@ Anote tudo **antes** da instalação. Nesta fase você **não precisa** do servi
 
 ### 3.1 Domínio (e registro DNS)
 
-#### Para que serve no deepEdu
+#### Para que serve no DeepEdu
 
 O WhatsApp (Twilio ou Meta) **não fala com `http://192.168.x.x`**. Ele exige um endereço **público HTTPS** para enviar mensagens ao servidor (webhook).
 
@@ -213,7 +213,7 @@ getent hosts tutor.escola.edu.br
 dig +short tutor.escola.edu.br
 ```
 
-4. No `.env` do deepEdu (Fase 8 / produção):
+4. No `.env` do DeepEdu (Fase 8 / produção):
 
 ```env
 PUBLIC_BASE_URL=https://tutor.escola.edu.br
@@ -234,9 +234,9 @@ PUBLIC_BASE_URL=https://tutor.escola.edu.br
 
 ### 3.2 Conta LangSmith
 
-#### Para que serve no deepEdu
+#### Para que serve no DeepEdu
 
-LangSmith é a plataforma de **observabilidade** do ecossistema LangChain. No deepEdu ela grava o **rastreamento (trace)** de cada execução do pipeline RAG:
+LangSmith é a plataforma de **observabilidade** do ecossistema LangChain. No DeepEdu ela grava o **rastreamento (trace)** de cada execução do pipeline RAG:
 
 - pergunta do aluno
 - chunks recuperados e scores
@@ -296,7 +296,7 @@ O aluno pergunta nesta máquina, em `POST /perguntar` ou na aba Pergunta do pain
 
 ### 3.4 Conta Asaas (opcional — cobrança)
 
-#### Para que serve no deepEdu
+#### Para que serve no DeepEdu
 
 Asaas é o **gateway de pagamento brasileiro** já integrado. Só é necessário se você for **cobrar** alunos ou escolas.
 
@@ -321,7 +321,7 @@ Variáveis no `.env`:
 |----------|-----|
 | `ASAAS_API_KEY` | Autentica chamadas à API Asaas |
 | `ASAAS_BASE_URL` | `https://api.asaas.com/v3` (produção) ou sandbox |
-| `ASAAS_WEBHOOK_TOKEN` | Token que o Asaas envia no header; deepEdu valida em `/webhook/asaas` |
+| `ASAAS_WEBHOOK_TOKEN` | Token que o Asaas envia no header; DeepEdu valida em `/webhook/asaas` |
 | `ASAAS_BILLING_AMOUNT` | Valor padrão do plano aluno (ex.: `29.90`) |
 | `ASAAS_DEFAULT_BILLING_TYPE` | `UNDEFINED` = aluno escolhe PIX/boleto/cartão no checkout |
 | `SCHOOL_PLAN_AMOUNT` / `SCHOOL_PLAN_DAYS` | Plano escola |
@@ -365,7 +365,7 @@ PUBLIC_BASE_URL=https://tutor.escola.edu.br
 
 ### 3.5 Chave `ADMIN_API_KEY`
 
-#### Para que serve no deepEdu
+#### Para que serve no DeepEdu
 
 É a **senha secreta da API administrativa**. Não é login de usuário humano com senha no banco — é uma chave que o cliente (painel Streamlit, `curl`, scripts) envia no header HTTP:
 
@@ -405,7 +405,7 @@ a3f1c9e8b2d04765...   # 64 caracteres hex
 ```
 
 2. Guarde em um cofre (Bitwarden, 1Password, papel no cofre da escola — **não** no WhatsApp/e-mail).
-3. No servidor, no `.env` do deepEdu:
+3. No servidor, no `.env` do DeepEdu:
 
 ```env
 ADMIN_API_KEY=cole_aqui_o_resultado_do_openssl
@@ -450,7 +450,7 @@ Sem a chave correta → **403**. Chave fraca ou ausente em produção → a apli
 ### 3.6 Resumo — o que anotar num único bloco
 
 ```
-=== deepEdu Fase 0 ===
+=== DeepEdu Fase 0 ===
 Domínio:              ______________________________
 PUBLIC_BASE_URL:      https://______________________
 IP servidor (depois): ______________________________
@@ -600,7 +600,7 @@ sudo netplan apply
 
 ## 6. Fase 3 — Python 3.11 e dependências de sistema
 
-O deepEdu usa Python 3.11+. No Ubuntu 24.04:
+O DeepEdu usa Python 3.11+. No Ubuntu 24.04:
 
 ```bash
 sudo apt install -y \
@@ -803,7 +803,7 @@ nano .env
 ### 11.1 Variáveis mínimas para MVP local
 
 ```env
-APP_NAME=deepEdu
+APP_NAME=DeepEdu
 ENV=development
 HOST=0.0.0.0
 PORT=8000

@@ -4,7 +4,7 @@
 
 | Campo | Valor |
 |-------|-------|
-| **Projeto** | deepEdu — Tutor RAG de Matemática para Ensino Médio |
+| **Projeto** | DeepEdu — Tutor RAG de Matemática para Ensino Médio |
 | **Versão do documento** | 1.2 |
 | **Data** | 29/06/2026 |
 | **Status** | Aprovado para desenvolvimento |
@@ -1093,6 +1093,6 @@ Códigos de habilidade seguem o padrão `EM13MATnnn` (ex.: EM13MAT101). O catál
 
 | Versão | Data | Autor | Alteração |
 |--------|------|-------|-----------|
-| 1.0 | 29/06/2026 | deepEdu | Versão inicial revisada a partir da análise de requisitos |
-| 1.1 | 29/06/2026 | deepEdu | Orçamento de tokens Qwen2.5-Math 4K (RF46, TOKEN_BUDGET, prompts) |
-| 1.2 | 29/06/2026 | deepEdu | RF47 auditoria integral ECA; docs/AUDITORIA_ECA.md |
+| 1.0 | 29/06/2026 | DeepEdu | Versão inicial revisada a partir da análise de requisitos |
+| 1.1 | 29/06/2026 | DeepEdu | Orçamento de tokens Qwen2.5-Math 4K (RF46, TOKEN_BUDGET, prompts) |
+| 1.2 | 29/06/2026 | DeepEdu | RF47 auditoria integral ECA; docs/AUDITORIA_ECA.md |

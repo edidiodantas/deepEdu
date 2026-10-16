@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Pré-baixa o LLM oficial deepEdu no cache Hugging Face.
+# Pré-baixa o LLM oficial DeepEdu no cache Hugging Face.
 # Modelo: Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct (PT-BR, 0,49B, base Qwen2.5)
 set -euo pipefail
 

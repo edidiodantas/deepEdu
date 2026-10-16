@@ -1,5 +1,5 @@
 ================================================================================
-deepEdu — INSTALAÇÃO NO UBUNTU SERVER LTS — FOLHA PARA IMPRIMIR
+DeepEdu — INSTALAÇÃO NO UBUNTU SERVER LTS — FOLHA PARA IMPRIMIR
 Data: 07/08/2026
 SO: Ubuntu Server 24.04 LTS (também vale 22.04 com as notas no final)
 Pasta no servidor: ~/deepEdu
@@ -275,7 +275,7 @@ Terminal 2 (outro TTY):
 curl -s http://127.0.0.1:8000/health
 
 Resposta esperada (JSON):
-  {"status":"ok","service":"deepEdu"}
+  {"status":"ok","service":"DeepEdu"}
 
 Voltar ao uvicorn: Ctrl+Alt+F1 (ou a tecla do 1º terminal)
 Para parar a API: Ctrl+C
@@ -346,5 +346,5 @@ PRÓXIMO (outra folha — NÃO agora)
 A pergunta entra em /perguntar ou no painel. A auditoria fica em data/audit/audit.db.
 Só depois do /health estável e 1 pergunta testada.
 
-FIM — deepEdu instalação Ubuntu LTS + Amadeus-Verbo (imprimir)
+FIM — DeepEdu instalação Ubuntu LTS + Amadeus-Verbo (imprimir)
 ================================================================================

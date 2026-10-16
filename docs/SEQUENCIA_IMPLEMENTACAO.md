@@ -1,4 +1,4 @@
-# Sequência oficial de implementação — deepEdu
+# Sequência oficial de implementação — DeepEdu
 
 | Campo | Valor |
 |-------|-------|
@@ -75,20 +75,20 @@ S9  Billing Asaas (opcional)           → só se for cobrar
 
 | Etapa | Módulo(s) | Pasta(s) no projeto | Nome sugerido do chat | Docs obrigatórios no chat |
 |-------|-----------|---------------------|------------------------|---------------------------|
-| **S0** | — (contas) | `.env` (depois) | `deepEdu S0 pré-requisitos` | `INSTALACAO_INFRAESTRUTURA.md` §3 |
-| **S1** | Infra base | sistema / venv | `deepEdu S1 ambiente` | `INSTALACAO_INFRAESTRUTURA.md` Fases 1–5 |
-| **S2** | **M05** | `app/core/llm_factory.py`, `app/rag/sympy_tool.py` | `deepEdu M05 LLM` | Este + REQUISITOS RF14/RF35 + CONTROLE |
-| **S3** | **M06+M07** | `app/rag/indexer.py`, `loader.py`, `data/` | `deepEdu M06-M07 ingestão` | RF15–RF24 + CONTROLE |
-| **S4a** | **M04** | `app/rag/retriever.py`, `reranker.py` | `deepEdu M04 retriever` | RF13, RF26 + CONTROLE |
-| **S4b** | **M03** | `app/memory/` | `deepEdu M03 memória` | RF03, RF08 + CONTROLE |
-| **S5a** | **M02** | `app/services/`, `app/rag/chain.py` | `deepEdu M02 orquestrador` | RF04, RF12, RF46 + TOKEN_BUDGET |
-| **S5b** | **M01** | `app/api/`, `app/integrations/` | `deepEdu M01 API` | RF05, RF40 (webhook depois) |
-| **S6a** | **M10** | `control_panel/` | `deepEdu M10 painel` | RF44 + CONTROLE |
-| **S6b** | **M09** | `app/audit/` | `deepEdu M09 auditoria` | RF31, RF47 + AUDITORIA_ECA |
-| **S7** | Infra nuvem | Nginx, systemd, DNS | `deepEdu S7 HTTPS` | INSTALACAO Fases 13–16 |
-| **S8** | WhatsApp | Twilio/Meta | `deepEdu S8 WhatsApp` | INSTALACAO §3.3 + Fase 15 |
-| **S9** | Billing | `app/billing/` | `deepEdu S9 Asaas` | INSTALACAO §3.4 (opcional) |
-| **Coord** | Todos | — | `deepEdu COORDENADOR` | `CONTROLE_MODULOS.md` |
+| **S0** | — (contas) | `.env` (depois) | `DeepEdu S0 pré-requisitos` | `INSTALACAO_INFRAESTRUTURA.md` §3 |
+| **S1** | Infra base | sistema / venv | `DeepEdu S1 ambiente` | `INSTALACAO_INFRAESTRUTURA.md` Fases 1–5 |
+| **S2** | **M05** | `app/core/llm_factory.py`, `app/rag/sympy_tool.py` | `DeepEdu M05 LLM` | Este + REQUISITOS RF14/RF35 + CONTROLE |
+| **S3** | **M06+M07** | `app/rag/indexer.py`, `loader.py`, `data/` | `DeepEdu M06-M07 ingestão` | RF15–RF24 + CONTROLE |
+| **S4a** | **M04** | `app/rag/retriever.py`, `reranker.py` | `DeepEdu M04 retriever` | RF13, RF26 + CONTROLE |
+| **S4b** | **M03** | `app/memory/` | `DeepEdu M03 memória` | RF03, RF08 + CONTROLE |
+| **S5a** | **M02** | `app/services/`, `app/rag/chain.py` | `DeepEdu M02 orquestrador` | RF04, RF12, RF46 + TOKEN_BUDGET |
+| **S5b** | **M01** | `app/api/`, `app/integrations/` | `DeepEdu M01 API` | RF05, RF40 (webhook depois) |
+| **S6a** | **M10** | `control_panel/` | `DeepEdu M10 painel` | RF44 + CONTROLE |
+| **S6b** | **M09** | `app/audit/` | `DeepEdu M09 auditoria` | RF31, RF47 + AUDITORIA_ECA |
+| **S7** | Infra nuvem | Nginx, systemd, DNS | `DeepEdu S7 HTTPS` | INSTALACAO Fases 13–16 |
+| **S8** | WhatsApp | Twilio/Meta | `DeepEdu S8 WhatsApp` | INSTALACAO §3.3 + Fase 15 |
+| **S9** | Billing | `app/billing/` | `DeepEdu S9 Asaas` | INSTALACAO §3.4 (opcional) |
+| **Coord** | Todos | — | `DeepEdu COORDENADOR` | `CONTROLE_MODULOS.md` |
 
 ---
 

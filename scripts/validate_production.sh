@@ -23,7 +23,7 @@ check_cmd() {
   fi
 }
 
-echo "== deepEdu | Validacao de producao =="
+echo "== DeepEdu | Validacao de producao =="
 echo "Dominio: ${DOMAIN}"
 echo
 

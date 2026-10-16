@@ -36,7 +36,7 @@ class AsaasClient:
             "billingType": billing_type,
             "value": value,
             "dueDate": due_date,
-            "description": "Assinatura deepEdu",
+            "description": "Assinatura DeepEdu",
             "externalReference": external_reference,
         }
         with httpx.Client(timeout=self.timeout) as client:

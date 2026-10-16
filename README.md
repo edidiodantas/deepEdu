@@ -1,4 +1,4 @@
-# deepEdu
+# DeepEdu
 
 Tutor de Matemática do Ensino Médio. A pergunta da tese é se o pipeline pode ser auditado: consentimento, recuperação, geração e resposta ficam numa trilha verificável. O RAG é o objeto auditado, não o tema da pesquisa.
 
@@ -88,7 +88,7 @@ python scripts/run_indexing.py
 
 ### Limites do RAG com livros (importante)
 
-O deepEdu indexa **texto** dos PDFs (via PyMuPDF). **Não entram no RAG:**
+O DeepEdu indexa **texto** dos PDFs (via PyMuPDF). **Não entram no RAG:**
 
 - figuras, diagramas, gráficos e imagens
 - esquemas desenhados sem texto selecionável
@@ -108,6 +108,16 @@ Após mudar chunk/overlap, rode de novo `python scripts/run_indexing.py` (a cole
 ### Pelo painel (sem linha de comando)
 
 Na aba **Materiais** do painel (`control_panel`): envie PDFs/TXT/MD, veja a lista, remova arquivos e clique em **Reindexar**. O tutor usa o índice novo já na próxima pergunta. Cada upload (com SHA-256), remoção e reindexação fica na trilha de auditoria (`admin.material.*`, `admin.index.rebuild`). Rotas usadas (exigem `X-Admin-Api-Key`): `GET/POST /admin/materials`, `DELETE /admin/materials/{arquivo}`, `POST /admin/index/rebuild`.
+
+## Atalho: ligar tudo com um clique
+
+Depois de instalar (passos 1–3), crie o atalho uma vez:
+
+```bash
+bash scripts/criar_atalho.sh
+```
+
+Aparece **DeepEdu** no menu de aplicativos e na Área de Trabalho. Ele abre uma janela que liga a API e o painel e abre o navegador; fechar a janela desliga tudo. Sem atalho: `bash scripts/iniciar.sh`. Logs em `data/logs/`.
 
 ## 5) Teste local da API
 

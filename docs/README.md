@@ -1,4 +1,4 @@
-# Documentação — deepEdu
+# Documentação — DeepEdu
 
 > **Implementação / sequência:** comece por **[`SEQUENCIA_IMPLEMENTACAO.md`](SEQUENCIA_IMPLEMENTACAO.md)** (fonte da verdade) ou pelo atalho na raiz [`../IMPLEMENTACAO.md`](../IMPLEMENTACAO.md).
 

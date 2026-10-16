@@ -1,4 +1,4 @@
-# deepEdu — Comece aqui (implementação)
+# DeepEdu — Comece aqui (implementação)
 
 Este arquivo na **raiz do projeto** existe para não haver dúvida de por onde seguir.
 

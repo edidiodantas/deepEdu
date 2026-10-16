@@ -6,7 +6,7 @@
 | **Parâmetros** | 0,49 bilhão |
 | **Provedor** | Hugging Face (`LLM_PROVIDER=huggingface`) |
 | **Janela nativa do modelo** | **32.768 tokens** |
-| **Orçamento usado pelo deepEdu** | **~4.000 tokens** |
+| **Orçamento usado pelo DeepEdu** | **~4.000 tokens** |
 | **Tokenizer** | o próprio modelo Amadeus (`LLM_TOKENIZER_ID`) |
 | **Versão** | 1.2 |
 | **Data** | 13/10/2026 |
@@ -130,4 +130,4 @@ Registrar no LangSmith (RF31): `input_tokens`, `rag_tokens`, `history_tokens`, `
 
 - Modelo: [Amadeus-Verbo 0.5B](https://huggingface.co/amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct) — `max_position_embeddings: 32768`
 - Relatório: [Amadeus-Verbo Technical Report](https://arxiv.org/html/2506.00019)
-- O teto de ~4.000 tokens é escolha do deepEdu para notebook modesto e para a trilha de auditoria, não o limite do modelo.
+- O teto de ~4.000 tokens é escolha do DeepEdu para notebook modesto e para a trilha de auditoria, não o limite do modelo.

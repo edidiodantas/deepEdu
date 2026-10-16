@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
-    APP_NAME: str = "deepEdu"
+    APP_NAME: str = "DeepEdu"
     ENV: str = "development"
     # 0.0.0.0: o chat abre no celular e nos outros PCs da mesma rede.
     # 127.0.0.1 so responde nesta maquina.

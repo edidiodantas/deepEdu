@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Prepara o projeto deepEdu para copiar ao pendrive (PC offline).
+# Prepara o projeto DeepEdu para copiar ao pendrive (PC offline).
 # Uso:
 #   ./scripts/prepare_pendrive.sh
 #   ./scripts/prepare_pendrive.sh /media/Edidio/MEU_PENDRIVE
@@ -22,7 +22,7 @@ done
 BUNDLE="${DEST}/deepEdu"
 WHEELS_DIR="${BUNDLE}/offline/wheels"
 
-echo "== deepEdu | Preparar pendrive =="
+echo "== DeepEdu | Preparar pendrive =="
 echo "Origem: ${ROOT}"
 echo "Destino: ${BUNDLE}"
 echo

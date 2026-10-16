@@ -1,4 +1,4 @@
-# Segurança de Dados em Repouso — deepEdu
+# Segurança de Dados em Repouso — DeepEdu
 
 | Campo | Valor |
 |-------|-------|

@@ -2,7 +2,7 @@
 ARQUIVO LEGADO — NÃO USE COMO GUIA PRINCIPAL (17/09/2026)
 LLM oficial = Amadeus-Verbo (Hugging Face). Use IMPRIMIR_AGORA.txt
 ================================================================================
-deepEdu — ENSAIO NUVEM — UBUNTU SERVER 24.04 LTS — IMPRIMIR E LEVAR
+DeepEdu — ENSAIO NUVEM — UBUNTU SERVER 24.04 LTS — IMPRIMIR E LEVAR
 Pasta no Server:  ~/Projects/02_deepEduNuvem
 LLM (projeto):    Amadeus-Verbo HF (ver IMPRIMIR_AGORA.txt) — NÃO Ollama por padrão
 Fonte:            requirements.txt + scripts/install_hf_model.sh

@@ -64,7 +64,7 @@ def has_active_access(phone: str) -> tuple[bool, StudentSubscription]:
 
 def payment_instructions_message() -> str:
     return (
-        "Sua assinatura do deepEdu nao esta ativa no momento. "
+        "Sua assinatura do DeepEdu nao esta ativa no momento. "
         "Para continuar, solicite seu link de pagamento ao suporte/professor. "
         "Se voce ja pagou, aguarde alguns minutos e tente novamente."
     )
@@ -73,7 +73,7 @@ def payment_instructions_message() -> str:
 def payment_instructions_with_link(checkout_url: str | None) -> str:
     if checkout_url:
         return (
-            "Sua assinatura do deepEdu nao esta ativa no momento.\n"
+            "Sua assinatura do DeepEdu nao esta ativa no momento.\n"
             "Voce pode pagar por PIX, boleto ou cartao no link abaixo:\n"
             f"{checkout_url}\n"
             "Assim que o pagamento for confirmado, seu acesso sera liberado automaticamente."

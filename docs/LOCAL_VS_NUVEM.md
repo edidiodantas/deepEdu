@@ -1,4 +1,4 @@
-# Localhost × Nuvem — deepEdu
+# Localhost × Nuvem — DeepEdu
 
 | Campo | Valor |
 |-------|-------|
@@ -11,7 +11,7 @@
 
 ## 1. Resposta clara (para não ter medo)
 
-Imagine o deepEdu como um **mesmo programa** que você pode ligar em dois lugares:
+Imagine o DeepEdu como um **mesmo programa** que você pode ligar em dois lugares:
 
 | | **Localhost (sua máquina / servidor local)** | **Nuvem (VPS sem GPU)** |
 |--|---------------------------------------------|-------------------------|

@@ -3,7 +3,7 @@
 | Campo | Valor |
 |-------|-------|
 | **Controlador** | _________________________ (Instituição de Ensino) |
-| **Operador** | _________________________ (Responsável técnico / deepEdu) |
+| **Operador** | _________________________ (Responsável técnico / DeepEdu) |
 | **Encarregado (DPO)** | _________________________ |
 | **Contato DPO** | _________________________ |
 | **Versão** | 1.0 |
@@ -16,7 +16,7 @@
 
 | Campo | Descrição |
 |-------|-----------|
-| **Nome do sistema** | deepEdu — Tutor RAG de Matemática para Ensino Médio |
+| **Nome do sistema** | DeepEdu — Tutor RAG de Matemática para Ensino Médio |
 | **Finalidade** | Tutoria personalizada em Matemática via WhatsApp, com recuperação de conteúdo curricular indexado |
 | **Base legal (LGPD)** | Consentimento do responsável legal (Art. 7º, I) + Legítimo interesse educacional com salvaguardas (Art. 7º, IX), em conformidade com ECA Digital |
 | **Categorias de titulares** | Estudantes do Ensino Médio (15–17 anos), menores de idade |
@@ -59,7 +59,7 @@
 ```
 Estudante (WhatsApp)
     → Meta Cloud API (webhook HTTPS)
-    → deepEdu API (validação, fila)
+    → DeepEdu API (validação, fila)
     → Worker (RAG: retrieval + LLM)
     → Banco vetorial (Qdrant) — apenas corpus curricular, sem PII
     → Banco de sessões (PostgreSQL/SQLite) — histórico pseudonimizado
