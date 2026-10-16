@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends
+import uuid
+
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from fastapi.responses import PlainTextResponse
 
 from app.audit.admin_audit import audited_admin_action
@@ -19,7 +21,15 @@ from app.billing.service import (
     create_school,
     get_school_for_student,
 )
+from app.audit.service import log_event
 from app.core.security import require_admin_api_key
+from app.rag.materials import (
+    MaterialError,
+    delete_material,
+    index_lock,
+    list_materials,
+    save_material,
+)
 
 router = APIRouter(prefix="/admin", tags=["admin"], dependencies=[Depends(require_admin_api_key)])
 
@@ -183,3 +193,72 @@ def report_incident(severity: str, description: str, action_taken: str = ""):
         reported_by="admin",
     )
     return {"ok": True, "incident_id": incident_id}
+
+
+def _log_admin(correlation_id: str, action: str, resource: str, outcome: str, metadata: dict) -> None:
+    log_event(
+        correlation_id=correlation_id,
+        actor_type="admin",
+        actor_id="admin",
+        session_id="admin",
+        action=action,
+        resource=resource,
+        outcome=outcome,
+        metadata=metadata,
+    )
+
+
+@router.get("/materials")
+def get_materials():
+    return {"items": list_materials()}
+
+
+@router.post("/materials")
+def upload_materials(files: list[UploadFile] = File(...)):
+    correlation_id = str(uuid.uuid4())
+    saved, errors = [], []
+    for upload in files:
+        try:
+            info = save_material(upload.filename or "", upload.file.read())
+        except MaterialError as exc:
+            errors.append({"name": upload.filename, "error": str(exc)})
+            _log_admin(correlation_id, "admin.material.upload", "materials", "failure", {"error": str(exc)})
+            continue
+        saved.append(info)
+        _log_admin(correlation_id, "admin.material.upload", info["name"], "success", info)
+    return {"ok": not errors, "saved": saved, "errors": errors, "correlation_id": correlation_id}
+
+
+@router.delete("/materials/{filename}")
+def remove_material(filename: str):
+    correlation_id = str(uuid.uuid4())
+    try:
+        info = delete_material(filename)
+    except MaterialError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Material nao encontrado")
+    _log_admin(correlation_id, "admin.material.delete", info["name"], "success", info)
+    return {"ok": True, **info, "correlation_id": correlation_id}
+
+
+@router.post("/index/rebuild")
+def rebuild_index():
+    """Reindexa data/materials. A próxima pergunta já usa o índice novo."""
+    from app.rag.indexer import build_index
+
+    if not index_lock.acquire(blocking=False):
+        raise HTTPException(status_code=409, detail="Indexacao ja em andamento")
+    correlation_id = str(uuid.uuid4())
+    try:
+        chunks = build_index(correlation_id=correlation_id)
+    except ValueError as exc:
+        _log_admin(correlation_id, "admin.index.rebuild", "chroma", "failure", {"error": str(exc)})
+        raise HTTPException(status_code=400, detail=str(exc))
+    except Exception as exc:
+        _log_admin(correlation_id, "admin.index.rebuild", "chroma", "failure", {"error": type(exc).__name__})
+        raise
+    finally:
+        index_lock.release()
+    _log_admin(correlation_id, "admin.index.rebuild", "chroma", "success", {"chunks": chunks})
+    return {"ok": True, "chunks": chunks, "correlation_id": correlation_id}

@@ -105,6 +105,10 @@ CHUNK_OVERLAP_TOKENS=120
 
 Após mudar chunk/overlap, rode de novo `python scripts/run_indexing.py` (a coleção Chroma é reconstruída).
 
+### Pelo painel (sem linha de comando)
+
+Na aba **Materiais** do painel (`control_panel`): envie PDFs/TXT/MD, veja a lista, remova arquivos e clique em **Reindexar**. O tutor usa o índice novo já na próxima pergunta. Cada upload (com SHA-256), remoção e reindexação fica na trilha de auditoria (`admin.material.*`, `admin.index.rebuild`). Rotas usadas (exigem `X-Admin-Api-Key`): `GET/POST /admin/materials`, `DELETE /admin/materials/{arquivo}`, `POST /admin/index/rebuild`.
+
 ## 5) Teste local da API
 
 ```bash
