@@ -59,7 +59,7 @@ echo "    1) bash scripts/install_hf_model.sh        # baixa Amadeus-Verbo"
 echo "    2) Copie PDFs para data/materials/         # corpus do RAG"
 echo "    3) source .venv/bin/activate"
 echo "    4) python scripts/run_indexing.py          # cria data/chroma/"
-echo "    5) uvicorn app.api.main:app --host 127.0.0.1 --port 8000"
+echo "    5) uvicorn app.api.main:app --host 0.0.0.0 --port 8000"
 echo "    6) curl http://127.0.0.1:8000/health"
 echo
 echo "Plano: docs/PLANO_ESTE_PC.md"

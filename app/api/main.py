@@ -1,6 +1,8 @@
 import uuid
+from pathlib import Path
 
 from fastapi import FastAPI, Header, HTTPException, Request
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
 from app.audit import init_audit
@@ -27,6 +29,15 @@ def startup_event():
     run_startup_checks()
     init_audit()
     init_billing()
+
+
+_CHAT_PAGE = Path(__file__).with_name("chat.html")
+
+
+@app.get("/")
+@app.get("/chat")
+def chat_page():
+    return FileResponse(_CHAT_PAGE)
 
 
 @app.get("/health")

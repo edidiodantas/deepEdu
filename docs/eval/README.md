@@ -4,6 +4,16 @@
 
 Conjunto de perguntas de referência para medir qualidade do RAG (RF38), executado via `scripts/eval_rag.py`.
 
+## Conjunto de referência (sem juiz automático)
+
+`docs/eval/golden_seguranca.csv` mais o gabarito deste CSV. Rode:
+
+```bash
+python scripts/eval_golden.py
+```
+
+Confere recusa, cerca, vazamento, ação indevida, formato e, se o SymPy estiver instalado, o cálculo. O relatório sai em `reports/golden_latest.json`.
+
 ## Arquivo
 
 - **CSV:** `docs/eval/dataset_rag_matematica_em.csv`

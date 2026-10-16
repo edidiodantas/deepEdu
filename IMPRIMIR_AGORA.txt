@@ -263,10 +263,11 @@ Terminal 1 (deixe rodando):
 
 cd ~/deepEdu
 source .venv/bin/activate
-uvicorn app.api.main:app --host 127.0.0.1 --port 8000
+uvicorn app.api.main:app --host 0.0.0.0 --port 8000
 
 Na 1ª subida o modelo pode demorar a carregar na RAM.
 Deve aparecer: Uvicorn running on http://0.0.0.0:8000
+127.0.0.1 NAO abre em outro aparelho. O host tem de ser 0.0.0.0.
 
 Terminal 2 (outro TTY):
   Ctrl+Alt+F2  → login de novo
@@ -287,13 +288,24 @@ curl -s http://127.0.0.1:8000/perguntar \
 O JSON traz "answer" e "correlation_id".
 Esse id liga os eventos em data/audit/audit.db.
 
-Painel (outro terminal, com o venv ativo):
+Chat do aluno, no navegador DESTA maquina:
+
+http://127.0.0.1:8000/
+
+No celular ou em outro PC da mesma rede (Wi-Fi da escola):
+
+hostname -I
+http://IP-DA-MAQUINA:8000/
+
+Exemplo: se hostname -I mostrar 192.168.15.72, abra
+http://192.168.15.72:8000/
+Se o firewall estiver ligado: sudo ufw allow 8000/tcp
+
+Painel da escola, se quiser ver a auditoria (outro terminal, venv ativo):
 
 cd ~/deepEdu/control_panel
 pip install -r requirements-control.txt
 streamlit run streamlit_app.py
-
-Abre http://127.0.0.1:8501 — aba Pergunta.
 
 Voltar ao uvicorn: Ctrl+Alt+F1 (ou a tecla do 1º terminal)
 Para parar a API: Ctrl+C
@@ -361,7 +373,7 @@ Se faltar pacote de build: sudo apt install -y build-essential
 ================================================================================
 INSTALAÇÃO LOCAL — FIM
 ================================================================================
-Não há canal externo. A pergunta entra em /perguntar ou no painel.
+O aluno abre o chat pelo IP desta maquina, porta 8000, na mesma rede.
 A auditoria fica em data/audit/audit.db.
 
 FIM — deepEdu instalação Ubuntu LTS + Amadeus-Verbo (imprimir)

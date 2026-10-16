@@ -103,7 +103,7 @@ python -c "import langchain, fastapi, chromadb; from app.core.llm_factory import
 # 2) Testes automatizados
 python -m unittest discover -s tests -v
 
-# 3) API no ar? (em outro terminal: uvicorn app.api.main:app --host 127.0.0.1 --port 8000)
+# 3) API no ar? (em outro terminal: uvicorn app.api.main:app --host 0.0.0.0 --port 8000)
 curl -s http://127.0.0.1:8000/health
 
 # 4) Índice existe?
