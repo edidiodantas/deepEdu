@@ -29,8 +29,8 @@ def _get(path: str, params: dict | None = None):
 st.set_page_config(page_title="deepEdu local", layout="wide")
 st.title("deepEdu — painel local")
 
-tab_q, tab1, tab2, tab3, tab4 = st.tabs(
-    ["Pergunta", "Aluno", "Escola", "ECA / Auditoria", "Operacao"]
+tab_q, tab_mat, tab1, tab2, tab3, tab4 = st.tabs(
+    ["Pergunta", "Materiais", "Aluno", "Escola", "ECA / Auditoria", "Operacao"]
 )
 
 with tab_q:
@@ -60,6 +60,77 @@ with tab_q:
 
 if not ADMIN_API_KEY:
     st.warning("Sem ADMIN_API_KEY as abas administrativas nao autenticam. A aba Pergunta funciona.")
+
+with tab_mat:
+    st.subheader("Materiais didaticos (RAG)")
+    st.caption("Envie PDFs/TXT/MD e clique em Reindexar. O tutor passa a usar o indice novo na proxima pergunta.")
+
+    uploads = st.file_uploader(
+        "Enviar arquivos", type=["pdf", "txt", "md"], accept_multiple_files=True
+    )
+    if uploads and st.button("Enviar para data/materials"):
+        try:
+            resp = requests.post(
+                f"{BASE_URL}/admin/materials",
+                files=[("files", (f.name, f.getvalue(), f.type or "application/octet-stream")) for f in uploads],
+                headers=_headers(),
+                timeout=120,
+            )
+        except requests.RequestException as exc:
+            st.error(f"API inacessivel: {exc}")
+        else:
+            data = resp.json() if resp.headers.get("content-type", "").startswith("application/json") else {}
+            if resp.status_code == 200:
+                for item in data.get("saved", []):
+                    st.success(f"{item['name']} enviado ({item['bytes'] / 1024:.1f} KB)")
+                for item in data.get("errors", []):
+                    st.error(f"{item['name']}: {item['error']}")
+                if data.get("saved"):
+                    st.info("Agora clique em Reindexar para o tutor usar os arquivos novos.")
+            else:
+                st.error(f"Erro {resp.status_code}: {data or resp.text}")
+
+    st.divider()
+    try:
+        code, data = _get("/admin/materials")
+    except requests.RequestException as exc:
+        code, data = 0, str(exc)
+    if code == 200 and isinstance(data, dict):
+        items = data.get("items", [])
+        st.write(f"{len(items)} arquivo(s) em data/materials")
+        if items:
+            st.dataframe(
+                [{"arquivo": i["name"], "KB": round(i["bytes"] / 1024, 1), "modificado": i["modified_at"]} for i in items],
+                use_container_width=True,
+            )
+            to_delete = st.selectbox("Remover arquivo", [i["name"] for i in items])
+            if st.button("Remover"):
+                resp = requests.delete(
+                    f"{BASE_URL}/admin/materials/{requests.utils.quote(to_delete)}",
+                    headers=_headers(),
+                    timeout=20,
+                )
+                if resp.status_code == 200:
+                    st.success(f"{to_delete} removido. Reindexe para tirar do tutor.")
+                else:
+                    st.error(f"Erro {resp.status_code}: {resp.text}")
+    else:
+        st.error(f"Nao foi possivel listar materiais ({code}): {data}")
+
+    st.divider()
+    if st.button("Reindexar", type="primary"):
+        with st.spinner("Indexando... (pode levar alguns minutos)"):
+            try:
+                resp = requests.post(
+                    f"{BASE_URL}/admin/index/rebuild", headers=_headers(), timeout=1800
+                )
+            except requests.RequestException as exc:
+                st.error(f"API inacessivel: {exc}")
+            else:
+                if resp.status_code == 200:
+                    st.success(f"Indexacao concluida: {resp.json().get('chunks')} trechos.")
+                else:
+                    st.error(f"Erro {resp.status_code}: {resp.text}")
 
 with tab1:
     st.subheader("Assinatura individual")
