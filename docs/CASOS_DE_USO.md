@@ -1,9 +1,9 @@
-# Casos de Uso — deepEdu (derivados de RF e RNF)
+# Casos de Uso — DeepEdu (derivados de RF e RNF)
 
 | Campo | Valor |
 |-------|-------|
 | **Versão** | 1.0 |
-| **Projeto** | deepEdu — Tutor RAG Matemática EM |
+| **Projeto** | DeepEdu — Tutor RAG Matemática EM |
 | **Base** | `docs/REQUISITOS.md` v1.2 |
 | **Formato** | Um caso de uso por RF/RNF |
 
@@ -12,12 +12,12 @@
 ## 1. Visão geral
 
 Cada caso de uso (UC) rastreia diretamente um requisito funcional (RF) ou não funcional (RNF).
-Atores principais: **Estudante EM**, **Administrador/DPO**, **Operador**, **Sistema deepEdu**.
+Atores principais: **Estudante EM**, **Administrador/DPO**, **Operador**, **Sistema DeepEdu**.
 
 ### Diagrama de contexto
 
 ```
-Estudante ──WhatsApp──► deepEdu API ──► RAG (retrieval + Qwen + SymPy)
+Estudante ──WhatsApp──► DeepEdu API ──► RAG (retrieval + Qwen + SymPy)
                               │
 Administrador ──painel/API──►├─► audit_log / LangSmith
 DPO ──export────────────────┘
@@ -33,7 +33,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF01 |
 | **Módulos** | M02, M05, M01 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** O sistema deve responder consultas em linguagem coloquial e acessível a adolescentes (15–17 anos), mantendo rigor matemático. |
 
@@ -55,7 +55,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF02 |
 | **Módulos** | M02, M04, M05, M06 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Utilizar LangChain como base de composição de componentes (loaders, retrievers, chains/runnables). |
 
@@ -77,7 +77,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF03 |
 | **Módulos** | M03, M02 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Manter contexto entre mensagens da mesma sessão para conversas com múltiplas trocas. |
 
@@ -99,7 +99,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF04 |
 | **Módulos** | M02 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Orquestrar o fluxo conversacional com LangGraph e checkpointer (substitui `ConversationChain`, depreciado). |
 
@@ -121,7 +121,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF05 |
 | **Módulos** | M01, M10 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Interface web simples para interação com o chatbot e testes internos. |
 
@@ -143,7 +143,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF06 |
 | **Módulos** | M02, M05 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Prompts de sistema versionados para tutoria em Matemática do Ensino Médio. |
 
@@ -165,7 +165,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF07 |
 | **Módulos** | M02, M03 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Utilizar histórico, intenção e entidades para respostas contextualizadas. |
 
@@ -187,7 +187,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF08 |
 | **Módulos** | M03 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Combinar memória de buffer e resumo; limitar detalhes desnecessários. |
 
@@ -209,7 +209,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF09 |
 | **Módulos** | M02, M05 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Decompor consultas complexas em subtarefas; usar ferramentas (APIs, calculadora, SymPy). |
 
@@ -231,7 +231,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF10 |
 | **Módulos** | M02, M05 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Integrar resultados de retrieval e ferramentas numa resposta única e coerente. |
 
@@ -253,7 +253,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF11 |
 | **Módulos** | M03, M02 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Armazenar entradas, intenções e entidades; atualizar com novas mensagens. |
 
@@ -275,7 +275,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF12 |
 | **Módulos** | M04, M05, M06, M07, M02 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** O sistema deve implementar Retriever, Gerador, Fonte de conhecimento e Orquestrador. |
 
@@ -297,7 +297,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF13 |
 | **Módulos** | M04 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Combinar busca densa (embeddings) e esparsa (BM25) com fusão de resultados. |
 
@@ -319,7 +319,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF14 |
 | **Módulos** | M05 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Utilizar modelo especializado em matemática, não LLM genérico. |
 
@@ -341,7 +341,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF15 |
 | **Módulos** | M06, M07, M08 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Suportar PDFs, DOCX, TXT e fontes estruturadas com metadados. |
 
@@ -363,7 +363,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF16 |
 | **Módulos** | M06 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Carregar e processar documentos em lotes para evitar esgotamento de memória. |
 
@@ -385,7 +385,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF17 |
 | **Módulos** | M06 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Remover ruído, normalizar texto e eliminar duplicados antes da indexação. |
 
@@ -407,7 +407,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF18 |
 | **Módulos** | M06 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Suportar texto, PDF nativo, DOCX; OCR para PDFs escaneados. |
 
@@ -429,7 +429,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF19 |
 | **Módulos** | M06 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Permitir ingestão web apenas de domínios na whitelist, com revisão. |
 
@@ -451,7 +451,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF20 |
 | **Módulos** | M06 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Segmentar por frases e parágrafos, preservando blocos matemáticos. |
 
@@ -473,7 +473,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF21 |
 | **Módulos** | M04, M06 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Chunks pequenos para busca precisa; contexto expandido do documento pai na geração. |
 
@@ -495,7 +495,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF22 |
 | **Módulos** | M06, M07 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Incorporar texto com modelo multilíngue compatível com português. |
 
@@ -517,7 +517,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF23 |
 | **Módulos** | M06 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Processar embeddings em batch para eficiência em grande escala. |
 
@@ -539,7 +539,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF24 |
 | **Módulos** | M07 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Armazenar e consultar vetores com ambientes distintos para teste e produção. |
 
@@ -561,7 +561,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF25 |
 | **Módulos** | M04, M07 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Usar similaridade cosseno na busca densa. |
 
@@ -583,7 +583,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF26 |
 | **Módulos** | M04 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Aplicar re-ranking para melhorar precisão após fusão híbrida. |
 
@@ -605,7 +605,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF27 |
 | **Módulos** | M06, M09 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Detectar e mascarar dados confidenciais antes da indexação. |
 
@@ -627,7 +627,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF28 |
 | **Módulos** | M02, M05 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Reduzir respostas tendenciosas ou estereotipadas. |
 
@@ -649,7 +649,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF29 |
 | **Módulos** | M02, M01, M10 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Apresentar documentos/chunks usados na geração da resposta. |
 
@@ -671,7 +671,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF30 |
 | **Módulos** | M09 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Anonimização, auditoria, consentimento e direitos do titular. |
 
@@ -693,7 +693,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF31 |
 | **Módulos** | M09, M02 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Rastrear todas as execuções do pipeline RAG no LangSmith. |
 
@@ -715,7 +715,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF32 |
 | **Módulos** | M09, M01 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Atender obrigações para sistemas com acesso provável por menores. |
 
@@ -737,7 +737,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF33 |
 | **Módulos** | M08, M02, M05 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Respostas e conteúdo indexado alinhados às competências e habilidades EM13MAT. |
 
@@ -759,7 +759,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF34 |
 | **Módulos** | M05, M01, M10 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Suportar fórmulas e símbolos matemáticos na geração e exibição. |
 
@@ -781,7 +781,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF35 |
 | **Módulos** | M05, M02 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Validar cálculos numéricos e simbólicos com ferramenta externa. |
 
@@ -803,7 +803,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF36 |
 | **Módulos** | M06, M08 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Cada documento indexado deve ter metadados estruturados. |
 
@@ -825,7 +825,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF37 |
 | **Módulos** | M02, M04 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Não responder quando confiança ou recuperação forem insuficientes. |
 
@@ -847,7 +847,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF38 |
 | **Módulos** | M09, M10 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Conjunto de testes de regressão para qualidade de recuperação e geração. |
 
@@ -869,7 +869,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF39 |
 | **Módulos** | M06, M07 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Atualizar índice sem reprocessar corpus inteiro; versionar coleções. |
 
@@ -891,7 +891,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF40 |
 | **Módulos** | M01 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Comunicação com clientes via WhatsApp Business Cloud API (Meta). |
 
@@ -913,7 +913,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF41 |
 | **Módulos** | M01 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Evitar processamento duplicado de webhooks. |
 
@@ -935,7 +935,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF42 |
 | **Módulos** | M01, M09 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Fluxo de consentimento LGPD/ECA Digital e cancelamento. |
 
@@ -957,7 +957,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF43 |
 | **Módulos** | M02, M06 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Diferenciar explicação passo a passo de entrega direta de gabarito. |
 
@@ -979,7 +979,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF44 |
 | **Módulos** | M10 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Painel para gestão do sistema RAG sem sobrecarregar o servidor. |
 
@@ -1001,7 +1001,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF45 |
 | **Módulos** | M06 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Preservar estrutura de tabelas e descrição de figuras para RAG. |
 
@@ -1023,7 +1023,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF46 |
 | **Módulos** | M02, M03, M04, M05 |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Toda montagem de prompt, memória e retrieval deve respeitar a janela de **4.096 tokens** do `Qwen2.5-Math-1.5B-Instruct`. |
 
@@ -1045,7 +1045,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RF47 |
 | **Módulos** | M01–M10, M09 (camada transversal) |
-| **Atores** | Estudante EM, Sistema deepEdu |
+| **Atores** | Estudante EM, Sistema DeepEdu |
 | **Pré-condições** | Matrícula ECA ativa (`VINCULAR`), consentimento `ACEITO`, acesso liberado. |
 | **Descrição** | **Descrição:** Todo o projeto deve ser auditável de ponta a ponta: canais, pipeline RAG, administração, consentimento e incidentes. A auditoria é obrigatória por força do ECA Digital (Lei 15.211/2025) e da LGPD, não opcional. |
 
@@ -1069,7 +1069,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RNF01 |
 | **Módulos** | — |
-| **Atores** | Sistema deepEdu, Operador, DPO |
+| **Atores** | Sistema DeepEdu, Operador, DPO |
 | **Pré-condições** | Ambiente configurado conforme `.env.example` e documentação de deploy. |
 | **Descrição** | **Critérios de aceitação:** - [ ] LangGraph para orquestração de agentes - [ ] LangSmith para tracing em todos os ambientes não locais - [ ] Versões fixadas e testadas em conjunto |
 
@@ -1090,7 +1090,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RNF02 |
 | **Módulos** | — |
-| **Atores** | Sistema deepEdu, Operador, DPO |
+| **Atores** | Sistema DeepEdu, Operador, DPO |
 | **Pré-condições** | Ambiente configurado conforme `.env.example` e documentação de deploy. |
 | **Descrição** | | Ambiente | Banco | |----------|-------| | Desenvolvimento / testes | Chroma | | Produção | Qdrant (padrão) ou pgvector (se ADR aprovar) | |
 
@@ -1111,7 +1111,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RNF03 |
 | **Módulos** | — |
-| **Atores** | Sistema deepEdu, Operador, DPO |
+| **Atores** | Sistema DeepEdu, Operador, DPO |
 | **Pré-condições** | Ambiente configurado conforme `.env.example` e documentação de deploy. |
 | **Descrição** | **Critérios de aceitação:** - [ ] Ubuntu Server 22.04 LTS ou 24.04 LTS - [ ] Documentação de instalação testada em Ubuntu limpo |
 
@@ -1132,7 +1132,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RNF04 |
 | **Módulos** | — |
-| **Atores** | Sistema deepEdu, Operador, DPO |
+| **Atores** | Sistema DeepEdu, Operador, DPO |
 | **Pré-condições** | Ambiente configurado conforme `.env.example` e documentação de deploy. |
 | **Descrição** | **Critérios de aceitação:** - [ ] WhatsApp Business Cloud API (Meta) como canal oficial - [ ] Twilio ou BSP alternativo permitido se compatível com Cloud API - [ ] Domínio com TLS válido para webhook |
 
@@ -1153,7 +1153,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RNF05 |
 | **Módulos** | — |
-| **Atores** | Sistema deepEdu, Operador, DPO |
+| **Atores** | Sistema DeepEdu, Operador, DPO |
 | **Pré-condições** | Ambiente configurado conforme `.env.example` e documentação de deploy. |
 | **Descrição** | **Critérios de aceitação:** - [ ] Prompts versionados em arquivos, não hardcoded - [ ] Revisão de prompt exige PR e teste de regressão (RF38) |
 
@@ -1174,7 +1174,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RNF06 |
 | **Módulos** | — |
-| **Atores** | Sistema deepEdu, Operador, DPO |
+| **Atores** | Sistema DeepEdu, Operador, DPO |
 | **Pré-condições** | Ambiente configurado conforme `.env.example` e documentação de deploy. |
 | **Descrição** | **Critérios de aceitação:** - [ ] Frontend estático ou SSR leve (FastAPI + Jinja, ou SPA mínima) - [ ] Não exige GPU no cliente - [ ] Tempo de carregamento inicial < 3s em rede local |
 
@@ -1195,7 +1195,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RNF07 |
 | **Módulos** | — |
-| **Atores** | Sistema deepEdu, Operador, DPO |
+| **Atores** | Sistema DeepEdu, Operador, DPO |
 | **Pré-condições** | Ambiente configurado conforme `.env.example` e documentação de deploy. |
 | **Descrição** | **Critérios de aceitação:** - [ ] `docker-compose.yml` com serviços: `api`, `worker`, `qdrant`, `redis`, `dashboard` (opcional) - [ ] Cada serviço com Dockerfile próprio - [ ] Volumes para dados persistentes (índice, uploads, memória) - [ ] Healthche |
 
@@ -1216,7 +1216,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RNF08 |
 | **Módulos** | — |
-| **Atores** | Sistema deepEdu, Operador, DPO |
+| **Atores** | Sistema DeepEdu, Operador, DPO |
 | **Pré-condições** | Ambiente configurado conforme `.env.example` e documentação de deploy. |
 | **Descrição** | **Critérios de aceitação:** - [ ] Troca de domínio (ex.: Física) alterando: corpus, prompts, metadados — sem reescrever core - [ ] Interfaces `Protocol` ou ABC documentadas em `app/core/interfaces/` |
 
@@ -1237,7 +1237,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RNF09 |
 | **Módulos** | — |
-| **Atores** | Sistema deepEdu, Operador, DPO |
+| **Atores** | Sistema DeepEdu, Operador, DPO |
 | **Pré-condições** | Ambiente configurado conforme `.env.example` e documentação de deploy. |
 | **Descrição** | **Critérios de aceitação:** - [ ] `Qwen2.5-Math-1.5B-Instruct` como padrão - [ ] Contexto máximo: **4.096 tokens** (série Math; não confundir com Qwen2.5 genérico 128K) - [ ] Requisito mínimo de hardware documentado: 8 GB RAM (CPU) ou 6 GB VRAM (GPU) |
 
@@ -1258,7 +1258,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RNF10 |
 | **Módulos** | — |
-| **Atores** | Sistema deepEdu, Operador, DPO |
+| **Atores** | Sistema DeepEdu, Operador, DPO |
 | **Pré-condições** | Ambiente configurado conforme `.env.example` e documentação de deploy. |
 | **Descrição** | **Critérios de aceitação:** - [ ] Português brasileiro como idioma principal de interface e respostas - [ ] Embeddings multilíngues compatíveis com PT |
 
@@ -1279,7 +1279,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RNF11 |
 | **Módulos** | — |
-| **Atores** | Sistema deepEdu, Operador, DPO |
+| **Atores** | Sistema DeepEdu, Operador, DPO |
 | **Pré-condições** | Ambiente configurado conforme `.env.example` e documentação de deploy. |
 | **Descrição** | **Critérios de aceitação:** - [ ] p95 latência end-to-end WhatsApp (mensagem recebida → resposta enviada) < 30s em hardware de referência - [ ] p95 retrieval < 2s - [ ] p95 geração LLM < 20s (1.5B, CPU aceitável com aviso) |
 
@@ -1300,7 +1300,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RNF12 |
 | **Módulos** | — |
-| **Atores** | Sistema deepEdu, Operador, DPO |
+| **Atores** | Sistema DeepEdu, Operador, DPO |
 | **Pré-condições** | Ambiente configurado conforme `.env.example` e documentação de deploy. |
 | **Descrição** | **Critérios de aceitação:** - [ ] Logs estruturados (JSON) com `correlation_id` - [ ] Métricas Prometheus ou equivalente: `rag_latency`, `retrieval_score`, `abstention_rate` - [ ] Alertas configuráveis para erro > 5% em 5 minutos |
 
@@ -1321,7 +1321,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RNF13 |
 | **Módulos** | — |
-| **Atores** | Sistema deepEdu, Operador, DPO |
+| **Atores** | Sistema DeepEdu, Operador, DPO |
 | **Pré-condições** | Ambiente configurado conforme `.env.example` e documentação de deploy. |
 | **Descrição** | **Critérios de aceitação:** - [ ] Segredos em variáveis de ambiente ou vault, nunca em código - [ ] `ADMIN_API_KEY` ou OAuth para endpoints administrativos - [ ] Rate limit por IP e por número WhatsApp - [ ] HTTPS obrigatório em produção |
 
@@ -1342,7 +1342,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RNF14 |
 | **Módulos** | — |
-| **Atores** | Sistema deepEdu, Operador, DPO |
+| **Atores** | Sistema DeepEdu, Operador, DPO |
 | **Pré-condições** | Ambiente configurado conforme `.env.example` e documentação de deploy. |
 | **Descrição** | **Critérios de aceitação:** - [ ] Papéis: `admin`, `operator`, `viewer` - [ ] Matriz de permissões documentada em `docs/RBAC.md` |
 
@@ -1363,7 +1363,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RNF15 |
 | **Módulos** | — |
-| **Atores** | Sistema deepEdu, Operador, DPO |
+| **Atores** | Sistema DeepEdu, Operador, DPO |
 | **Pré-condições** | Ambiente configurado conforme `.env.example` e documentação de deploy. |
 | **Descrição** | **Critérios de aceitação:** - [ ] Pipeline CI: lint, testes unitários, `eval_rag.py` em dataset reduzido - [ ] Regressão de métricas RAG bloqueia merge na branch principal - [ ] Build de imagens Docker em cada release tag |
 
@@ -1384,7 +1384,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RNF16 |
 | **Módulos** | — |
-| **Atores** | Sistema deepEdu, Operador, DPO |
+| **Atores** | Sistema DeepEdu, Operador, DPO |
 | **Pré-condições** | Ambiente configurado conforme `.env.example` e documentação de deploy. |
 | **Descrição** | **Critérios de aceitação:** - [ ] Backup diário: banco vetorial, metadados, corpus em `data/materials` - [ ] Procedimento de restore documentado e testado trimestralmente - [ ] RPO ≤ 24h; RTO ≤ 4h |
 
@@ -1405,7 +1405,7 @@ DPO ──export────────────────┘
 |-------|-------|
 | **Requisito** | RNF17 |
 | **Módulos** | — |
-| **Atores** | Sistema deepEdu, Operador, DPO |
+| **Atores** | Sistema DeepEdu, Operador, DPO |
 | **Pré-condições** | Ambiente configurado conforme `.env.example` e documentação de deploy. |
 | **Descrição** | **Critérios de aceitação:** - [ ] Workers de fila escaláveis (`docker compose up --scale worker=3`) - [ ] API stateless; estado em banco/fila |
 

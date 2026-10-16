@@ -1,12 +1,12 @@
 ================================================================================
-deepEdu — COMO COLOCAR A PASTA NO SERVIDOR LINUX
+DeepEdu — COMO COLOCAR A PASTA NO SERVIDOR LINUX
 FOLHA PARA LEIGO — IMPRIMIR E SEGUIR COM CANETA
 Data: 10/08/2026
 ================================================================================
 
 O QUE É ISTO (leia antes de digitar)
 --------------------------------------------------------------------------------
-No seu PC com Deepin/Cursor, o programa deepEdu já existe nesta pasta:
+No seu PC com Deepin/Cursor, o programa DeepEdu já existe nesta pasta:
 
   /home/Edidio/Projects/01_deepEdu
 
@@ -177,7 +177,7 @@ Volte para a folha IMPRIMIR_AGORA.txt no passo 4 (venv + pip).
 OPÇÃO A — GITHUB (alternativa — precisa internet + celular)
 ================================================================================
 Use só se NÃO puder usar pendrive.
-O GitHub é um "armário na internet" onde o código do deepEdu já está guardado.
+O GitHub é um "armário na internet" onde o código do DeepEdu já está guardado.
 O servidor baixa uma cópia para ~/deepEdu.
 
 ----- A1) Instalar a ferramenta gh -----

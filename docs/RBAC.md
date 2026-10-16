@@ -1,8 +1,8 @@
-# Matriz de Controle de Acesso (RBAC) — deepEdu
+# Matriz de Controle de Acesso (RBAC) — DeepEdu
 
 | Campo | Valor |
 |-------|-------|
-| **Sistema** | deepEdu — Tutor RAG de Matemática (Ensino Médio) |
+| **Sistema** | DeepEdu — Tutor RAG de Matemática (Ensino Médio) |
 | **Versão** | 1.0 |
 | **Data** | 29/06/2026 |
 

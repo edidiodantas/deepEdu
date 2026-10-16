@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Bootstrap deepEdu: venv + deps + .env com Amadeus-Verbo (Hugging Face PT-BR).
+# Bootstrap DeepEdu: venv + deps + .env com Amadeus-Verbo (Hugging Face PT-BR).
 # Uso: bash scripts/bootstrap_deepin_rag.sh
 set -euo pipefail
 
@@ -8,7 +8,7 @@ cd "$ROOT"
 
 MODEL="amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct"
 
-echo "==> deepEdu bootstrap (Amadeus-Verbo PT-BR via Hugging Face — RAG)"
+echo "==> DeepEdu bootstrap (Amadeus-Verbo PT-BR via Hugging Face — RAG)"
 echo "    raiz: $ROOT"
 
 python3 --version

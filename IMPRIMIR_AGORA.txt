@@ -1,5 +1,5 @@
 ================================================================================
-deepEdu — INSTALAÇÃO NO UBUNTU SERVER LTS — FOLHA PARA IMPRIMIR
+DeepEdu — INSTALAÇÃO NO UBUNTU SERVER LTS — FOLHA PARA IMPRIMIR
 Data: 07/08/2026
 SO: Ubuntu Server 24.04 LTS (também vale 22.04 com as notas no final)
 Pasta no servidor: ~/deepEdu
@@ -364,5 +364,5 @@ INSTALAÇÃO LOCAL — FIM
 Não há canal externo. A pergunta entra em /perguntar ou no painel.
 A auditoria fica em data/audit/audit.db.
 
-FIM — deepEdu instalação Ubuntu LTS + Amadeus-Verbo (imprimir)
+FIM — DeepEdu instalação Ubuntu LTS + Amadeus-Verbo (imprimir)
 ================================================================================

@@ -26,8 +26,8 @@ def _get(path: str, params: dict | None = None):
     return resp.status_code, resp.json() if resp.headers.get("content-type", "").startswith("application/json") else resp.text
 
 
-st.set_page_config(page_title="deepEdu local", layout="wide")
-st.title("deepEdu — painel local")
+st.set_page_config(page_title="DeepEdu local", layout="wide")
+st.title("DeepEdu — painel local")
 
 tab_q, tab_mat, tab1, tab2, tab3, tab4 = st.tabs(
     ["Pergunta", "Materiais", "Aluno", "Escola", "ECA / Auditoria", "Operacao"]

@@ -1,5 +1,5 @@
 [Unit]
-Description=deepEdu FastAPI Service
+Description=DeepEdu FastAPI Service
 After=network.target
 
 [Service]
