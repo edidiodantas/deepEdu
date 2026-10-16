@@ -15,7 +15,7 @@ jobs:
           python-version: "3.12"
       - name: Install dependencies
         run: |
-          pip install pydantic-settings cryptography sympy langchain-community langchain-core
+          pip install pydantic-settings cryptography sympy langchain-community langchain-core greenlet
       - name: Run unit tests
         env:
           AUDIT_PHONE_SALT: ci-test-salt-min-16-chars
