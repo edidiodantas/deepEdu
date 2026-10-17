@@ -1,3 +1,4 @@
+import base64
 import os
 
 import requests
@@ -75,19 +76,41 @@ def _render_pergunta(is_admin: bool):
             st.error(f"Erro {resp.status_code}: {data}" if is_admin else "Não foi possível responder agora.")
 
 
-st.set_page_config(page_title="DeepEdu", layout="wide")
+ASSETS_DIR = os.path.join(os.path.dirname(__file__), "assets")
+LOGO_PATH = os.path.join(ASSETS_DIR, "logo.png")
+FAVICON_PATH = os.path.join(ASSETS_DIR, "favicon.png")
+
+
+@st.cache_data
+def _logo_data_uri() -> str:
+    if not os.path.exists(LOGO_PATH):
+        return ""
+    with open(LOGO_PATH, "rb") as fh:
+        return "data:image/png;base64," + base64.b64encode(fh.read()).decode()
+
+
+st.set_page_config(
+    page_title="DeepEdu",
+    page_icon=FAVICON_PATH if os.path.exists(FAVICON_PATH) else None,
+    layout="wide",
+)
 
 
 def _header(subtitle: str):
-    """Nome com degradê suave (azul do tema) e subtítulo leve em cinza."""
+    """Logo + nome com degradê suave (azul do tema) e subtítulo leve em cinza."""
+    uri = _logo_data_uri()
+    logo = f'<img src="{uri}" alt="" style="height: 96px; width: 96px;">' if uri else ""
     st.markdown(
         f"""
-<div style="margin: 0 0 1.5rem 0;">
+<div style="display: flex; align-items: center; gap: 1rem; margin: 0 0 1.5rem 0;">
+  {logo}
+  <div>
   <div style="display: inline-block; font-size: 2.8rem; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em;
               background: linear-gradient(90deg, #1F4E9E 0%, #3B7DD8 100%);
               -webkit-background-clip: text; background-clip: text;
               -webkit-text-fill-color: transparent; color: #1F4E9E;">DeepEdu</div>
   <div style="font-size: 1.25rem; font-weight: 300; color: #5B6575; margin-top: 0.2rem;">{subtitle}</div>
+  </div>
 </div>
 """,
         unsafe_allow_html=True,
