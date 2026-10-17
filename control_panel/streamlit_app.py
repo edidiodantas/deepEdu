@@ -37,7 +37,7 @@ def _check_admin_key(key: str) -> tuple[bool, str]:
             f"{BASE_URL}/admin/materials", headers={"X-Admin-Api-Key": key}, timeout=10
         )
     except requests.RequestException as exc:
-        return False, f"API inacessivel: {exc}"
+        return False, f"API inacessível: {exc}"
     if resp.status_code == 200:
         return True, ""
     if resp.status_code == 403:
@@ -47,8 +47,8 @@ def _check_admin_key(key: str) -> tuple[bool, str]:
 
 def _render_pergunta(is_admin: bool):
     st.subheader("Pergunte ao tutor")
-    st.caption("Escreva sua duvida de matematica. O tutor responde com base nos materiais da escola.")
-    student_id = st.text_input("Seu codigo de aluno", value="aluno-local")
+    st.caption("Escreva sua dúvida de matemática. O tutor responde com base nos materiais da escola.")
+    student_id = st.text_input("Seu código de aluno", value="aluno-local")
     question = st.text_area("Sua pergunta")
     if st.button("Perguntar"):
         if not question.strip():
@@ -62,7 +62,7 @@ def _render_pergunta(is_admin: bool):
                     timeout=300,
                 )
             except requests.RequestException as exc:
-                st.error(f"Tutor indisponivel no momento: {exc}" if is_admin else "Tutor indisponivel no momento.")
+                st.error(f"Tutor indisponível no momento: {exc}" if is_admin else "Tutor indisponível no momento.")
                 return
         if resp.headers.get("content-type", "").startswith("application/json"):
             data = resp.json()
@@ -70,9 +70,9 @@ def _render_pergunta(is_admin: bool):
             data = {"detail": resp.text}
         if resp.status_code == 200:
             st.write(data.get("answer", ""))
-            st.caption(f"codigo da resposta: {data.get('correlation_id', '')}")
+            st.caption(f"Código da resposta: {data.get('correlation_id', '')}")
         else:
-            st.error(f"Erro {resp.status_code}: {data}" if is_admin else "Nao foi possivel responder agora.")
+            st.error(f"Erro {resp.status_code}: {data}" if is_admin else "Não foi possível responder agora.")
 
 
 st.set_page_config(page_title="DeepEdu", layout="wide")
@@ -99,14 +99,14 @@ IS_ADMIN = bool(st.session_state.get("admin_key"))
 
 if not IS_ADMIN:
     # Aluno: só a pergunta. As outras abas nem são desenhadas.
-    st.title("DeepEdu — Tutor de Matematica")
+    st.title("DeepEdu — Tutor de Matemática")
     _render_pergunta(is_admin=False)
     st.stop()
 
 st.title("DeepEdu — painel do administrador")
 
 tab_inicio, tab_q, tab_mat, tab1, tab2, tab3 = st.tabs(
-    ["Inicio", "Pergunta", "Materiais", "Aluno", "Escola", "ECA / Auditoria"]
+    ["Início", "Pergunta", "Materiais", "Aluno", "Escola", "ECA / Auditoria"]
 )
 
 with tab_inicio:
@@ -116,10 +116,10 @@ with tab_inicio:
 | Aba | Para que serve |
 |---|---|
 | **Pergunta** | Testar o tutor como se fosse um aluno. |
-| **Materiais** | Enviar, listar e remover os PDFs/TXT/MD do conteudo e **reindexar**. |
+| **Materiais** | Enviar, listar e remover os PDFs/TXT/MD do conteúdo e **reindexar**. |
 | **Aluno** | Assinatura individual: ativar manualmente ou gerar link de pagamento. |
-| **Escola** | Plano escola: criar escola, vincular aluno, pagamento e ativacao. |
-| **ECA / Auditoria** | Matricula com consentimento dos responsaveis, logs de auditoria, exportar CSV e incidentes. |
+| **Escola** | Plano escola: criar escola, vincular aluno, pagamento e ativação. |
+| **ECA / Auditoria** | Matrícula com consentimento dos responsáveis, logs de auditoria, exportar CSV e incidentes. |
 
 **Primeiro uso:** 1) envie os materiais na aba *Materiais* → 2) clique em *Reindexar* → 3) teste na aba *Pergunta*.
 
@@ -133,21 +133,21 @@ Os alunos que abrem o painel sem entrar como administrador veem **somente** a te
         st.success("API ligada")
         st.write(f"Modelo de linguagem: `{health.get('llm_model', '?')}`")
     except Exception as exc:
-        st.error(f"API desligada ou inacessivel: {exc}")
+        st.error(f"API desligada ou inacessível: {exc}")
     try:
         code, data = _get("/admin/materials")
         if code == 200 and isinstance(data, dict):
             st.write(f"Materiais em data/materials: **{len(data.get('items', []))}**")
     except requests.RequestException:
         pass
-    st.caption(f"Endereco da API: {BASE_URL}")
+    st.caption(f"Endereço da API: {BASE_URL}")
 
 with tab_q:
     _render_pergunta(is_admin=True)
 
 with tab_mat:
-    st.subheader("Materiais didaticos (RAG)")
-    st.caption("Envie PDFs/TXT/MD e clique em Reindexar. O tutor passa a usar o indice novo na proxima pergunta.")
+    st.subheader("Materiais didáticos (RAG)")
+    st.caption("Envie PDFs/TXT/MD e clique em Reindexar. O tutor passa a usar o índice novo na próxima pergunta.")
 
     uploads = st.file_uploader(
         "Enviar arquivos", type=["pdf", "txt", "md"], accept_multiple_files=True
@@ -161,7 +161,7 @@ with tab_mat:
                 timeout=120,
             )
         except requests.RequestException as exc:
-            st.error(f"API inacessivel: {exc}")
+            st.error(f"API inacessível: {exc}")
         else:
             data = resp.json() if resp.headers.get("content-type", "").startswith("application/json") else {}
             if resp.status_code == 200:
@@ -199,7 +199,7 @@ with tab_mat:
                 else:
                     st.error(f"Erro {resp.status_code}: {resp.text}")
     else:
-        st.error(f"Nao foi possivel listar materiais ({code}): {data}")
+        st.error(f"Não foi possível listar materiais ({code}): {data}")
 
     st.divider()
     if st.button("Reindexar", type="primary"):
@@ -209,10 +209,10 @@ with tab_mat:
                     f"{BASE_URL}/admin/index/rebuild", headers=_headers(), timeout=1800
                 )
             except requests.RequestException as exc:
-                st.error(f"API inacessivel: {exc}")
+                st.error(f"API inacessível: {exc}")
             else:
                 if resp.status_code == 200:
-                    st.success(f"Indexacao concluida: {resp.json().get('chunks')} trechos.")
+                    st.success(f"Indexação concluída: {resp.json().get('chunks')} trechos.")
                 else:
                     st.error(f"Erro {resp.status_code}: {resp.text}")
 
@@ -280,12 +280,12 @@ with tab2:
             st.code(f"{code}\n{body}")
 
 with tab3:
-    st.subheader("Matricula ECA (Lei 15.211/2025)")
-    st.caption("Cadastre o aluno com o consentimento dos responsaveis, consulte a trilha de auditoria e registre incidentes.")
+    st.subheader("Matrícula ECA (Lei 15.211/2025)")
+    st.caption("Cadastre o aluno com o consentimento dos responsáveis, consulte a trilha de auditoria e registre incidentes.")
     enroll_phone = st.text_input("Telefone do aluno", value="+5511999999999", key="enroll_phone")
     enroll_school = st.text_input("ID da escola", value="escola-alpha", key="enroll_school")
-    enroll_code = st.text_input("Codigo do aluno", value="MAT2026A")
-    consent_ref = st.text_input("Referencia consentimento parental", value="RESP-001")
+    enroll_code = st.text_input("Código do aluno", value="MAT2026A")
+    consent_ref = st.text_input("Referência consentimento parental", value="RESP-001")
     if st.button("Cadastrar aluno (enrollment)"):
         code, body = _post(
             "/admin/students/enroll",
@@ -333,8 +333,8 @@ with tab3:
     st.divider()
     st.subheader("Incidentes")
     severity = st.selectbox("Severidade", ["low", "medium", "high", "critical"])
-    description = st.text_area("Descricao do incidente")
-    action_taken = st.text_input("Acao tomada", value="")
+    description = st.text_area("Descrição do incidente")
+    action_taken = st.text_input("Ação tomada", value="")
     if st.button("Registrar incidente"):
         code, body = _post(
             "/admin/incidents",
