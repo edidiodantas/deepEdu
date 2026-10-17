@@ -50,7 +50,7 @@ def _render_pergunta(is_admin: bool):
     st.caption("Escreva sua dúvida de matemática. O tutor responde com base nos materiais da escola.")
     student_id = st.text_input("Seu código de aluno", value="aluno-local")
     question = st.text_area("Sua pergunta")
-    if st.button("Perguntar"):
+    if st.button("Perguntar", type="primary"):
         if not question.strip():
             st.warning("Escreva uma pergunta.")
             return
@@ -87,7 +87,7 @@ with st.sidebar:
     else:
         with st.form("login_admin", clear_on_submit=True):
             typed = st.text_input("Chave de administrador", type="password")
-            if st.form_submit_button("Entrar"):
+            if st.form_submit_button("Entrar", type="primary"):
                 ok, msg = _check_admin_key(typed.strip())
                 if ok:
                     st.session_state["admin_key"] = typed.strip()
@@ -152,7 +152,7 @@ with tab_mat:
     uploads = st.file_uploader(
         "Enviar arquivos", type=["pdf", "txt", "md"], accept_multiple_files=True
     )
-    if uploads and st.button("Enviar para data/materials"):
+    if uploads and st.button("Enviar para data/materials", type="primary"):
         try:
             resp = requests.post(
                 f"{BASE_URL}/admin/materials",

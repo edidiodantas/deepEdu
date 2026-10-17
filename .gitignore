@@ -22,8 +22,8 @@ data/billing/*
 data/audit/*
 !data/audit/.gitkeep
 
-# Streamlit
-control_panel/.streamlit/
+# Streamlit (o tema config.toml é versionado; segredos não)
+control_panel/.streamlit/secrets.toml
 
 # IDE / OS
 .idea/
