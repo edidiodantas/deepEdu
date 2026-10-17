@@ -21,6 +21,9 @@ class Settings(BaseSettings):
     LLM_MAX_NEW_TOKENS: int = 1024
     # Id do tokenizer (vazio = usa o proprio LLM_MODEL no Hugging Face).
     LLM_TOKENIZER_ID: str = "amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct"
+    # 1 = usa só modelos já baixados (instalação offline pelo pendrive).
+    # Lido pelo huggingface_hub no ambiente; scripts/iniciar.sh exporta a partir do .env.
+    HF_HUB_OFFLINE: bool = False
 
     # Legado DeepSeek (fallback openai_compatible)
     DEEPSEEK_API_KEY: str = ""

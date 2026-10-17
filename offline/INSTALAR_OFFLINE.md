@@ -1,93 +1,38 @@
-# Instalação offline — passo a passo
+# Instalação offline (pendrive)
 
-## No PC **com internet** (antes de levar o pendrive)
+O DeepEdu instala em outro Linux x86_64 **sem internet**, com tudo no pendrive:
+código, Python 3.12 portátil, bibliotecas (torch só CPU), modelos de IA,
+materiais e índice.
 
-Execute na pasta do projeto:
+## 1. Gerar o pacote (no PC com internet)
 
-```bash
-cd ~/Projects/deepEdu
-chmod +x scripts/prepare_pendrive.sh
-./scripts/prepare_pendrive.sh --with-wheels /caminho/do/pendrive
-```
-
-Isso copia o projeto + baixa os pacotes Python em `offline/wheels/`.
-
----
-
-## No PC **sem internet**
-
-### Passo 1 — Copiar do pendrive
+Na pasta do projeto, com o `.venv` já funcionando e o modelo baixado
+(`bash scripts/install_hf_model.sh`):
 
 ```bash
-mkdir -p ~/Projects
-cp -r /media/$USER/NOME_DO_PENDRIVE/deepEdu ~/Projects/deepEdu
-cd ~/Projects/deepEdu
+bash scripts/preparar_pendrive.sh                      # cria ~/DeepEdu-pendrive
+bash scripts/preparar_pendrive.sh /media/$USER/PENDRIVE/DeepEdu-pendrive
+bash scripts/preparar_pendrive.sh --sem-materiais      # sem PDFs nem índice
 ```
 
-### Passo 2 — Sistema
+Copie a pasta gerada inteira para o pendrive. O pacote é dividido em partes de
+1,9 GB, então funciona até em pendrive FAT32. Não leva `.env`, chaves nem os
+bancos de alunos/auditoria.
+
+## 2. Instalar (no notebook ou servidor, sem internet)
+
+Na pasta do pendrive:
 
 ```bash
-sudo apt update
-sudo apt install -y python3.12 python3.12-venv python3-pip poppler-utils build-essential
+bash INSTALAR.sh              # notebook: cria o ícone DeepEdu
+bash INSTALAR.sh --servidor   # servidor: painel na rede (porta 8501) e liga no boot
 ```
 
-### Passo 3 — Ambiente Python
+O instalador confere se o pacote está íntegro, instala em `~/deepEdu`, gera
+chaves novas (a de administrador fica em `~/deepEdu/CHAVE_ADMIN.txt`) e grava
+`HF_HUB_OFFLINE=1` no `.env` para os modelos não tentarem a internet.
 
-```bash
-python3.12 -m venv .venv
-source .venv/bin/activate
-pip install --upgrade pip wheel setuptools
-pip install --no-index --find-links=offline/wheels -r offline/requirements-offline.txt
-```
+Rodar de novo **atualiza** o programa e mantém `.env`, chaves e dados.
 
-### Passo 4 — Modelo Amadeus-Verbo (Hugging Face)
-
-Na 1ª máquina com internet (ou se o cache já veio no pendrive):
-
-```bash
-bash scripts/install_hf_model.sh
-```
-
-### Passo 5 — Configurar
-
-```bash
-cp .env.example .env
-nano .env
-```
-
-Mínimo para dev:
-
-```env
-ENV=development
-LLM_PROVIDER=huggingface
-LLM_MODEL=amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct
-LLM_TOKENIZER_ID=amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct
-LLM_DEVICE_MAP=auto
-LANGCHAIN_TRACING_V2=false
-AUDIT_PHONE_SALT=seu-salt-longo-aqui-min-16
-ADMIN_API_KEY=sua-chave-admin-forte
-```
-
-### Passo 6 — Corpus e índice
-
-```bash
-# Copie PDFs da escola para data/materials/
-python scripts/run_indexing.py
-```
-
-### Passo 7 — Rodar
-
-```bash
-uvicorn app.api.main:app --host 127.0.0.1 --port 8000
-```
-
----
-
-## Verificação
-
-```bash
-python -m unittest discover -s tests -v
-curl http://127.0.0.1:8000/health
-```
-
-Se tudo OK, pode codificar offline normalmente.
+No servidor, o serviço é `deepedu-local` (`systemctl status deepedu-local`).
+Para remover: `bash ~/deepEdu/scripts/instalar_servico.sh --remover`.

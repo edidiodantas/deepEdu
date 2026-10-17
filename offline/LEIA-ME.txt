@@ -1,0 +1,66 @@
+==============================================================
+  DeepEdu — PENDRIVE DE INSTALAÇÃO (funciona sem internet)
+==============================================================
+
+Serve para: notebook ou servidor com Linux 64 bits (ex.: Ubuntu).
+Não precisa de internet, nem de instalar Python, nem nada antes.
+Espaço livre necessário no computador: ~3x o tamanho deste pendrive.
+
+
+--------------------------------------------------------------
+  NOTEBOOK (para apresentar)
+--------------------------------------------------------------
+1. Coloque o pendrive no notebook.
+2. Abra a pasta do pendrive, clique com o botão direito num
+   espaço vazio e escolha "Abrir no terminal".
+3. Digite e aperte Enter:
+
+      bash INSTALAR.sh
+
+4. Espere terminar (uns 5 a 15 minutos). No final aparece a
+   CHAVE DE ADMINISTRADOR. Ela também fica guardada em
+   ~/deepEdu/CHAVE_ADMIN.txt
+
+5. Pronto: dois cliques no ícone DeepEdu (Área de Trabalho ou
+   menu de aplicativos). Se o ícone aparecer com um X, botão
+   direito nele -> "Permitir execução".
+
+
+--------------------------------------------------------------
+  SERVIDOR (fica ligado e acessível pela rede)
+--------------------------------------------------------------
+1. Coloque o pendrive no servidor e entre na pasta dele, por
+   exemplo:
+
+      cd /media/$USER/NOME_DO_PENDRIVE/DeepEdu-pendrive
+
+   (servidor sem tela: monte o pendrive antes, ex.
+    sudo mount /dev/sdb1 /mnt  e  cd /mnt/DeepEdu-pendrive)
+
+2. Digite e aperte Enter (vai pedir a senha do usuário):
+
+      bash INSTALAR.sh --servidor
+
+3. No final aparece o endereço, algo como:
+
+      http://192.168.0.50:8501
+
+   Abra esse endereço no navegador de qualquer computador da
+   mesma rede. O DeepEdu liga sozinho quando o servidor reinicia.
+
+   Comandos úteis no servidor:
+      systemctl status deepedu-local      (está ligado?)
+      sudo systemctl restart deepedu-local
+      journalctl -u deepedu-local -n 50   (ver erros)
+
+
+--------------------------------------------------------------
+  BOM SABER
+--------------------------------------------------------------
+- Alunos que abrem o painel veem só a tela de pergunta. As abas
+  de administração aparecem depois de entrar com a chave, na
+  barra da esquerda.
+- Rodar o INSTALAR.sh de novo ATUALIZA o programa e mantém a
+  chave, a configuração e os dados.
+- A primeira pergunta demora mais (o modelo está carregando).
+- Se der erro, tire uma foto da tela do terminal.
