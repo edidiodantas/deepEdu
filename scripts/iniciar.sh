@@ -70,7 +70,7 @@ else
   echo "    Ligando painel (log: data/logs/painel.log)..."
   (cd control_panel && streamlit run streamlit_app.py \
     --server.port "$PANEL_PORT" --server.headless true \
-    --browser.gatherUsageStats false) >"$LOG_DIR/painel.log" 2>&1 &
+    --browser.gatherUsageStats false --client.toolbarMode viewer) >"$LOG_DIR/painel.log" 2>&1 &
   PANEL_PID=$!
   for _ in $(seq 1 60); do
     curl -fs "http://127.0.0.1:${PANEL_PORT}" >/dev/null 2>&1 && break

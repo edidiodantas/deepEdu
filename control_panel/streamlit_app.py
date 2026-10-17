@@ -7,11 +7,15 @@ from dotenv import load_dotenv
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
 
 BASE_URL = (os.getenv("CLOUD_API_BASE_URL") or "http://127.0.0.1:8000").rstrip("/")
-ADMIN_API_KEY = os.getenv("ADMIN_API_KEY", "")
+
+
+def _admin_key() -> str:
+    # Chave digitada no login; fica só na sessão do navegador, nunca em disco.
+    return st.session_state.get("admin_key", "")
 
 
 def _headers():
-    return {"X-Admin-Api-Key": ADMIN_API_KEY}
+    return {"X-Admin-Api-Key": _admin_key()}
 
 
 def _post(path: str, params: dict):
@@ -26,40 +30,120 @@ def _get(path: str, params: dict | None = None):
     return resp.status_code, resp.json() if resp.headers.get("content-type", "").startswith("application/json") else resp.text
 
 
-st.set_page_config(page_title="DeepEdu local", layout="wide")
-st.title("DeepEdu — painel local")
+def _check_admin_key(key: str) -> tuple[bool, str]:
+    """A API decide se a chave vale (mesma ADMIN_API_KEY do .env da API)."""
+    try:
+        resp = requests.get(
+            f"{BASE_URL}/admin/materials", headers={"X-Admin-Api-Key": key}, timeout=10
+        )
+    except requests.RequestException as exc:
+        return False, f"API inacessivel: {exc}"
+    if resp.status_code == 200:
+        return True, ""
+    if resp.status_code == 403:
+        return False, "Chave de administrador incorreta."
+    return False, f"Erro {resp.status_code}: {resp.text}"
 
-tab_q, tab_mat, tab1, tab2, tab3, tab4 = st.tabs(
-    ["Pergunta", "Materiais", "Aluno", "Escola", "ECA / Auditoria", "Operacao"]
+
+def _render_pergunta(is_admin: bool):
+    st.subheader("Pergunte ao tutor")
+    st.caption("Escreva sua duvida de matematica. O tutor responde com base nos materiais da escola.")
+    student_id = st.text_input("Seu codigo de aluno", value="aluno-local")
+    question = st.text_area("Sua pergunta")
+    if st.button("Perguntar"):
+        if not question.strip():
+            st.warning("Escreva uma pergunta.")
+            return
+        with st.spinner("Pensando..."):
+            try:
+                resp = requests.post(
+                    f"{BASE_URL}/perguntar",
+                    json={"student_id": student_id.strip() or "aluno-local", "question": question},
+                    timeout=300,
+                )
+            except requests.RequestException as exc:
+                st.error(f"Tutor indisponivel no momento: {exc}" if is_admin else "Tutor indisponivel no momento.")
+                return
+        if resp.headers.get("content-type", "").startswith("application/json"):
+            data = resp.json()
+        else:
+            data = {"detail": resp.text}
+        if resp.status_code == 200:
+            st.write(data.get("answer", ""))
+            st.caption(f"codigo da resposta: {data.get('correlation_id', '')}")
+        else:
+            st.error(f"Erro {resp.status_code}: {data}" if is_admin else "Nao foi possivel responder agora.")
+
+
+st.set_page_config(page_title="DeepEdu", layout="wide")
+
+with st.sidebar:
+    st.markdown("### Administrador")
+    if st.session_state.get("admin_key"):
+        st.success("Modo administrador")
+        if st.button("Sair"):
+            st.session_state.pop("admin_key", None)
+            st.rerun()
+    else:
+        with st.form("login_admin", clear_on_submit=True):
+            typed = st.text_input("Chave de administrador", type="password")
+            if st.form_submit_button("Entrar"):
+                ok, msg = _check_admin_key(typed.strip())
+                if ok:
+                    st.session_state["admin_key"] = typed.strip()
+                    st.rerun()
+                else:
+                    st.error(msg)
+
+IS_ADMIN = bool(st.session_state.get("admin_key"))
+
+if not IS_ADMIN:
+    # Aluno: só a pergunta. As outras abas nem são desenhadas.
+    st.title("DeepEdu — Tutor de Matematica")
+    _render_pergunta(is_admin=False)
+    st.stop()
+
+st.title("DeepEdu — painel do administrador")
+
+tab_inicio, tab_q, tab_mat, tab1, tab2, tab3 = st.tabs(
+    ["Inicio", "Pergunta", "Materiais", "Aluno", "Escola", "ECA / Auditoria"]
 )
 
-with tab_q:
-    st.subheader("Pergunta local")
-    st.caption(f"API: {BASE_URL}")
-    student_id = st.text_input("Identificador do aluno", value="aluno-local")
-    question = st.text_area("Pergunta de matematica")
-    if st.button("Perguntar"):
-        try:
-            resp = requests.post(
-                f"{BASE_URL}/perguntar",
-                json={"student_id": student_id.strip() or "aluno-local", "question": question},
-                timeout=300,
-            )
-        except requests.RequestException as exc:
-            st.error(f"API inacessivel: {exc}")
-        else:
-            if resp.headers.get("content-type", "").startswith("application/json"):
-                data = resp.json()
-            else:
-                data = {"detail": resp.text}
-            if resp.status_code == 200:
-                st.write(data.get("answer", ""))
-                st.caption(f"correlacao: {data.get('correlation_id', '')}")
-            else:
-                st.error(f"Erro {resp.status_code}: {data}")
+with tab_inicio:
+    st.subheader("Como usar este painel")
+    st.markdown(
+        """
+| Aba | Para que serve |
+|---|---|
+| **Pergunta** | Testar o tutor como se fosse um aluno. |
+| **Materiais** | Enviar, listar e remover os PDFs/TXT/MD do conteudo e **reindexar**. |
+| **Aluno** | Assinatura individual: ativar manualmente ou gerar link de pagamento. |
+| **Escola** | Plano escola: criar escola, vincular aluno, pagamento e ativacao. |
+| **ECA / Auditoria** | Matricula com consentimento dos responsaveis, logs de auditoria, exportar CSV e incidentes. |
 
-if not ADMIN_API_KEY:
-    st.warning("Sem ADMIN_API_KEY as abas administrativas nao autenticam. A aba Pergunta funciona.")
+**Primeiro uso:** 1) envie os materiais na aba *Materiais* → 2) clique em *Reindexar* → 3) teste na aba *Pergunta*.
+
+Os alunos que abrem o painel sem entrar como administrador veem **somente** a tela de pergunta.
+"""
+    )
+    st.divider()
+    st.subheader("Status do sistema")
+    try:
+        health = requests.get(f"{BASE_URL}/health", timeout=10).json()
+        st.success("API ligada")
+        st.write(f"Modelo de linguagem: `{health.get('llm_model', '?')}`")
+    except Exception as exc:
+        st.error(f"API desligada ou inacessivel: {exc}")
+    try:
+        code, data = _get("/admin/materials")
+        if code == 200 and isinstance(data, dict):
+            st.write(f"Materiais em data/materials: **{len(data.get('items', []))}**")
+    except requests.RequestException:
+        pass
+    st.caption(f"Endereco da API: {BASE_URL}")
+
+with tab_q:
+    _render_pergunta(is_admin=True)
 
 with tab_mat:
     st.subheader("Materiais didaticos (RAG)")
@@ -134,6 +218,7 @@ with tab_mat:
 
 with tab1:
     st.subheader("Assinatura individual")
+    st.caption("Ative a assinatura de um aluno manualmente ou gere o link de pagamento dele.")
     phone = st.text_input("Telefone do aluno (E.164)", value="+5511999999999")
     paid_until = st.text_input(
         "paid_until (ISO, opcional — vazio = +BILLING_PLAN_DAYS)",
@@ -158,6 +243,7 @@ with tab1:
 
 with tab2:
     st.subheader("Plano Escola")
+    st.caption("Cadastre a escola, vincule alunos a ela e controle o plano/pagamento da escola.")
     school_id = st.text_input("ID da escola", value="escola-alpha")
     school_name = st.text_input("Nome da escola", value="Escola Alpha")
     school_phone = st.text_input("Telefone do aluno para vincular", value="+5511888888888")
@@ -195,6 +281,7 @@ with tab2:
 
 with tab3:
     st.subheader("Matricula ECA (Lei 15.211/2025)")
+    st.caption("Cadastre o aluno com o consentimento dos responsaveis, consulte a trilha de auditoria e registre incidentes.")
     enroll_phone = st.text_input("Telefone do aluno", value="+5511999999999", key="enroll_phone")
     enroll_school = st.text_input("ID da escola", value="escola-alpha", key="enroll_school")
     enroll_code = st.text_input("Codigo do aluno", value="MAT2026A")
@@ -254,8 +341,3 @@ with tab3:
             {"severity": severity, "description": description, "action_taken": action_taken},
         )
         st.code(f"{code}\n{body}")
-
-with tab4:
-    st.subheader("Operacao")
-    st.write("Este painel roda local e controla a API na nuvem via endpoints administrativos protegidos.")
-    st.write(f"API alvo: `{BASE_URL}`")
