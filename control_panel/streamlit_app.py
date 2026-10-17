@@ -77,6 +77,23 @@ def _render_pergunta(is_admin: bool):
 
 st.set_page_config(page_title="DeepEdu", layout="wide")
 
+
+def _header(subtitle: str):
+    """Nome com degradê suave (azul do tema) e subtítulo leve em cinza."""
+    st.markdown(
+        f"""
+<div style="margin: 0 0 1.5rem 0;">
+  <div style="display: inline-block; font-size: 2.8rem; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em;
+              background: linear-gradient(90deg, #1F4E9E 0%, #3B7DD8 100%);
+              -webkit-background-clip: text; background-clip: text;
+              -webkit-text-fill-color: transparent; color: #1F4E9E;">DeepEdu</div>
+  <div style="font-size: 1.25rem; font-weight: 300; color: #5B6575; margin-top: 0.2rem;">{subtitle}</div>
+</div>
+""",
+        unsafe_allow_html=True,
+    )
+
+
 with st.sidebar:
     st.markdown("### Administrador")
     if st.session_state.get("admin_key"):
@@ -99,11 +116,11 @@ IS_ADMIN = bool(st.session_state.get("admin_key"))
 
 if not IS_ADMIN:
     # Aluno: só a pergunta. As outras abas nem são desenhadas.
-    st.title("DeepEdu — Tutor de Matemática")
+    _header("Tutor de Matemática")
     _render_pergunta(is_admin=False)
     st.stop()
 
-st.title("DeepEdu — painel do administrador")
+_header("Painel do administrador")
 
 tab_inicio, tab_q, tab_mat, tab1, tab2, tab3 = st.tabs(
     ["Início", "Pergunta", "Materiais", "Aluno", "Escola", "ECA / Auditoria"]
