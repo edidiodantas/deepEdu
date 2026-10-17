@@ -202,7 +202,8 @@ cp .env.example .env
 
 Edite `.env`:
 - `CLOUD_API_BASE_URL=https://SEU_DOMINIO`
-- `ADMIN_API_KEY` (mesma chave do servidor)
+
+Acesso: quem abre o painel vê **somente a tela de pergunta** (modo aluno). Para as abas administrativas, entre na barra lateral com a `ADMIN_API_KEY` do servidor; a chave fica só na sessão do navegador, não em arquivo.
 
 ### 2) Instalar e executar painel
 
