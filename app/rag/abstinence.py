@@ -10,8 +10,8 @@ from app.core.config import settings
 from app.rag.constants import COLLECTION_NAME
 
 ABSTINENCE_MESSAGE = (
-    "Nao encontrei material suficiente no acervo para responder com seguranca. "
-    "Tente reformular a pergunta (seja mais especifica sobre o tema de Matematica) "
+    "Não encontrei material suficiente no acervo para responder com segurança. "
+    "Tente reformular a pergunta (seja mais específica sobre o tema de Matemática) "
     "ou consulte seu professor."
 )
 
