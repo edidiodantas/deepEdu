@@ -8,6 +8,8 @@ chmod +x "$ROOT/scripts/iniciar.sh"
 APPS_DIR="$HOME/.local/share/applications"
 mkdir -p "$APPS_DIR"
 DESKTOP_FILE="$APPS_DIR/deepedu.desktop"
+ICON="$ROOT/control_panel/assets/logo.png"
+[[ -f "$ICON" ]] || ICON="applications-science"
 
 cat >"$DESKTOP_FILE" <<EOF
 [Desktop Entry]
@@ -16,7 +18,7 @@ Name=DeepEdu
 Comment=Liga a API e o painel do DeepEdu
 Exec=bash "$ROOT/scripts/iniciar.sh"
 Path=$ROOT
-Icon=applications-science
+Icon=$ICON
 Terminal=true
 Categories=Education;
 EOF
