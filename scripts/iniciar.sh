@@ -8,6 +8,8 @@ cd "$ROOT"
 
 API_PORT="${API_PORT:-8000}"
 PANEL_PORT="${PANEL_PORT:-8501}"
+# 127.0.0.1 = só nesta máquina; o serviço do servidor usa 0.0.0.0 (rede).
+PANEL_HOST="${PANEL_HOST:-127.0.0.1}"
 LOG_DIR="$ROOT/data/logs"
 mkdir -p "$LOG_DIR"
 
@@ -30,6 +32,15 @@ if [[ ! -f .env ]]; then
   pause_and_exit
 fi
 
+# Instalação pelo pendrive grava HF_HUB_OFFLINE=1 no .env: modelos só do disco.
+if grep -qE '^HF_HUB_OFFLINE=(1|true)' .env; then
+  export HF_HUB_OFFLINE=1
+fi
+
+responde() {  # responde URL: 0 se o endereço responde (sem depender de curl)
+  python -c "import sys, urllib.request; urllib.request.urlopen(sys.argv[1], timeout=2)" "$1" >/dev/null 2>&1
+}
+
 API_PID=""
 PANEL_PID=""
 cleanup() {
@@ -45,14 +56,14 @@ trap 'exit 0' INT TERM HUP
 
 echo "==> DeepEdu — ligando..."
 
-if curl -fs "http://127.0.0.1:${API_PORT}/health" >/dev/null 2>&1; then
+if responde "http://127.0.0.1:${API_PORT}/health"; then
   echo "    API já estava ligada na porta ${API_PORT}."
 else
   echo "    Ligando API (log: data/logs/api.log)..."
   uvicorn app.api.main:app --host 127.0.0.1 --port "$API_PORT" >"$LOG_DIR/api.log" 2>&1 &
   API_PID=$!
   for _ in $(seq 1 60); do
-    curl -fs "http://127.0.0.1:${API_PORT}/health" >/dev/null 2>&1 && break
+    responde "http://127.0.0.1:${API_PORT}/health" && break
     if ! kill -0 "$API_PID" 2>/dev/null; then
       echo "ERRO: a API não ligou. Últimas linhas do log:"
       tail -n 20 "$LOG_DIR/api.log"
@@ -64,16 +75,16 @@ else
   echo "    API OK."
 fi
 
-if curl -fs "http://127.0.0.1:${PANEL_PORT}" >/dev/null 2>&1; then
+if responde "http://127.0.0.1:${PANEL_PORT}"; then
   echo "    Painel já estava ligado na porta ${PANEL_PORT}."
 else
   echo "    Ligando painel (log: data/logs/painel.log)..."
   (cd control_panel && streamlit run streamlit_app.py \
-    --server.port "$PANEL_PORT" --server.headless true \
+    --server.address "$PANEL_HOST" --server.port "$PANEL_PORT" --server.headless true \
     --browser.gatherUsageStats false --client.toolbarMode viewer) >"$LOG_DIR/painel.log" 2>&1 &
   PANEL_PID=$!
   for _ in $(seq 1 60); do
-    curl -fs "http://127.0.0.1:${PANEL_PORT}" >/dev/null 2>&1 && break
+    responde "http://127.0.0.1:${PANEL_PORT}" && break
     if ! kill -0 "$PANEL_PID" 2>/dev/null; then
       echo "ERRO: o painel não ligou. Últimas linhas do log:"
       tail -n 20 "$LOG_DIR/painel.log"
@@ -86,7 +97,9 @@ else
 fi
 
 URL="http://localhost:${PANEL_PORT}"
-command -v xdg-open >/dev/null 2>&1 && xdg-open "$URL" >/dev/null 2>&1 &
+if [[ -z "${NO_BROWSER:-}" ]] && command -v xdg-open >/dev/null 2>&1; then
+  xdg-open "$URL" >/dev/null 2>&1 &
+fi
 
 echo
 echo "==> DeepEdu ligado: $URL"

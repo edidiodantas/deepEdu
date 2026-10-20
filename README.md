@@ -119,6 +119,14 @@ bash scripts/criar_atalho.sh
 
 Aparece **DeepEdu** no menu de aplicativos e na Área de Trabalho. Ele abre uma janela que liga a API e o painel e abre o navegador; fechar a janela desliga tudo. Sem atalho: `bash scripts/iniciar.sh`. Logs em `data/logs/`.
 
+## Pendrive: instalar em outro notebook ou servidor (sem internet)
+
+```bash
+bash scripts/preparar_pendrive.sh        # no PC com internet → ~/DeepEdu-pendrive
+```
+
+No destino, na pasta do pendrive: `bash INSTALAR.sh` (notebook) ou `bash INSTALAR.sh --servidor`. Detalhes em [offline/INSTALAR_OFFLINE.md](offline/INSTALAR_OFFLINE.md).
+
 ## 5) Teste local da API
 
 ```bash
