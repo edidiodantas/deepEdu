@@ -1,0 +1,372 @@
+======================================================================
+  DeepEdu — MANUAL DO PAINEL DO ADMINISTRADOR
+======================================================================
+
+Este manual explica cada aba, campo e botão do painel do DeepEdu.
+Endereço do painel neste computador: http://localhost:8501
+(no servidor: http://IP_DO_SERVIDOR:8501)
+
+
+----------------------------------------------------------------------
+  SUMÁRIO
+----------------------------------------------------------------------
+  1. Entrar e sair do modo administrador
+  2. Aba Início
+  3. Aba Pergunta
+  4. Aba Materiais
+  5. Aba Aluno
+  6. Aba Escola
+  7. Aba ECA / Auditoria
+  8. O que significa cada evento da auditoria
+  9. Formatos dos campos (telefone, data)
+ 10. Dúvidas frequentes
+
+
+======================================================================
+  1. ENTRAR E SAIR DO MODO ADMINISTRADOR
+======================================================================
+
+Quem abre o painel sem entrar vê SOMENTE a tela "Pergunte ao tutor".
+É assim que os alunos veem o DeepEdu.
+
+  Barra da esquerda -> "Chave de administrador"
+      Digite (ou cole) a chave e clique em ENTRAR.
+      Chave errada: aparece "Chave de administrador incorreta".
+      Cada tentativa errada fica registrada na auditoria
+      (evento admin.action_denied).
+
+  Onde encontrar a chave (no terminal):
+      grep ADMIN_API_KEY ~/projetos/01_deepEdu/.env
+      (instalação pelo pendrive: cat ~/deepEdu/CHAVE_ADMIN.txt)
+      A chave é tudo o que vem depois do sinal "=".
+
+  Botão SAIR
+      Volta para o modo aluno. Use sempre antes de deixar o
+      computador com outra pessoa.
+
+  A chave não fica gravada no navegador: ao fechar a página ou
+  reiniciar o DeepEdu, é preciso entrar de novo.
+
+
+======================================================================
+  2. ABA INÍCIO
+======================================================================
+
+Primeira aba do administrador. Não altera nada; só informa.
+
+  "Como usar este painel"
+      Resumo do que cada aba faz e o roteiro de primeiro uso:
+      enviar materiais -> Reindexar -> testar na aba Pergunta.
+
+  "Status do sistema"
+      API ligada ............ o "cérebro" do DeepEdu está funcionando.
+      API desligada ......... feche a janela do DeepEdu e abra de
+                              novo pelo ícone.
+      Modelo de linguagem ... a IA em uso (padrão: Amadeus-Verbo
+                              0,5B, em português).
+      Materiais ............. quantos arquivos estão em data/materials.
+      Endereço da API ....... informação técnica (normalmente
+                              http://127.0.0.1:8000).
+
+
+======================================================================
+  3. ABA PERGUNTA
+======================================================================
+
+A mesma tela que o aluno usa. Serve para o administrador testar o
+tutor. Aqui, erros técnicos aparecem com mais detalhes que para o
+aluno.
+
+  Seu código de aluno
+      Identifica quem pergunta. O DeepEdu guarda o histórico da
+      conversa por código, então perguntas seguidas com o mesmo
+      código continuam a mesma conversa. Para testes, use algo como
+      "teste-prof". O código nunca é gravado em texto puro: a
+      auditoria guarda só uma versão embaralhada (hash).
+
+  Sua pergunta
+      A dúvida, em português. Ex.: "Como resolvo 2x + 3 = 11?"
+
+  Botão PERGUNTAR
+      Envia a pergunta. A primeira resposta do dia demora mais (o
+      modelo está carregando na memória).
+
+  Abaixo da resposta: "Código da resposta"
+      Número único da pergunta. Com ele dá para achar, na
+      auditoria, tudo o que aconteceu nessa resposta (busca nos
+      materiais, chamada à IA, conferência da conta).
+
+  Respostas especiais:
+      "Não encontrei material suficiente no acervo..."
+          O tutor não achou nos materiais algo parecido com a
+          pergunta e preferiu NÃO inventar. Envie material sobre o
+          assunto (aba Materiais) ou reformule a pergunta.
+      "(Verificação: resultado esperado ~ X. Revise os cálculos.)"
+          A conferência automática de contas (SymPy) encontrou um
+          resultado diferente do que a IA respondeu.
+
+
+======================================================================
+  4. ABA MATERIAIS
+======================================================================
+
+O conteúdo que o tutor usa para responder. O tutor só responde
+com base no que está aqui.
+
+  Enviar arquivos (arraste ou "Browse files")
+      Aceita PDF, TXT e MD, vários de uma vez, até 50 MB cada.
+      Funciona só com PDF que tem TEXTO selecionável. Figuras,
+      gráficos e PDF escaneado (foto da página) não são lidos.
+
+  Botão ENVIAR PARA DATA/MATERIALS
+      Grava os arquivos no DeepEdu. Arquivo com o mesmo nome de um
+      existente SUBSTITUI o antigo. Cada envio vai para a auditoria
+      com uma "impressão digital" do arquivo (SHA-256), que prova
+      qual versão estava em uso.
+      Depois de enviar, ainda é preciso clicar em REINDEXAR.
+
+  Lista de arquivos
+      Nome, tamanho (KB) e data da última modificação de cada
+      material.
+
+  Remover arquivo + botão REMOVER
+      Apaga o arquivo escolhido. O tutor continua "lembrando" dele
+      até você clicar em REINDEXAR.
+
+  Botão REINDEXAR
+      Lê todos os materiais, divide em trechos e monta o índice de
+      busca. Pode levar alguns minutos com muitos PDFs. No fim
+      mostra "Indexação concluída: N trechos". O tutor usa o índice
+      novo já na próxima pergunta, sem reiniciar nada.
+
+  SEMPRE que enviar ou remover materiais: clique em REINDEXAR.
+
+
+======================================================================
+  5. ABA ALUNO  (assinatura individual)
+======================================================================
+
+Controle de assinatura de um aluno avulso (sem escola).
+
+  ATENÇÃO: nesta versão a assinatura fica registrada, mas NÃO
+  bloqueia perguntas no painel. O bloqueio é para o atendimento
+  pelo WhatsApp na nuvem e só vale com BILLING_ENFORCE_SUBSCRIPTION
+  =true no arquivo .env (padrão: false).
+
+  Telefone do aluno (E.164)
+      Identifica o aluno. Formato: +55 DDD número, sem espaços.
+      Ex.: +5511987654321
+
+  paid_until (opcional)
+      Até quando a assinatura vale. Formato: AAAA-MM-DD,
+      ex.: 2026-12-31. Vazio = hoje + 30 dias (BILLING_PLAN_DAYS).
+
+  Botão ATIVAR ASSINATURA (MANUAL)
+      Marca a assinatura como ativa até a data acima. Use quando o
+      pagamento foi feito fora do sistema (ex.: dinheiro, PIX direto).
+
+  Botão GERAR CHECKOUT DO ALUNO
+      Cria uma cobrança no Asaas (R$ 29,90 por padrão) e mostra o
+      link de pagamento para enviar ao aluno.
+      Só funciona com a conta Asaas configurada no .env
+      (ASAAS_API_KEY). Sem ela, aparece erro.
+
+  A caixa cinza abaixo dos botões mostra a resposta do sistema:
+  o número (200 = deu certo; 4xx/5xx = erro) e os detalhes.
+
+
+======================================================================
+  6. ABA ESCOLA  (plano escola)
+======================================================================
+
+Para quando a ESCOLA paga por todos os alunos. Mesma observação da
+aba Aluno: registra, mas não bloqueia perguntas nesta versão.
+
+  ID da escola
+      Código curto e sem espaços, escolhido por você.
+      Ex.: escola-centro. É usado em todas as outras operações.
+
+  Nome da escola
+      Nome completo. Ex.: Escola Estadual Centro.
+
+  Telefone do aluno para vincular
+      Formato +55DDDnúmero (ver item 9).
+
+  paid_until escola (opcional)
+      Até quando o plano da escola vale (AAAA-MM-DD).
+      Vazio = hoje + 30 dias (SCHOOL_PLAN_DAYS).
+
+  Botões, na ordem de uso:
+    1) CRIAR ESCOLA ................ cadastra o ID e o nome.
+    2) VINCULAR ALUNO .............. liga o telefone do aluno à escola.
+    3) CHECKOUT ESCOLA ............. gera cobrança do plano escola no
+                                     Asaas (R$ 499,00 por padrão;
+                                     precisa do Asaas configurado).
+    4) ATIVAR PLANO ESCOLA (MANUAL)  ativa o plano até a data acima,
+                                     para pagamento feito fora do
+                                     sistema.
+
+
+======================================================================
+  7. ABA ECA / AUDITORIA
+======================================================================
+
+Proteção de dados de menores (ECA Digital, Lei 15.211/2025) e a
+trilha de auditoria — o centro da proposta do DeepEdu.
+
+  ---- Matrícula ECA ----
+  Cadastra o aluno vinculado à escola, com a referência do
+  consentimento assinado pelos responsáveis.
+
+    Telefone do aluno ............ +55DDDnúmero.
+    ID da escola ................. o mesmo usado na aba Escola.
+    Código do aluno .............. código de matrícula entregue aos
+                                   responsáveis (ex.: MAT2026A). No
+                                   WhatsApp o aluno confirma enviando
+                                   "VINCULAR MAT2026A".
+    Referência consentimento
+    parental ..................... número/identificação do termo de
+                                   consentimento assinado (ex.:
+                                   RESP-001). Guarde o papel/arquivo
+                                   original com esse número.
+
+    Botão CADASTRAR ALUNO (ENROLLMENT)
+        Grava a matrícula como "pendente" até o aluno confirmar o
+        código. O telefone é guardado criptografado; a auditoria
+        guarda só o hash.
+
+  ---- Logs de auditoria ----
+  Tudo o que o DeepEdu faz fica registrado: perguntas, buscas nos
+  materiais, uso da IA, ações do administrador, acessos negados.
+
+    Filtrar por action (opcional)
+        Mostra só um tipo de evento. Ex.: rag.completed
+        (lista completa no item 8). Vazio = todos.
+    Limite
+        Quantos eventos mostrar (10 a 1000), do mais recente para o
+        mais antigo.
+    Botão CARREGAR LOGS
+        Mostra a tabela. Colunas principais:
+          timestamp ........ data e hora (horário UTC, 3 h à frente
+                             de Brasília)
+          correlation_id ... o "Código da resposta"; junta todos os
+                             eventos de uma mesma pergunta
+          actor_type ....... quem fez: student (aluno), admin,
+                             system (o próprio DeepEdu)
+          action ........... o que aconteceu (item 8)
+          outcome .......... success (ok), failure (falhou),
+                             denied (negado)
+          metadata ......... detalhes técnicos do evento
+
+    Botão EXPORTAR CSV DE AUDITORIA
+        Prepara a planilha com todos os eventos e os registros de
+        consentimento. Depois clique em BAIXAR AUDIT_EXPORT.CSV.
+        Abre no LibreOffice Calc ou Excel. Útil para relatórios,
+        para a escola e para a tese.
+
+  ---- Incidentes ----
+  Registro formal de problemas de segurança ou de dados (exigido
+  pela LGPD), por exemplo: computador do laboratório furtado,
+  chave de administrador vazada, aluno viu dado de outro.
+
+    Severidade
+        low ....... baixa (sem dado pessoal exposto)
+        medium .... média
+        high ...... alta (dado pessoal possivelmente exposto)
+        critical .. crítica (dados de alunos expostos; avisar a
+                    escola/DPO imediatamente)
+    Descrição do incidente ... o que aconteceu, quando e onde.
+    Ação tomada .............. o que já foi feito (ex.: "troquei a
+                               chave de administrador").
+    Botão REGISTRAR INCIDENTE
+        Grava o incidente com data e hora. Aparece também nos logs.
+
+
+======================================================================
+  8. O QUE SIGNIFICA CADA EVENTO DA AUDITORIA (coluna "action")
+======================================================================
+
+  Perguntas do aluno
+    rag.started ............ pergunta recebida
+    retrieval.executed ..... busca nos materiais feita
+    rag.abstained .......... tutor preferiu não responder (pouco
+                             material sobre o assunto)
+    llm.invoked ............ a IA gerou a resposta
+    sympy.verified ......... conta conferida e correta
+    sympy.divergence ....... conta conferida com resultado diferente
+    rag.completed .......... resposta entregue ao aluno
+    rag.failed ............. erro ao responder
+
+  Materiais
+    admin.material.upload .. arquivo enviado (com SHA-256)
+    admin.material.delete .. arquivo removido
+    corpus.document_added .. página/arquivo lido na indexação
+    index.rebuilt .......... índice montado de novo
+    admin.index.rebuild .... reindexação pedida pelo administrador
+
+  Alunos, consentimento e privacidade
+    enrollment.created ..... matrícula cadastrada
+    enrollment.verified .... aluno confirmou o código
+    consent.granted ........ consentimento dado
+    consent.revoked ........ consentimento retirado
+    optout.requested ....... aluno pediu para sair
+    session.deleted ........ histórico de conversa apagado
+
+  Administração e segurança
+    admin.action_denied .... tentativa com chave errada
+    admin.billing.* ........ ações da aba Aluno
+    admin.school.* ......... ações da aba Escola
+    admin.enrollment.create  matrícula pelo painel
+    admin.incident.report .. incidente registrado
+
+
+======================================================================
+  9. FORMATOS DOS CAMPOS
+======================================================================
+
+  Telefone (E.164): +55, DDD e número, tudo junto, sem espaços,
+                    traços ou parênteses.
+                    Certo:  +5511987654321
+                    Errado: (11) 98765-4321
+
+  Data (paid_until): AAAA-MM-DD   ex.: 2026-12-31
+
+
+======================================================================
+ 10. DÚVIDAS FREQUENTES
+======================================================================
+
+  O tutor responde "Não encontrei material suficiente"
+      -> Faltam materiais sobre o assunto, ou você esqueceu de
+         clicar em REINDEXAR depois de enviar.
+
+  Enviei um PDF e o tutor não usa o conteúdo
+      -> Clicou em REINDEXAR? O PDF tem texto selecionável? (Tente
+         selecionar uma frase do PDF no leitor; se não der, é
+         imagem escaneada e o DeepEdu não consegue ler.)
+
+  "API inacessível" ou "API desligada"
+      -> Feche a janela preta do DeepEdu e abra de novo pelo ícone.
+
+  Esqueci a chave de administrador
+      -> No terminal: grep ADMIN_API_KEY ~/projetos/01_deepEdu/.env
+
+  Quero trocar a chave de administrador
+      -> Edite ADMIN_API_KEY no arquivo .env da pasta do DeepEdu e
+         reinicie o DeepEdu (feche a janela e abra pelo ícone).
+
+  Os botões de Aluno/Escola dão erro de Asaas
+      -> Normal sem conta Asaas configurada. Use os botões de
+         ativação MANUAL.
+
+  Onde ficam os dados
+      -> Pasta data/ dentro do DeepEdu:
+           materials/  arquivos enviados
+           chroma/     índice de busca
+           audit/      trilha de auditoria
+           billing/    assinaturas e escolas
+           logs/       registros técnicos (para diagnóstico)
+
+======================================================================
+  Fim do manual — DeepEdu
+======================================================================
