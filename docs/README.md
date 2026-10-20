@@ -56,3 +56,5 @@ python scripts/build_documento_pdf.py
 12. Parte XI — Avaliação RAG
 13. Anexos A (dataset) e B (prompts)
 14. Termo de aprovação
+
+- [MANUAL_ADMINISTRADOR.txt](MANUAL_ADMINISTRADOR.txt) — o que cada aba, campo e botão do painel do administrador faz
