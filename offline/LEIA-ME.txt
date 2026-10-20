@@ -63,4 +63,5 @@ Espaço livre necessário no computador: ~3x o tamanho deste pendrive.
 - Rodar o INSTALAR.sh de novo ATUALIZA o programa e mantém a
   chave, a configuração e os dados.
 - A primeira pergunta demora mais (o modelo está carregando).
+- Manual do painel do administrador: ~/deepEdu/docs/MANUAL_ADMINISTRADOR.txt
 - Se der erro, tire uma foto da tela do terminal.
