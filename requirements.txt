@@ -23,6 +23,8 @@ pymupdf==1.24.10
 sympy==1.13.2
 cryptography==43.0.1
 transformers>=4.37.0
+# Necessário para device_map="auto"/"cpu" ao carregar o Amadeus (sem ele: erro 500 na pergunta).
+accelerate>=0.33.0
 torch>=2.2.0
 sentencepiece>=0.1.99
 
