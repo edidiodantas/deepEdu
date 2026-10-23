@@ -11,7 +11,7 @@ from app.core.config import settings
 from app.core.hardware import runtime_status
 from app.core.langsmith_setup import configure_langsmith
 from app.core.startup_checks import run_startup_checks
-from app.services.tutor_service import answer_question
+from app.services.tutor_service import answer_question_detailed
 
 app = FastAPI(title=settings.APP_NAME)
 app.include_router(admin_router)
@@ -49,12 +49,13 @@ def perguntar(body: LocalQuestion):
         raise HTTPException(status_code=400, detail="Pergunta vazia")
     student_id = body.student_id.strip() or "aluno-local"
     correlation_id = str(uuid.uuid4())
-    answer = answer_question(
+    result = answer_question_detailed(
         phone=student_id,
         question=question,
         correlation_id=correlation_id,
     )
-    return {"correlation_id": correlation_id, "answer": answer}
+    # sources = trechos do material didático usados (o painel mostra só ao administrador).
+    return {"correlation_id": correlation_id, **result}
 
 
 @app.post("/webhook/asaas")
