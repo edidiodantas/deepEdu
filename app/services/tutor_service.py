@@ -7,6 +7,7 @@ from app.core.config import settings
 from app.core.token_budget import count_tokens, truncate_to_tokens
 from app.rag.abstinence import evaluate_retrieval
 from app.rag.chain import build_tutor_chain
+from app.rag.sources import source_summary
 from app.rag.sympy_tool import verify_numeric_answer
 
 
@@ -34,6 +35,16 @@ def answer_question(
     *,
     correlation_id: str,
 ) -> str:
+    return answer_question_detailed(phone, question, correlation_id=correlation_id)["answer"]
+
+
+def answer_question_detailed(
+    phone: str,
+    question: str,
+    *,
+    correlation_id: str,
+) -> dict:
+    """Responde e devolve também os trechos usados (ou os melhores, se absteve)."""
     hashed = phone_hash(phone)
     session_id = pseudonymize_session_id(phone)
     trimmed_question = truncate_to_tokens(question, settings.USER_MESSAGE_MAX_TOKENS)
@@ -68,7 +79,13 @@ def answer_question(
             metadata={"max_score": gate.max_score, "min_score": settings.RETRIEVAL_MIN_SCORE},
             fail_closed=True,
         )
-        return gate.message
+        return {
+            "answer": gate.message,
+            "abstained": True,
+            "max_score": round(gate.max_score, 3),
+            "min_score": settings.RETRIEVAL_MIN_SCORE,
+            "sources": source_summary(gate.docs),
+        }
 
     chain = build_tutor_chain(
         correlation_id=correlation_id,
@@ -164,7 +181,13 @@ def answer_question(
             langsmith_run_id=langsmith_run_id,
             fail_closed=True,
         )
-        return answer
+        return {
+            "answer": answer,
+            "abstained": False,
+            "max_score": round(gate.max_score, 3),
+            "min_score": settings.RETRIEVAL_MIN_SCORE,
+            "sources": source_summary(gate.docs),
+        }
     except Exception as exc:
         log_event(
             correlation_id=correlation_id,
