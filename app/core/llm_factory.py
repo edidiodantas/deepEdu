@@ -10,6 +10,25 @@ from app.core.config import settings
 DEFAULT_HF_MODEL = "amadeusai/Amadeus-Verbo-FI-Qwen2.5-0.5B-PT-BR-Instruct"
 
 
+def _llm_dtype(device_map: str, requested: str):
+    """Escolhe o tipo numérico que o hardware realmente suporta.
+
+    O Amadeus vem em bfloat16, mas GPUs NVIDIA anteriores à série RTX 30
+    (compute capability < 8) falham com CUBLAS_STATUS_NOT_SUPPORTED nesse
+    formato. Não usamos torch.cuda.is_bf16_supported(): ele também aceita
+    bf16 "emulado", que é justamente o que quebra nessas placas.
+    """
+    import torch
+
+    requested = (requested or "auto").strip().lower()
+    if requested != "auto":
+        return getattr(torch, requested)
+    if device_map != "cpu" and torch.cuda.is_available():
+        major, _ = torch.cuda.get_device_capability()
+        return torch.bfloat16 if major >= 8 else torch.float16
+    return torch.float32
+
+
 def _cache_key() -> tuple:
     """Chave estável para não recarregar o modelo a cada pergunta."""
     return (
@@ -21,6 +40,7 @@ def _cache_key() -> tuple:
         settings.OLLAMA_BASE_URL,
         settings.LLM_API_KEY or settings.DEEPSEEK_API_KEY,
         settings.LLM_BASE_URL or settings.DEEPSEEK_BASE_URL,
+        settings.LLM_DTYPE,
     )
 
 
@@ -40,7 +60,7 @@ def _build_chat_model_cached(cache_key: tuple) -> BaseChatModel:
         model = AutoModelForCausalLM.from_pretrained(
             model_id,
             device_map=cache_key[2],
-            torch_dtype="auto",
+            torch_dtype=_llm_dtype(cache_key[2], cache_key[8]),
             trust_remote_code=True,
         )
         temperature = float(cache_key[3])
