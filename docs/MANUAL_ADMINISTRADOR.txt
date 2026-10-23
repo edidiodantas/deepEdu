@@ -64,6 +64,16 @@ Primeira aba do administrador. Não altera nada; só informa.
                               novo pelo ícone.
       Modelo de linguagem ... a IA em uso (padrão: Amadeus-Verbo
                               0,5B, em português).
+      Processamento ......... onde a IA está rodando, escolhido sozinho
+                              a cada vez que o DeepEdu liga:
+                                GPU NVIDIA (float16 ou bfloat16), ou
+                                Processador (CPU) (float32).
+                              Se aparecer "Rodando no processador
+                              porque: ...", é o motivo (sem GPU, pouca
+                              memória de vídeo, ou a GPU falhou no
+                              teste). Funciona igual, só mais devagar.
+                              Antes da 1ª pergunta: "modelo ainda não
+                              carregado".
       Materiais ............. quantos arquivos estão em data/materials.
       Endereço da API ....... informação técnica (normalmente
                               http://127.0.0.1:8000).

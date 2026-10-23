@@ -172,6 +172,13 @@ Os alunos que abrem o painel sem entrar como administrador veem **somente** a te
         health = requests.get(f"{BASE_URL}/health", timeout=10).json()
         st.success("API ligada")
         st.write(f"Modelo de linguagem: `{health.get('llm_model', '?')}`")
+        rt = health.get("llm_runtime") or {}
+        if rt.get("status") == "carregado":
+            st.write(f"Processamento: **{rt.get('device_label')}** ({rt.get('dtype_name')})")
+            if rt.get("reason") and rt.get("device_map") == "cpu":
+                st.caption(f"Rodando no processador porque: {rt['reason']}")
+        else:
+            st.write(f"Processamento: {rt.get('status', '?')}")
     except Exception as exc:
         st.error(f"API desligada ou inacessível: {exc}")
     try:
