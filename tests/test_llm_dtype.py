@@ -14,7 +14,7 @@ class LlmDtypeTests(unittest.TestCase):
         import torch
 
         self.torch = torch
-        from app.core.llm_factory import _llm_dtype
+        from app.core.hardware import _llm_dtype
 
         self.pick = _llm_dtype
 

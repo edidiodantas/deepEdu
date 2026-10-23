@@ -8,6 +8,7 @@ from app.api.admin import router as admin_router
 from app.billing.payment_service import process_asaas_webhook
 from app.billing.service import init_billing
 from app.core.config import settings
+from app.core.hardware import runtime_status
 from app.core.langsmith_setup import configure_langsmith
 from app.core.startup_checks import run_startup_checks
 from app.services.tutor_service import answer_question
@@ -36,6 +37,7 @@ def health():
         "service": settings.APP_NAME,
         "llm_provider": settings.LLM_PROVIDER,
         "llm_model": settings.LLM_MODEL,
+        "llm_runtime": runtime_status(),
     }
 
 
