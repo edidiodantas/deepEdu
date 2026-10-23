@@ -161,8 +161,17 @@ def export_audit_csv(
 
 
 @router.get("/audit/logs")
-def list_audit_logs(limit: int = 200, action: str | None = None):
-    return {"items": fetch_audit_logs(action=action, limit=limit)}
+def list_audit_logs(limit: int = 200, action: str | None = None, correlation_id: str | None = None):
+    """Sem correlation_id: os N eventos mais recentes. Com ele: a trilha de uma
+    resposta, em ordem cronológica."""
+    correlation_id = (correlation_id or "").strip() or None
+    items = fetch_audit_logs(
+        action=action,
+        limit=limit,
+        correlation_id=correlation_id,
+        newest_first=correlation_id is None,
+    )
+    return {"items": items}
 
 
 @router.post("/students/enroll")

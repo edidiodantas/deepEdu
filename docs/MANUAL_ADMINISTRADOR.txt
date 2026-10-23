@@ -106,6 +106,17 @@ aluno.
       auditoria, tudo o que aconteceu nessa resposta (busca nos
       materiais, chamada à IA, conferência da conta).
 
+  "📄 Trechos usados" (só o administrador vê)
+      Logo abaixo da resposta: os trechos do material que o tutor
+      usou, com o arquivo, a página e a RELEVÂNCIA (0 a 1; quanto
+      maior, mais parecido com a pergunta) e o começo do texto.
+      Serve para conferir se a resposta veio do lugar certo. Se o
+      trecho não fala do assunto, o problema está no material ou na
+      busca, não na IA.
+      Quando o tutor não responde, aparece "relevância insuficiente"
+      com o melhor valor encontrado e o mínimo exigido
+      (RETRIEVAL_MIN_SCORE, padrão 0,35).
+
   Respostas especiais:
       "Não encontrei material suficiente no acervo..."
           O tutor não achou nos materiais algo parecido com a
@@ -249,12 +260,19 @@ trilha de auditoria — o centro da proposta do DeepEdu.
   Tudo o que o DeepEdu faz fica registrado: perguntas, buscas nos
   materiais, uso da IA, ações do administrador, acessos negados.
 
+    Código da resposta (opcional)
+        Cole o "Código da resposta" que aparece abaixo de uma
+        resposta: a tabela mostra SÓ os eventos daquela pergunta, em
+        ordem (normalmente 4 a 6: rag.started, retrieval.executed,
+        llm.invoked, sympy.*, rag.completed).
     Filtrar por action (opcional)
         Mostra só um tipo de evento. Ex.: rag.completed
         (lista completa no item 8). Vazio = todos.
     Limite
-        Quantos eventos mostrar (10 a 1000), do mais recente para o
-        mais antigo.
+        Quantos eventos mostrar (10 a 1000). Sem código da resposta,
+        mostra os MAIS RECENTES primeiro. Atenção: a indexação gera
+        um evento por página lida, então logo depois de reindexar a
+        lista fica cheia de corpus.document_added.
     Botão CARREGAR LOGS
         Mostra a tabela. Colunas principais:
           timestamp ........ data e hora (horário UTC, 3 h à frente

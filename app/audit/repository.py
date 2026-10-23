@@ -309,6 +309,8 @@ def fetch_audit_logs(
     date_to: str | None = None,
     action: str | None = None,
     limit: int = 10_000,
+    correlation_id: str | None = None,
+    newest_first: bool = False,
 ) -> list[dict[str, Any]]:
     query = "SELECT event_id, timestamp, correlation_id, actor_type, actor_id, session_id, action, resource, outcome, metadata, langsmith_run_id FROM audit_log WHERE 1=1"
     params: list[Any] = []
@@ -321,7 +323,11 @@ def fetch_audit_logs(
     if action:
         query += " AND action = ?"
         params.append(action)
-    query += " ORDER BY timestamp ASC LIMIT ?"
+    if correlation_id:
+        query += " AND correlation_id = ?"
+        params.append(correlation_id)
+    # newest_first: LIMIT pega os N mais recentes (painel); senão, ordem cronológica.
+    query += f" ORDER BY timestamp {'DESC' if newest_first else 'ASC'} LIMIT ?"
     params.append(limit)
 
     with _connect() as conn:

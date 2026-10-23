@@ -46,6 +46,28 @@ def _check_admin_key(key: str) -> tuple[bool, str]:
     return False, f"Erro {resp.status_code}: {resp.text}"
 
 
+def _render_fontes(data: dict):
+    """Só para o administrador: de onde veio a resposta."""
+    sources = data.get("sources") or []
+    min_score = data.get("min_score")
+    titulo = f"📄 Trechos usados ({len(sources)})"
+    if data.get("abstained"):
+        titulo = f"📄 Trechos encontrados — relevância insuficiente ({len(sources)})"
+    with st.expander(titulo, expanded=True):
+        if data.get("abstained"):
+            st.warning(
+                f"O melhor trecho teve relevância {data.get('max_score', 0):.2f}, abaixo do mínimo "
+                f"{min_score:.2f} (RETRIEVAL_MIN_SCORE). Por isso o tutor não respondeu."
+            )
+        if not sources:
+            st.write("Nenhum trecho encontrado. Há materiais indexados?")
+        for i, src in enumerate(sources, 1):
+            pagina = f", pág. {src['page']}" if src.get("page") else ""
+            st.markdown(f"**{i}. {src.get('file', '?')}{pagina}** — relevância {src.get('score', 0):.2f}")
+            st.caption(src.get("snippet", ""))
+        st.caption("Relevância de 0 a 1. Trilha completa: aba ECA / Auditoria, campo Código da resposta.")
+
+
 def _render_pergunta(is_admin: bool):
     st.subheader("Pergunte ao tutor")
     st.caption("Escreva sua dúvida de matemática. O tutor responde com base nos materiais da escola.")
@@ -72,6 +94,8 @@ def _render_pergunta(is_admin: bool):
         if resp.status_code == 200:
             st.write(data.get("answer", ""))
             st.caption(f"Código da resposta: {data.get('correlation_id', '')}")
+            if is_admin:
+                _render_fontes(data)
         else:
             st.error(f"Erro {resp.status_code}: {data}" if is_admin else "Não foi possível responder agora.")
 
@@ -347,17 +371,31 @@ with tab3:
 
     st.divider()
     st.subheader("Logs de auditoria")
+    st.caption(
+        "Sem código: os eventos mais recentes primeiro. Com o código de uma resposta: "
+        "só a trilha daquela pergunta, em ordem."
+    )
+    corr_filter = st.text_input("Código da resposta (opcional)", value="")
     action_filter = st.text_input("Filtrar por action (opcional)", value="")
     limit = st.number_input("Limite", min_value=10, max_value=1000, value=100, step=10)
     if st.button("Carregar logs"):
         params = {"limit": int(limit)}
         if action_filter.strip():
             params["action"] = action_filter.strip()
+        if corr_filter.strip():
+            params["correlation_id"] = corr_filter.strip()
         code, data = _get("/admin/audit/logs", params)
         if code == 200 and isinstance(data, dict):
             items = data.get("items", [])
-            st.write(f"{len(items)} eventos")
-            st.dataframe(items, use_container_width=True)
+            if corr_filter.strip():
+                st.write(f"{len(items)} eventos da resposta {corr_filter.strip()}")
+            else:
+                st.write(f"{len(items)} eventos mais recentes")
+            # Colunas mais úteis primeiro: o que aconteceu, quando e com que resultado.
+            ordem = ["timestamp", "action", "outcome", "actor_type", "resource", "metadata",
+                     "correlation_id", "actor_id", "session_id", "event_id", "langsmith_run_id"]
+            linhas = [{k: (str(i.get(k)) if k == "metadata" else i.get(k)) for k in ordem} for i in items]
+            st.dataframe(linhas, use_container_width=True)
         else:
             st.error(f"Erro {code}: {data}")
 
