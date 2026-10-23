@@ -17,6 +17,9 @@ class Settings(BaseSettings):
     LLM_BASE_URL: str = ""
     OLLAMA_BASE_URL: str = "http://127.0.0.1:11434"
     LLM_DEVICE_MAP: str = "auto"
+    # auto = bfloat16 em GPU RTX 30+, float16 em GPU mais antiga, float32 na CPU.
+    # Forçar: float32 | float16 | bfloat16
+    LLM_DTYPE: str = "auto"
     LLM_TEMPERATURE: float = 0.3
     LLM_MAX_NEW_TOKENS: int = 1024
     # Id do tokenizer (vazio = usa o proprio LLM_MODEL no Hugging Face).
