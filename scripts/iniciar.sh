@@ -79,6 +79,8 @@ if responde "http://127.0.0.1:${PANEL_PORT}"; then
   echo "    Painel já estava ligado na porta ${PANEL_PORT}."
 else
   echo "    Ligando painel (log: data/logs/painel.log)..."
+  # Página em pt-BR: o navegador para de oferecer tradução do inglês.
+  python control_panel/idioma_ptbr.py >/dev/null 2>&1 || true
   (cd control_panel && streamlit run streamlit_app.py \
     --server.address "$PANEL_HOST" --server.port "$PANEL_PORT" --server.headless true \
     --browser.gatherUsageStats false --client.toolbarMode viewer) >"$LOG_DIR/painel.log" 2>&1 &

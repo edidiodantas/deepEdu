@@ -5,6 +5,8 @@ import requests
 import streamlit as st
 from dotenv import load_dotenv
 
+from idioma_ptbr import marcar_pagina
+
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
 
 BASE_URL = (os.getenv("CLOUD_API_BASE_URL") or "http://127.0.0.1:8000").rstrip("/")
@@ -94,6 +96,7 @@ st.set_page_config(
     page_icon=FAVICON_PATH if os.path.exists(FAVICON_PATH) else None,
     layout="wide",
 )
+marcar_pagina()
 
 
 def _header(subtitle: str):
