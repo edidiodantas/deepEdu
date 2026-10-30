@@ -4,7 +4,21 @@
 
 Serve para: notebook ou servidor com Linux 64 bits (ex.: Ubuntu).
 Não precisa de internet, nem de instalar Python, nem nada antes.
-Espaço livre necessário no computador: ~3x o tamanho deste pendrive.
+Espaço livre necessário no computador: ~2x o tamanho da pasta
+"pacote" (o instalador confere e avisa). Depois de instalado, o
+DeepEdu ocupa mais ou menos o tamanho da pasta "pacote".
+
+ATENÇÃO AO DIGITAR: o comando é  bash INSTALAR.sh  (com letras
+MAIÚSCULAS e o .sh no fim). "bash instalar" NÃO funciona: o
+Linux diferencia maiúsculas de minúsculas.
+
+Testado em Ubuntu 26.04 LTS. No Ubuntu o pendrive aparece em
+/media/SEU_USUARIO/NOME_DO_PENDRIVE (ex.: /media/$USER/exfat).
+Para conferir se está na pasta certa, digite  ls  : tem que
+aparecer INSTALAR.sh  LEIA-ME.txt  PACOTE.txt  pacote
+
+Pouco espaço na pasta pessoal? Instale em outro disco:
+      bash INSTALAR.sh --destino /caminho/do/disco/deepEdu
 
 
 --------------------------------------------------------------
