@@ -125,7 +125,7 @@ Aparece **DeepEdu** no menu de aplicativos e na Área de Trabalho. Ele abre uma 
 bash scripts/preparar_pendrive.sh        # no PC com internet → ~/DeepEdu-pendrive
 ```
 
-No destino, na pasta do pendrive: `bash INSTALAR.sh` (notebook) ou `bash INSTALAR.sh --servidor`. Detalhes em [offline/INSTALAR_OFFLINE.md](offline/INSTALAR_OFFLINE.md).
+No destino, siga o `LEIA-ME.txt` do pendrive: abra um terminal e cole a linha que acha o pendrive e roda o instalador. Detalhes em [offline/INSTALAR_OFFLINE.md](offline/INSTALAR_OFFLINE.md).
 
 ## 5) Teste local da API
 

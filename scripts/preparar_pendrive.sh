@@ -151,7 +151,7 @@ rm -rf "$WORK"
 
 echo
 echo "Pronto! Pacote em: $DEST ($(du -sh "$DEST" | cut -f1))"
-echo "Copie a pasta inteira para o pendrive. No outro Linux: bash INSTALAR.sh"
+echo "Copie a pasta inteira para o pendrive. No outro Linux: siga o LEIA-ME.txt da pasta."
 if [[ ${#MISSING[@]} -gt 0 ]]; then
   echo
   echo "ATENÇÃO: modelos que não entraram no pacote: ${MISSING[*]}"

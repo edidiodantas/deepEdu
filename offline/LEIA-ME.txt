@@ -1,66 +1,61 @@
 ==============================================================
-  DeepEdu — PENDRIVE DE INSTALAÇÃO (funciona sem internet)
+  DeepEdu — COMO INSTALAR NO LINUX UBUNTU (testado no 26.04 LTS)
+  Funciona sem internet. Serve para qualquer PC ou notebook
+  com Ubuntu 64 bits.
 ==============================================================
 
-Serve para: notebook ou servidor com Linux 64 bits (ex.: Ubuntu).
-Não precisa de internet, nem de instalar Python, nem nada antes.
-Espaço livre necessário no computador: ~2x o tamanho da pasta
-"pacote" (o instalador confere e avisa). Depois de instalado, o
-DeepEdu ocupa mais ou menos o tamanho da pasta "pacote".
-
-ATENÇÃO AO DIGITAR: o comando é  bash INSTALAR.sh  (com letras
-MAIÚSCULAS e o .sh no fim). "bash instalar" NÃO funciona: o
-Linux diferencia maiúsculas de minúsculas.
-
-Testado em Ubuntu 26.04 LTS. No Ubuntu o pendrive aparece em
-/media/SEU_USUARIO/NOME_DO_PENDRIVE (ex.: /media/$USER/exfat).
-Para conferir se está na pasta certa, digite  ls  : tem que
-aparecer INSTALAR.sh  LEIA-ME.txt  PACOTE.txt  pacote
-
-Pouco espaço na pasta pessoal? Instale em outro disco:
-      bash INSTALAR.sh --destino /caminho/do/disco/deepEdu
+ANTES DE COMEÇAR
+- Espaço livre: uns 15 GB na pasta pessoal (o instalador confere).
+  Depois de pronto, o DeepEdu ocupa uns 9 GB.
+- Não precisa instalar Python nem nada antes.
 
 
 --------------------------------------------------------------
-  NOTEBOOK (para apresentar)
+  PASSO A PASSO (notebook ou PC com tela)
 --------------------------------------------------------------
-1. Coloque o pendrive no notebook.
-2. Abra a pasta do pendrive, clique com o botão direito num
-   espaço vazio e escolha "Abrir no terminal".
-3. Digite e aperte Enter:
+1. Coloque o pendrive no computador e espere ele aparecer
+   no Arquivos (ícone do pendrive na barra da esquerda).
 
-      bash INSTALAR.sh
+2. Abra o Terminal: aperte  Ctrl + Alt + T
+   (não precisa entrar em nenhuma pasta).
 
-4. Espere terminar (uns 5 a 15 minutos). No final aparece a
-   CHAVE DE ADMINISTRADOR. Ela também fica guardada em
+3. Copie a linha abaixo INTEIRA, cole no terminal
+   (Ctrl + Shift + V) e aperte Enter:
+
+bash "$(find /media /run/media -maxdepth 4 -path '*DeepEdu-pendrive/INSTALAR.sh' 2>/dev/null | head -n 1)"
+
+   Essa linha encontra o pendrive sozinha e começa a instalação.
+
+4. Espere terminar (5 a 15 minutos). No final aparece a
+   CHAVE DE ADMINISTRADOR. Ela fica guardada também em
    ~/deepEdu/CHAVE_ADMIN.txt
 
 5. Pronto: dois cliques no ícone DeepEdu (Área de Trabalho ou
-   menu de aplicativos). Se o ícone aparecer com um X, botão
-   direito nele -> "Permitir execução".
+   menu de aplicativos). Se o ícone aparecer com um X, clique
+   com o botão direito nele e escolha "Permitir execução".
+
+SE APARECER "Arquivo ou diretório inexistente" ou
+"No such file or directory":
+   o pendrive não foi encontrado. Abra o pendrive no Arquivos
+   (passo 1) e repita o passo 3.
 
 
 --------------------------------------------------------------
   SERVIDOR (fica ligado e acessível pela rede)
 --------------------------------------------------------------
-1. Coloque o pendrive no servidor e entre na pasta dele, por
-   exemplo:
+Mesma linha do passo 3, com --servidor no fim (vai pedir a
+senha do usuário):
 
-      cd /media/$USER/NOME_DO_PENDRIVE/DeepEdu-pendrive
+bash "$(find /media /run/media -maxdepth 4 -path '*DeepEdu-pendrive/INSTALAR.sh' 2>/dev/null | head -n 1)" --servidor
 
-   (servidor sem tela: monte o pendrive antes, ex.
-    sudo mount /dev/sdb1 /mnt  e  cd /mnt/DeepEdu-pendrive)
+Servidor sem tela: monte o pendrive antes e rode o arquivo
+pelo caminho completo:
+      sudo mount /dev/sdb1 /mnt
+      bash /mnt/DeepEdu-pendrive/INSTALAR.sh --servidor
 
-2. Digite e aperte Enter (vai pedir a senha do usuário):
-
-      bash INSTALAR.sh --servidor
-
-3. No final aparece o endereço, algo como:
-
-      http://192.168.0.50:8501
-
-   Abra esse endereço no navegador de qualquer computador da
-   mesma rede. O DeepEdu liga sozinho quando o servidor reinicia.
+No final aparece o endereço, algo como http://192.168.0.50:8501
+Abra esse endereço no navegador de qualquer computador da mesma
+rede. O DeepEdu liga sozinho quando o servidor reinicia.
 
    Comandos úteis no servidor:
       systemctl status deepedu-local      (está ligado?)
@@ -69,13 +64,21 @@ Pouco espaço na pasta pessoal? Instale em outro disco:
 
 
 --------------------------------------------------------------
+  POUCO ESPAÇO NA PASTA PESSOAL?
+--------------------------------------------------------------
+Instale em outro disco acrescentando --destino e a pasta, ex.:
+
+bash "$(find /media /run/media -maxdepth 4 -path '*DeepEdu-pendrive/INSTALAR.sh' 2>/dev/null | head -n 1)" --destino /caminho/do/disco/deepEdu
+
+
+--------------------------------------------------------------
   BOM SABER
 --------------------------------------------------------------
 - Alunos que abrem o painel veem só a tela de pergunta. As abas
   de administração aparecem depois de entrar com a chave, na
   barra da esquerda.
-- Rodar o INSTALAR.sh de novo ATUALIZA o programa e mantém a
-  chave, a configuração e os dados.
+- Instalar de novo ATUALIZA o programa e mantém a chave, a
+  configuração e os dados.
 - A primeira pergunta demora mais (o modelo está carregando).
 - Manual do painel do administrador: ~/deepEdu/docs/MANUAL_ADMINISTRADOR.txt
 - Se der erro, tire uma foto da tela do terminal.
