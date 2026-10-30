@@ -65,8 +65,11 @@ if [[ -n "${DEEPEDU_PYTHON:-}" ]]; then
   echo "    Usando $PY (não será incluído no pacote)."
 else
   "$UV" python install 3.12 >/dev/null
-  PY="$("$UV" python find --managed-python 3.12)"
-  PY_HOME="$(cd "$(dirname "$PY")/.." && pwd)"
+  # Fora do projeto e sem VIRTUAL_ENV: senão o uv devolve o .venv, que é só um
+  # atalho para o Python desta máquina e quebra no destino.
+  PY="$(cd / && env -u VIRTUAL_ENV "$UV" python find --managed-python 3.12)"
+  PY_HOME="$(cd "$(dirname "$(readlink -f "$PY")")/.." && pwd)"
+  [[ ! -f "$PY_HOME/pyvenv.cfg" ]] || die "uv devolveu um venv ($PY_HOME), não um Python completo."
   cp -a "$PY_HOME" "$PKG/python"
   PY="$PKG/python/bin/python3.12"
   echo "    $(basename "$PY_HOME")"

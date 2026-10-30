@@ -83,6 +83,7 @@ if [[ -d "$PKG/python" ]]; then
 else
   PY="${DEEPEDU_PYTHON:-python3.12}"   # pacote de teste sem Python embutido
 fi
+"$PY" -V >/dev/null 2>&1 || die "o Python do pacote não roda ($PY). Gere o pacote de novo."
 rm -rf "$TARGET/.venv"
 "$UV" venv --quiet --python "$PY" "$TARGET/.venv"
 UV_CACHE_DIR="$WORK/uv-cache" VIRTUAL_ENV="$TARGET/.venv" "$UV" pip install --quiet \
