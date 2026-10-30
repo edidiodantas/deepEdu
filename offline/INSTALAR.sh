@@ -35,7 +35,9 @@ ls "$HERE"/pacote/deepedu.tar.part* >/dev/null 2>&1 || die "pasta 'pacote' não 
 PKG_KB=$(du -sk "$HERE/pacote" | cut -f1)
 mkdir -p "$(dirname "$TARGET")"
 FREE_KB=$(df -Pk "$(dirname "$TARGET")" | awk 'NR==2 {print $4}')
-NEED_KB=$((PKG_KB * 3))
+# Pico: pacote extraído + bibliotecas instaladas. O programa e o Python são movidos
+# (não copiados) e as wheels são apagadas antes dos modelos, então 2x basta.
+NEED_KB=$((PKG_KB * 2))
 if [[ -d "$TARGET/.venv" ]]; then   # atualização: o .venv antigo é substituído
   FREE_KB=$((FREE_KB + $(du -sk "$TARGET/.venv" | cut -f1)))
 fi
@@ -64,8 +66,9 @@ if [[ -f "$TARGET/.env" ]]; then
     | tar -C "$TARGET" -xf -
   # Materiais novos do pacote entram; nada existente é apagado.
   cp -an "$PKG/deepEdu/data/materials/." "$TARGET/data/materials/" 2>/dev/null || true
+elif [[ ! -e "$TARGET" ]]; then
+  mv "$PKG/deepEdu" "$TARGET"   # mesmo disco: não ocupa espaço extra
 else
-  mkdir -p "$TARGET"
   cp -a "$PKG/deepEdu/." "$TARGET/"
 fi
 mkdir -p "$TARGET/data"/{materials,chroma,audit,billing,chat_history,logs}
@@ -75,7 +78,7 @@ mkdir -p "$HOME/.local/bin"
 step "4/7 Instalando Python e bibliotecas (sem internet)"
 if [[ -d "$PKG/python" ]]; then
   rm -rf "$TARGET/.python"
-  cp -a "$PKG/python" "$TARGET/.python"
+  mv "$PKG/python" "$TARGET/.python"
   PY="$TARGET/.python/bin/python3.12"
 else
   PY="${DEEPEDU_PYTHON:-python3.12}"   # pacote de teste sem Python embutido
@@ -84,6 +87,7 @@ rm -rf "$TARGET/.venv"
 "$UV" venv --quiet --python "$PY" "$TARGET/.venv"
 UV_CACHE_DIR="$WORK/uv-cache" VIRTUAL_ENV="$TARGET/.venv" "$UV" pip install --quiet \
   --offline --no-index --find-links "$PKG/wheels" -r "$PKG/requirements.lock"
+rm -rf "$PKG/wheels" "$WORK/uv-cache"   # libera espaço antes dos modelos
 VPY="$TARGET/.venv/bin/python"
 echo "    OK ($("$VPY" --version))"
 
