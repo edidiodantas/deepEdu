@@ -62,14 +62,19 @@ UPDATE=0
 if [[ -f "$TARGET/.env" ]]; then
   UPDATE=1
   echo "    Instalação existente encontrada: atualizando código, mantendo .env e dados."
+  chmod -R u+w "$TARGET/.git" 2>/dev/null || true
   tar -C "$PKG/deepEdu" --exclude=./data --exclude=./.env --exclude=./control_panel/.env -cf - . \
-    | tar -C "$TARGET" -xf -
+    | tar -C "$TARGET" --overwrite -xf -
   # Materiais novos do pacote entram; nada existente é apagado.
   cp -an "$PKG/deepEdu/data/materials/." "$TARGET/data/materials/" 2>/dev/null || true
 elif [[ ! -e "$TARGET" ]]; then
   mv "$PKG/deepEdu" "$TARGET"   # mesmo disco: não ocupa espaço extra
 else
-  cp -a "$PKG/deepEdu/." "$TARGET/"
+  # Pasta já existe (ex.: tentativa anterior interrompida). O tar substitui os
+  # arquivos somente-leitura do .git, que o "cp" não consegue sobrescrever.
+  echo "    Pasta já existe sem configuração: substituindo os arquivos do programa."
+  chmod -R u+w "$TARGET" 2>/dev/null || true
+  tar -C "$PKG/deepEdu" -cf - . | tar -C "$TARGET" --overwrite -xf -
 fi
 mkdir -p "$TARGET/data"/{materials,chroma,audit,billing,chat_history,logs}
 mkdir -p "$HOME/.local/bin"
