@@ -34,6 +34,10 @@ ls "$HERE"/pacote/deepedu.tar.part* >/dev/null 2>&1 || die "pasta 'pacote' não 
 
 PKG_KB=$(du -sk "$HERE/pacote" | cut -f1)
 mkdir -p "$(dirname "$TARGET")"
+# Restos de uma tentativa interrompida ocupam espaço: apaga antes de medir.
+for OLD in "$(dirname "$TARGET")"/.deepedu-instalador.*; do
+  [[ -d "$OLD" ]] && { chmod -R u+w "$OLD" 2>/dev/null; rm -rf "$OLD"; }
+done
 FREE_KB=$(df -Pk "$(dirname "$TARGET")" | awk 'NR==2 {print $4}')
 # Pico: pacote extraído + bibliotecas instaladas. O programa e o Python são movidos
 # (não copiados) e as wheels são apagadas antes dos modelos, então 2x basta.
@@ -51,7 +55,7 @@ echo "    OK"
 
 step "2/7 Extraindo (alguns minutos)"
 WORK="$(mktemp -d "$(dirname "$TARGET")/.deepedu-instalador.XXXXXX")"
-trap 'rm -rf "$WORK"' EXIT
+trap 'chmod -R u+w "$WORK" 2>/dev/null; rm -rf "$WORK"' EXIT
 cat "$HERE"/pacote/deepedu.tar.part* | tar -xf - -C "$WORK"
 PKG="$WORK/deepedu-pacote"
 UV="$PKG/uv"
@@ -78,7 +82,7 @@ else
 fi
 mkdir -p "$TARGET/data"/{materials,chroma,audit,billing,chat_history,logs}
 mkdir -p "$HOME/.local/bin"
-[[ -x "$HOME/.local/bin/uv" ]] || cp "$UV" "$HOME/.local/bin/uv"
+cp -f "$UV" "$HOME/.local/bin/uv"   # sempre: pode ter ficado pela metade
 
 step "4/7 Instalando Python e bibliotecas (sem internet)"
 if [[ -d "$PKG/python" ]]; then

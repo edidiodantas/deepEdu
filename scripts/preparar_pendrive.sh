@@ -103,7 +103,7 @@ EXCLUDES=(
   --exclude=./.env --exclude=./control_panel/.env --exclude=./CHAVE_ADMIN.txt
   --exclude='./data/audit/*.db' --exclude='./data/billing/*.db'
   --exclude='./data/chat_history/*.db' --exclude=./data/logs --exclude=./data/backups
-  --exclude=./docs/.pdf-venv --exclude=./.pytest_cache --exclude=./.mypy_cache
+  --exclude=./docs/.pdf-venv --exclude=./.pytest_cache --exclude=./.mypy_cache --exclude=./.git
 )
 if [[ "$INCLUDE_DATA" -eq 0 ]]; then
   EXCLUDES+=(--exclude='./data/materials/*' --exclude='./data/chroma/*')
