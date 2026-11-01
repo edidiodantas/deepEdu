@@ -21,11 +21,13 @@ bancos de alunos/auditoria.
 
 ## 2. Instalar (no notebook ou servidor, sem internet)
 
-Na pasta do pendrive:
+Com o pendrive aberto no Arquivos, abra um terminal (Ctrl+Alt+T, em qualquer pasta)
+e cole a linha abaixo. Ela acha o pendrive sozinha. Com `--servidor` no fim, o painel
+fica aberto na rede (porta 8501) e liga junto com a máquina. Passo a passo para leigos:
+`offline/LEIA-ME.txt` (vai para o pendrive).
 
 ```bash
-bash INSTALAR.sh              # notebook: cria o ícone DeepEdu
-bash INSTALAR.sh --servidor   # servidor: painel na rede (porta 8501) e liga no boot
+bash "$(find /media /run/media -maxdepth 4 -path '*DeepEdu-pendrive/INSTALAR.sh' 2>/dev/null | head -n 1)"
 ```
 
 O instalador confere se o pacote está íntegro, instala em `~/deepEdu`, gera
