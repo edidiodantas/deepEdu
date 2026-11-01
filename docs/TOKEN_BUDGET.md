@@ -19,7 +19,7 @@
 
 | Componente | Máximo (tokens) | Variável de config | Observação |
 |------------|:---------------:|-------------------|------------|
-| Prompt de sistema | 400 | `PROMPT_MAX_TOKENS` | Ver `prompts/v1_tutor_em.md` (~250–350 na prática) |
+| Prompt de sistema | 480 | `PROMPT_MAX_TOKENS` | Ver `prompts/v1_tutor_em.md` (~330–430 na prática, com a seção Segurança) |
 | Contexto RAG (total) | 1.200 | `RAG_CONTEXT_MAX_TOKENS` | Soma de todos os chunks injetados (truncados se preciso) |
 | Histórico de chat | 800 | `HISTORY_MAX_TOKENS` | Buffer + resumo (RF08) |
 | Mensagem do usuário | 400 | `USER_MESSAGE_MAX_TOKENS` | Truncar se exceder; pedir reformulação |
@@ -93,7 +93,7 @@ Registrar no LangSmith (RF31): `input_tokens`, `rag_tokens`, `history_tokens`, `
 ## 6. Template de montagem do prompt
 
 ```
-[System — máx. 400 tokens]
+[System — máx. 480 tokens]
 {prompts/v1_tutor_em.md}
 
 [Contexto RAG — máx. 1.200 tokens]
@@ -118,7 +118,7 @@ Registrar no LangSmith (RF31): `input_tokens`, `rag_tokens`, `history_tokens`, `
 
 | ID | Teste | Critério |
 |----|-------|----------|
-| TB-01 | Prompt sistema | ≤ 400 tokens |
+| TB-01 | Prompt sistema | ≤ 480 tokens |
 | TB-02 | 3 chunks + histórico médio + pergunta | Entrada ≤ 2.900 tokens |
 | TB-03 | Pergunta com 10 turnos de conversa | Resumo ativado; sem erro de contexto |
 | TB-04 | Pergunta de 2.000 caracteres | Truncada ou recusa educada |

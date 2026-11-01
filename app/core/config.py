@@ -35,7 +35,7 @@ class Settings(BaseSettings):
 
     # Prompt e orcamento de tokens (RF46)
     PROMPT_FILE: str = "prompts/v1_tutor_em.md"
-    PROMPT_MAX_TOKENS: int = 400
+    PROMPT_MAX_TOKENS: int = 480
     RAG_CONTEXT_MAX_TOKENS: int = 1200
     HISTORY_MAX_TOKENS: int = 800
     HISTORY_SUMMARY_TRIGGER: int = 600
