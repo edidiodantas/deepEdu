@@ -30,8 +30,7 @@ Instalacao local
   2. Siga IMPRIMIR_AGORA.txt
   3. Confira: curl http://127.0.0.1:8000/health
      tem de mostrar o modelo 0.5B.
-  4. Pergunta: curl -s http://127.0.0.1:8000/perguntar
-     -H 'Content-Type: application/json'
-     -d '{"student_id":"aluno-local","question":"quanto e 2+2?"}'
-  5. Painel: cd control_panel && streamlit run streamlit_app.py
-     aba Pergunta. A trilha fica em data/audit/audit.db.
+  4. Chat do aluno nesta maquina: http://127.0.0.1:8000/
+     No celular ou em outro PC da mesma rede: http://IP-DA-MAQUINA:8000/
+     (veja o IP com hostname -I). A API sobe com --host 0.0.0.0.
+  5. Painel da escola (auditoria): cd control_panel && streamlit run streamlit_app.py

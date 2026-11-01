@@ -3,6 +3,7 @@ from __future__ import annotations
 from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
 
 from app.core.config import settings
+from app.core.prompt_barrier import neutralize
 from app.core.token_budget import count_tokens, truncate_to_tokens
 
 
@@ -46,7 +47,7 @@ def compact_chat_history(messages: list[BaseMessage]) -> list[BaseMessage]:
     summary_parts: list[str] = []
     for msg in older:
         role = _role_label(msg)
-        excerpt = truncate_to_tokens(_message_text(msg), 80)
+        excerpt, _ = neutralize(truncate_to_tokens(_message_text(msg), 80))
         summary_parts.append(f"- {role}: {excerpt}")
 
     summary = truncate_to_tokens(
