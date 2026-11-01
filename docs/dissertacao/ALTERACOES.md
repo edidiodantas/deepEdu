@@ -3,6 +3,17 @@
 Arquivo de origem: Dissertacao_final (1).docx. Arquivo revisado: Dissertacao_DeepEdu_revisada.docx (e o PDF correspondente).
 Os 39 trechos de código do Apêndice A não foram alterados e continuam idênticos ao repositório (commit 6d67901 / main 447364e).
 
+## Revisão de 1º nov. 2026 (noite): retirada de dois trabalhos não confirmados
+
+A pedido do autor, foram retirados do texto dois trabalhos de difícil confirmação (um de acesso pago e um artigo de evento não localizado/publicado integralmente). Nenhum dos dois tinha entrada na lista de referências; ambos estavam sem autoria indicada no texto.
+
+1. Seção 5.3 — removido o parágrafo "Um sistema de aprendizado adaptativo baseado em agentes, com arquitetura de três camadas [...] redução de 95% no tempo de criação de conteúdo [...] [inserir fonte]" (trabalho "Scalable Personalized Education Through Agent-orchestrated Retrieval-Augmented Learning").
+2. Seção 5.3 — "Taneja et al. (2025) corroboram esses achados, demonstrando que" passou a "Taneja et al. (2025) demonstraram que", porque o parágrafo anterior deixou de existir.
+3. Seção 5.3 — título alterado de "Aprendizagem Personalizada em Larga Escala" para "Aprendizagem Personalizada com Agentes" (no texto e no sumário), pois o trabalho que sustentava a ideia de larga escala foi retirado.
+4. Seção 5.8 — removido o parágrafo "Em evento nacional, foi apresentado o desenvolvimento de um Tutor Inteligente Interativo para alunos de graduação online em Pedagogia [...] [inserir autoria, evento e ano]" (artigo da Realize Editora sobre o projeto finalista do Prêmio Semesp).
+5. Lista de abreviaturas — removida a sigla CSAT (Customer Satisfaction Score), usada só no parágrafo retirado.
+6. Sumário, lista de figuras e lista de quadros — números de página ajustados (a partir da seção 5.5, uma página a menos). Ao abrir no Word, convém usar "Atualizar campo" no sumário para confirmar.
+
 ## Pendências que dependem do autor
 
 - Campos destacados em amarelo: cidade, ano, ficha catalográfica, banca.
