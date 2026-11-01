@@ -3,6 +3,24 @@
 Arquivo de origem: Dissertacao_final (1).docx. Arquivo revisado: Dissertacao_DeepEdu_revisada.docx (e o PDF correspondente).
 Os 39 trechos de código do Apêndice A não foram alterados e continuam idênticos ao repositório (commit 6d67901 / main 447364e).
 
+## Revisão de 1º nov. 2026 (noite, 3): busca dos seis trabalhos não confirmados
+
+A pedido do autor, os seis trabalhos foram procurados em repositórios institucionais e em buscadores acadêmicos. Os não localizados foram retirados; os localizados tiveram a referência completada.
+
+Localizados (referência completada):
+1. BARTCZAK (2024) — Degree Project, Uppsala Universitet (DiVA, diva2:1905130).
+2. ORRENIUS (2024) — Degree Project, KTH Royal Institute of Technology (DiVA, diva2:1887429).
+3. HENRIQUES (2024) — Dissertação de mestrado, Universidade de Coimbra (Estudo Geral, handle 10316/116586).
+4. PLUTO (UFAL) — o autor é Enrique Santos de Oliveira (TCC em Ciência da Computação, Campus Arapiraca, 2025). A citação "Santos (2025)" passou a "Oliveira (2025)", a referência foi refeita e movida para a posição alfabética.
+
+Retirados (não localizados):
+5. ERIKSSON (2024) — retirado da lista de trabalhos internacionais da seção 5.8 e das referências; com ele saiu a menção a "recuperação de informações em bases de patentes", que se referia a esse trabalho.
+6. FERREIRA (2026, UFRR) — foi localizada apenas a banca de qualificação (PROFNIT/UFRR, dez. 2025), sem os resultados citados (RAGAS 0,866/0,864; 80% de acurácia). Foram retirados o parágrafo da seção 5.8, a menção no capítulo 4 ("conforme demonstrado por Borges (2025) em contexto brasileiro") e a entrada das referências.
+
+Observação: os números atribuídos a Orrenius (8,5%) e Bartczak (custo computacional) e a seleção em duas fases de Henriques seguem a revisão de Araújo (2025), citada no mesmo parágrafo; convém conferi-los no texto integral de cada trabalho (links na referência).
+
+Sumário sem alteração (98 páginas).
+
 ## Revisão de 1º nov. 2026 (noite, 2): referências conferidas com os PDFs dos artigos
 
 O autor localizou os PDFs de Aquino et al. (2024), Albuquerque et al. (2024), Béchard e Ayala (2024) e Bordin et al. (2025). A conferência resultou nos ajustes abaixo; Bordin et al. (2025) conferiu integralmente e não foi alterado.
