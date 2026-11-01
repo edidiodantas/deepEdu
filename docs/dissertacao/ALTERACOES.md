@@ -3,6 +3,17 @@
 Arquivo de origem: Dissertacao_final (1).docx. Arquivo revisado: Dissertacao_DeepEdu_revisada.docx (e o PDF correspondente).
 Os 39 trechos de código do Apêndice A não foram alterados e continuam idênticos ao repositório (commit 6d67901 / main 447364e).
 
+## Revisão de 1º nov. 2026 (noite, 2): referências conferidas com os PDFs dos artigos
+
+O autor localizou os PDFs de Aquino et al. (2024), Albuquerque et al. (2024), Béchard e Ayala (2024) e Bordin et al. (2025). A conferência resultou nos ajustes abaixo; Bordin et al. (2025) conferiu integralmente e não foi alterado.
+
+1. Capítulo 4 (Prevenção de Riscos e Alucinações): "em contextos educacionais (NOUALI; BADACHE; BELLOT, 2025; AYALA; BECHARD, 2024)" passou a "em contextos educacionais (NOUALI; BADACHE; BELLOT, 2025) e reduzem a alucinação na geração de saídas estruturadas em aplicações corporativas (BÉCHARD; AYALA, 2024)". O artigo trata de geração de fluxos de trabalho em JSON em ambiente corporativo (ServiceNow), não de contexto educacional.
+2. Capítulo 4 (Métricas de Avaliação de Qualidade): Albuquerque et al. (2024) saiu da frase sobre o RAGAS, pois o artigo não usa esse framework; foi acrescentada a frase "Como alternativa à avaliação automática, Albuquerque et al. (2024) propuseram a avaliação de aplicações RAG por meio de feedback implícito, derivado das ações dos usuários sobre as respostas geradas."
+3. Referências: "AQUINO, J. et al." passou a "AQUINO, I. V. de et al." (primeira autora: Isabella V. de Aquino); acrescentados local (Florianópolis) e páginas (p. 280-287).
+4. Referências: em Albuquerque et al. (2024), acrescentados local (Florianópolis) e páginas (p. 253-259).
+5. Referências: "AYALA, O.; BECHARD, P." passou a "BÉCHARD, P.; AYALA, O. M.", na ordem de autoria do artigo, e a entrada foi movida para a posição alfabética (depois de BARTCZAK).
+6. Sumário sem alteração: os títulos permanecem nas mesmas páginas (98 páginas no total).
+
 ## Revisão de 1º nov. 2026 (noite): retirada de dois trabalhos não confirmados
 
 A pedido do autor, foram retirados do texto dois trabalhos de difícil confirmação (um de acesso pago e um artigo de evento não localizado/publicado integralmente). Nenhum dos dois tinha entrada na lista de referências; ambos estavam sem autoria indicada no texto.
