@@ -47,10 +47,9 @@ class ConsentGateTests(unittest.TestCase):
         self.assertEqual(blocked["answer"], consent_prompt())
 
     def test_perguntar_endpoint_calls_consent_gate_first(self):
-        source = open(
-            os.path.join(os.path.dirname(__file__), "..", "app", "api", "main.py"),
-            encoding="utf-8",
-        ).read()
+        path = os.path.join(os.path.dirname(__file__), "..", "app", "api", "main.py")
+        with open(path, encoding="utf-8") as fh:
+            source = fh.read()
         body = source.split("def perguntar", 1)[1]
         self.assertIn("consent_gate(", body)
         self.assertLess(body.index("consent_gate("), body.index("answer_question_detailed("))
