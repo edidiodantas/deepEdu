@@ -15,6 +15,7 @@ control_panel/.env
 # Dados gerados em runtime (índice vetorial, SQLite, auditoria)
 data/chroma/*
 !data/chroma/.gitkeep
+data/index_versions/
 data/chat_history/*
 !data/chat_history/.gitkeep
 data/billing/*

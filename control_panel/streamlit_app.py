@@ -172,8 +172,8 @@ if not IS_ADMIN:
 
 _header("Painel do administrador")
 
-tab_inicio, tab_q, tab_mat, tab1, tab2, tab3 = st.tabs(
-    ["Início", "Pergunta", "Materiais", "Aluno", "Escola", "ECA / Auditoria"]
+tab_inicio, tab_q, tab_mat, tab_met, tab1, tab2, tab3 = st.tabs(
+    ["Início", "Pergunta", "Materiais", "Métricas", "Aluno", "Escola", "ECA / Auditoria"]
 )
 
 with tab_inicio:
@@ -286,9 +286,91 @@ with tab_mat:
                 st.error(f"API inacessível: {exc}")
             else:
                 if resp.status_code == 200:
-                    st.success(f"Indexação concluída: {resp.json().get('chunks')} trechos.")
+                    body = resp.json()
+                    st.success(
+                        f"Indexação concluída: {body.get('chunks')} trechos. "
+                        f"Versão da base: {body.get('index_version')}."
+                    )
                 else:
                     st.error(f"Erro {resp.status_code}: {resp.text}")
+
+    st.divider()
+    st.subheader("Versões da base de conhecimento")
+    st.caption(
+        "Cada reindexação gera uma versão com a lista dos materiais e a impressão digital (SHA-256) "
+        "de cada arquivo. As respostas registram a versão usada. Restaure uma versão anterior se a "
+        "nova piorar as respostas."
+    )
+    try:
+        vcode, vdata = _get("/admin/index/versions")
+    except requests.RequestException as exc:
+        vcode, vdata = 0, str(exc)
+    if vcode == 200 and isinstance(vdata, dict):
+        versoes = vdata.get("items", [])
+        if versoes:
+            st.dataframe(
+                [
+                    {
+                        "versão": v["version"],
+                        "em uso": "sim" if v.get("current") else "",
+                        "criada em": v.get("created_at"),
+                        "arquivos": len(v.get("files", [])),
+                        "trechos": v.get("chunks"),
+                        "impressão digital": v.get("manifest_hash", "")[:16],
+                    }
+                    for v in versoes
+                ],
+                use_container_width=True,
+            )
+            escolhida = st.selectbox("Restaurar versão", [v["version"] for v in versoes])
+            if st.button("Restaurar esta versão"):
+                resp = requests.post(
+                    f"{BASE_URL}/admin/index/restore/{requests.utils.quote(escolhida)}",
+                    headers=_headers(),
+                    timeout=300,
+                )
+                if resp.status_code == 200:
+                    st.success(f"Base restaurada para a versão {escolhida}.")
+                else:
+                    st.error(f"Erro {resp.status_code}: {resp.text}")
+        else:
+            st.info("Nenhuma versão guardada ainda. Clique em Reindexar para criar a primeira.")
+    else:
+        st.error(f"Não foi possível listar as versões ({vcode}): {vdata}")
+
+with tab_met:
+    st.subheader("Métricas de qualidade e proteção")
+    st.caption(
+        "Números calculados a partir da trilha de auditoria. Deixe as datas em branco para ver todo o período."
+    )
+    col_de, col_ate = st.columns(2)
+    data_de = col_de.text_input("De (AAAA-MM-DD)", value="")
+    data_ate = col_ate.text_input("Até (AAAA-MM-DD)", value="")
+    if st.button("Calcular métricas", type="primary"):
+        params = {}
+        if data_de.strip():
+            params["date_from"] = data_de.strip()
+        if data_ate.strip():
+            params["date_to"] = data_ate.strip() + "T23:59:59"
+        mcode, m = _get("/admin/metrics", params)
+        if mcode == 200 and isinstance(m, dict):
+            c1, c2, c3, c4 = st.columns(4)
+            c1.metric("Perguntas", m.get("perguntas", 0))
+            c2.metric("Respondidas", m.get("respondidas", 0))
+            c3.metric("Taxa de abstenção", f"{m.get('taxa_abstencao', 0):.1%}")
+            c4.metric("Respostas bloqueadas", m.get("respostas_bloqueadas", 0))
+            c5, c6, c7, c8 = st.columns(4)
+            c5.metric("Manipulações neutralizadas", m.get("injecoes_neutralizadas", 0))
+            c6.metric("Pedidos sem consentimento", m.get("pedidos_sem_consentimento", 0))
+            c7.metric("Acerto dos cálculos (SymPy)", f"{m.get('taxa_acerto_calculos', 0):.1%}")
+            media = m.get("pontuacao_media_recuperacao")
+            c8.metric("Pontuação média da busca", "—" if media is None else f"{media:.2f}")
+            st.write("Respostas por versão da base:", m.get("respostas_por_versao_da_base", {}))
+            st.write("Motivos de bloqueio:", m.get("motivos_bloqueio", {}))
+            with st.expander("Todos os números"):
+                st.json(m)
+        else:
+            st.error(f"Erro {mcode}: {m}")
 
 with tab1:
     st.subheader("Assinatura individual")

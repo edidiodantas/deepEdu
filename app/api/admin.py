@@ -6,6 +6,7 @@ from fastapi.responses import PlainTextResponse
 from app.audit.admin_audit import audited_admin_action
 from app.audit.enrollment import admin_enroll_student
 from app.audit.hashing import phone_hash
+from app.audit.metrics import quality_metrics
 from app.audit.repository import append_incident, fetch_audit_logs, fetch_consent_logs
 from app.billing.phone_identity import store_phone
 from app.billing.payment_service import (
@@ -22,7 +23,9 @@ from app.billing.service import (
     get_school_for_student,
 )
 from app.audit.service import log_event
+from app.core.config import settings
 from app.core.security import require_admin_api_key
+from app.rag.index_versions import IndexVersionError, list_versions, restore_version
 from app.rag.materials import (
     MaterialError,
     delete_material,
@@ -270,4 +273,49 @@ def rebuild_index():
     finally:
         index_lock.release()
     _log_admin(correlation_id, "admin.index.rebuild", "chroma", "success", {"chunks": chunks})
-    return {"ok": True, "chunks": chunks, "correlation_id": correlation_id}
+    versions = list_versions()
+    return {
+        "ok": True,
+        "chunks": chunks,
+        "index_version": versions[0]["version"] if versions else None,
+        "correlation_id": correlation_id,
+    }
+
+
+@router.get("/index/versions")
+def get_index_versions():
+    """Versões guardadas da base de conhecimento, da mais recente para a mais antiga."""
+    return {"items": list_versions()}
+
+
+@router.post("/index/restore/{version}")
+def restore_index_version(version: str):
+    """Volta a base de conhecimento para uma versão guardada."""
+    if not index_lock.acquire(blocking=False):
+        raise HTTPException(status_code=409, detail="Indexacao ja em andamento")
+    correlation_id = str(uuid.uuid4())
+    try:
+        manifest = restore_version(version, settings.CHROMA_DIR)
+    except IndexVersionError as exc:
+        _log_admin(correlation_id, "admin.index.restore", version, "failure", {"error": str(exc)})
+        raise HTTPException(status_code=404, detail=str(exc))
+    finally:
+        index_lock.release()
+    log_event(
+        correlation_id=correlation_id,
+        actor_type="admin",
+        actor_id="admin",
+        session_id="admin",
+        action="index.restored",
+        resource=settings.CHROMA_DIR,
+        outcome="success",
+        metadata={"index_version": version, "manifest_hash": manifest["manifest_hash"]},
+        fail_closed=True,
+    )
+    return {"ok": True, "index_version": version, "correlation_id": correlation_id}
+
+
+@router.get("/metrics")
+def get_metrics(date_from: str | None = None, date_to: str | None = None):
+    """Métricas consolidadas de qualidade e proteção, a partir da trilha de auditoria."""
+    return quality_metrics(date_from=date_from, date_to=date_to)

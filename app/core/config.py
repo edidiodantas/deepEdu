@@ -57,6 +57,9 @@ class Settings(BaseSettings):
     EMBEDDING_MODEL: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 
     CHROMA_DIR: str = "./data/chroma"
+    # Versões guardadas da base vetorial (art. 17, § 4º, VIII): cópia + manifesto por reindexação.
+    INDEX_VERSIONS_DIR: str = "./data/index_versions"
+    INDEX_VERSIONS_KEEP: int = 5
     MATERIALS_DIR: str = "./data/materials"
     CHAT_DB_PATH: str = "./data/chat_history/chat_history.db"
     BILLING_DB_PATH: str = "./data/billing/billing.db"

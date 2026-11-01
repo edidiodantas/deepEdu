@@ -10,6 +10,7 @@ from app.core.prompt_barrier import has_meaningful_content, neutralize
 from app.core.token_budget import count_tokens, truncate_to_tokens
 from app.rag.abstinence import evaluate_retrieval
 from app.rag.chain import build_tutor_chain
+from app.rag.index_versions import current_version
 from app.rag.sources import source_summary
 from app.rag.sympy_tool import verify_numeric_answer
 
@@ -51,6 +52,8 @@ def answer_question_detailed(
     hashed = phone_hash(phone)
     session_id = pseudonymize_session_id(phone)
     trimmed_question = truncate_to_tokens(question, settings.USER_MESSAGE_MAX_TOKENS)
+    # Versão da base de conhecimento usada nesta resposta (registrada na auditoria).
+    index_version = current_version()
     # Barreira contra injeção de instruções: neutraliza antes de qualquer uso da pergunta.
     trimmed_question, injected = neutralize(trimmed_question)
 
@@ -103,7 +106,11 @@ def answer_question_detailed(
             action="rag.abstained",
             resource="rag_pipeline",
             outcome="success",
-            metadata={"max_score": gate.max_score, "min_score": settings.RETRIEVAL_MIN_SCORE},
+            metadata={
+                "max_score": gate.max_score,
+                "min_score": settings.RETRIEVAL_MIN_SCORE,
+                "index_version": index_version,
+            },
             fail_closed=True,
         )
         return {
@@ -111,6 +118,7 @@ def answer_question_detailed(
             "abstained": True,
             "max_score": round(gate.max_score, 3),
             "min_score": settings.RETRIEVAL_MIN_SCORE,
+            "index_version": index_version,
             "sources": source_summary(gate.docs),
         }
 
@@ -151,7 +159,11 @@ def answer_question_detailed(
                 action="output.blocked",
                 resource="output_guard",
                 outcome="blocked",
-                metadata={"reason": check.reason, "max_retrieval_score": gate.max_score},
+                metadata={
+                    "reason": check.reason,
+                    "max_retrieval_score": gate.max_score,
+                    "index_version": index_version,
+                },
                 langsmith_run_id=langsmith_run_id,
                 fail_closed=True,
             )
@@ -193,6 +205,7 @@ def answer_question_detailed(
                 "sympy_verified": verification.get("verified"),
                 "sympy_reason": verification.get("reason"),
                 "max_retrieval_score": gate.max_score,
+                "index_version": index_version,
             },
             langsmith_run_id=langsmith_run_id,
             fail_closed=True,
@@ -230,6 +243,7 @@ def answer_question_detailed(
                 "answer_length": len(answer),
                 "parental_consent_ref": (enrollment or {}).get("parental_consent_ref"),
                 "max_retrieval_score": gate.max_score,
+                "index_version": index_version,
             },
             langsmith_run_id=langsmith_run_id,
             fail_closed=True,
@@ -239,6 +253,7 @@ def answer_question_detailed(
             "abstained": False,
             "max_score": round(gate.max_score, 3),
             "min_score": settings.RETRIEVAL_MIN_SCORE,
+            "index_version": index_version,
             "sources": source_summary(gate.docs),
         }
     except Exception as exc:
