@@ -11,6 +11,7 @@ from app.core.config import settings
 from app.core.hardware import runtime_status
 from app.core.langsmith_setup import configure_langsmith
 from app.core.startup_checks import run_startup_checks
+from app.services.consent_gate import consent_gate
 from app.services.tutor_service import answer_question_detailed
 
 app = FastAPI(title=settings.APP_NAME)
@@ -49,6 +50,10 @@ def perguntar(body: LocalQuestion):
         raise HTTPException(status_code=400, detail="Pergunta vazia")
     student_id = body.student_id.strip() or "aluno-local"
     correlation_id = str(uuid.uuid4())
+    # Consentimento antes de qualquer processamento (Lei 15.211/2025, art. 12, § 2º).
+    gate = consent_gate(student_id, question, correlation_id=correlation_id)
+    if gate is not None:
+        return {"correlation_id": correlation_id, **gate}
     result = answer_question_detailed(
         phone=student_id,
         question=question,

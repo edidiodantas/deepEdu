@@ -9,6 +9,7 @@ from app.audit.service import log_event
 from app.core.config import settings
 from app.rag.loader import load_materials
 from app.rag.constants import COLLECTION_NAME
+from app.rag.index_versions import create_version
 
 
 def _clear_collection(persist_directory: str, collection_name: str) -> None:
@@ -70,6 +71,14 @@ def build_index(correlation_id: str = "index-job"):
     except Exception:
         pass
 
+    # Cada reindexação vira uma versão numerada, com manifesto (hash de cada material).
+    manifest = create_version(
+        settings.CHROMA_DIR,
+        settings.MATERIALS_DIR,
+        chunks=len(chunks),
+        documents=len(docs),
+    )
+
     log_event(
         correlation_id=correlation_id,
         actor_type="system",
@@ -78,7 +87,14 @@ def build_index(correlation_id: str = "index-job"):
         action="index.rebuilt",
         resource=settings.CHROMA_DIR,
         outcome="success",
-        metadata={"chunks": len(chunks), "documents": len(docs)},
+        metadata={
+            "chunks": len(chunks),
+            "documents": len(docs),
+            "index_version": manifest["version"],
+            "manifest_hash": manifest["manifest_hash"],
+            "files": [f["name"] for f in manifest["files"]],
+        },
+        fail_closed=True,
     )
     return len(chunks)
 

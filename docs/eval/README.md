@@ -40,8 +40,32 @@ Conjunto de perguntas de referência para medir qualidade do RAG (RF38), executa
 
 ## Uso
 
+No computador em que o DeepEdu está instalado, com os materiais já indexados:
+
 ```bash
-python scripts/eval_rag.py --dataset docs/eval/dataset_rag_matematica_em.csv --output reports/eval_latest.json
+# Só a recuperação (rápido)
+python scripts/eval_rag.py
+
+# Recuperação + resposta completa do tutor (usa o modelo de linguagem; mais lento)
+python scripts/eval_rag.py --com-llm
 ```
+
+O script grava dois arquivos em `reports/`:
+
+- `eval_AAAAMMDD_HHMMSS.json` — todos os resultados, pergunta a pergunta;
+- `eval_AAAAMMDD_HHMMSS.md` — resumo em tabela, com data, versão da base e modelo.
+
+Métricas calculadas hoje pelo script:
+
+| Métrica | O que mede |
+|---|---|
+| Taxa de abstenção | Perguntas em que o sistema se recusou a responder |
+| Acerto da fonte | O documento esperado (`documento_esperado`) está entre os trechos recuperados |
+| Consistência da política | A decisão de abstenção segue o limiar configurado |
+| Acerto dos cálculos (`--com-llm`) | Respostas de perguntas com `requer_calculo=true` conferidas pelo SymPy |
+| Respostas bloqueadas (`--com-llm`) | Respostas barradas pela validação de saída |
+| Tempo médio (`--com-llm`) | Segundos por resposta completa |
+
+As métricas *precision@5* e *faithfulness* da tabela de metas acima ainda não são calculadas pelo script.
 
 Regressão > 5% em qualquer métrica bloqueia deploy (RNF15).

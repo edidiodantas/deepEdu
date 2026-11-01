@@ -5,6 +5,7 @@ from langchain_core.runnables.history import RunnableWithMessageHistory
 from app.core.config import settings
 from app.core.langsmith_setup import configure_langsmith
 from app.core.llm_factory import build_chat_model
+from app.core.prompt_barrier import QUESTION_CLOSE, QUESTION_OPEN
 from app.core.prompt_loader import load_system_prompt
 from app.core.token_budget import format_rag_context, truncate_to_tokens
 from app.memory.history import get_history
@@ -63,7 +64,8 @@ def build_tutor_chain(
         [
             ("system", system_template),
             MessagesPlaceholder(variable_name="history"),
-            ("human", "{question}"),
+            # Pergunta delimitada: o prompt instrui o modelo a tratá-la como dado.
+            ("human", f"{QUESTION_OPEN}\n{{question}}\n{QUESTION_CLOSE}"),
         ]
     )
 
