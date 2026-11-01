@@ -65,8 +65,11 @@ if [[ -n "${DEEPEDU_PYTHON:-}" ]]; then
   echo "    Usando $PY (não será incluído no pacote)."
 else
   "$UV" python install 3.12 >/dev/null
-  PY="$("$UV" python find --managed-python 3.12)"
-  PY_HOME="$(cd "$(dirname "$PY")/.." && pwd)"
+  # Fora do projeto e sem VIRTUAL_ENV: senão o uv devolve o .venv, que é só um
+  # atalho para o Python desta máquina e quebra no destino.
+  PY="$(cd / && env -u VIRTUAL_ENV "$UV" python find --managed-python 3.12)"
+  PY_HOME="$(cd "$(dirname "$(readlink -f "$PY")")/.." && pwd)"
+  [[ ! -f "$PY_HOME/pyvenv.cfg" ]] || die "uv devolveu um venv ($PY_HOME), não um Python completo."
   cp -a "$PY_HOME" "$PKG/python"
   PY="$PKG/python/bin/python3.12"
   echo "    $(basename "$PY_HOME")"
@@ -100,7 +103,7 @@ EXCLUDES=(
   --exclude=./.env --exclude=./control_panel/.env --exclude=./CHAVE_ADMIN.txt
   --exclude='./data/audit/*.db' --exclude='./data/billing/*.db'
   --exclude='./data/chat_history/*.db' --exclude=./data/logs --exclude=./data/backups
-  --exclude=./docs/.pdf-venv --exclude=./.pytest_cache --exclude=./.mypy_cache
+  --exclude=./docs/.pdf-venv --exclude=./.pytest_cache --exclude=./.mypy_cache --exclude=./.git
 )
 if [[ "$INCLUDE_DATA" -eq 0 ]]; then
   EXCLUDES+=(--exclude='./data/materials/*' --exclude='./data/chroma/*')
@@ -151,7 +154,7 @@ rm -rf "$WORK"
 
 echo
 echo "Pronto! Pacote em: $DEST ($(du -sh "$DEST" | cut -f1))"
-echo "Copie a pasta inteira para o pendrive. No outro Linux: bash INSTALAR.sh"
+echo "Copie a pasta inteira para o pendrive. No outro Linux: siga o LEIA-ME.txt da pasta."
 if [[ ${#MISSING[@]} -gt 0 ]]; then
   echo
   echo "ATENÇÃO: modelos que não entraram no pacote: ${MISSING[*]}"

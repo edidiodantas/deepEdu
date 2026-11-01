@@ -34,6 +34,10 @@ ls "$HERE"/pacote/deepedu.tar.part* >/dev/null 2>&1 || die "pasta 'pacote' não 
 
 PKG_KB=$(du -sk "$HERE/pacote" | cut -f1)
 mkdir -p "$(dirname "$TARGET")"
+# Restos de uma tentativa interrompida ocupam espaço: apaga antes de medir.
+for OLD in "$(dirname "$TARGET")"/.deepedu-instalador.*; do
+  [[ -d "$OLD" ]] && { chmod -R u+w "$OLD" 2>/dev/null; rm -rf "$OLD"; }
+done
 FREE_KB=$(df -Pk "$(dirname "$TARGET")" | awk 'NR==2 {print $4}')
 # Pico: pacote extraído + bibliotecas instaladas. O programa e o Python são movidos
 # (não copiados) e as wheels são apagadas antes dos modelos, então 2x basta.
@@ -51,7 +55,7 @@ echo "    OK"
 
 step "2/7 Extraindo (alguns minutos)"
 WORK="$(mktemp -d "$(dirname "$TARGET")/.deepedu-instalador.XXXXXX")"
-trap 'rm -rf "$WORK"' EXIT
+trap 'chmod -R u+w "$WORK" 2>/dev/null; rm -rf "$WORK"' EXIT
 cat "$HERE"/pacote/deepedu.tar.part* | tar -xf - -C "$WORK"
 PKG="$WORK/deepedu-pacote"
 UV="$PKG/uv"
@@ -62,18 +66,23 @@ UPDATE=0
 if [[ -f "$TARGET/.env" ]]; then
   UPDATE=1
   echo "    Instalação existente encontrada: atualizando código, mantendo .env e dados."
+  chmod -R u+w "$TARGET/.git" 2>/dev/null || true
   tar -C "$PKG/deepEdu" --exclude=./data --exclude=./.env --exclude=./control_panel/.env -cf - . \
-    | tar -C "$TARGET" -xf -
+    | tar -C "$TARGET" --overwrite -xf -
   # Materiais novos do pacote entram; nada existente é apagado.
   cp -an "$PKG/deepEdu/data/materials/." "$TARGET/data/materials/" 2>/dev/null || true
 elif [[ ! -e "$TARGET" ]]; then
   mv "$PKG/deepEdu" "$TARGET"   # mesmo disco: não ocupa espaço extra
 else
-  cp -a "$PKG/deepEdu/." "$TARGET/"
+  # Pasta já existe (ex.: tentativa anterior interrompida). O tar substitui os
+  # arquivos somente-leitura do .git, que o "cp" não consegue sobrescrever.
+  echo "    Pasta já existe sem configuração: substituindo os arquivos do programa."
+  chmod -R u+w "$TARGET" 2>/dev/null || true
+  tar -C "$PKG/deepEdu" -cf - . | tar -C "$TARGET" --overwrite -xf -
 fi
 mkdir -p "$TARGET/data"/{materials,chroma,audit,billing,chat_history,logs}
 mkdir -p "$HOME/.local/bin"
-[[ -x "$HOME/.local/bin/uv" ]] || cp "$UV" "$HOME/.local/bin/uv"
+cp -f "$UV" "$HOME/.local/bin/uv"   # sempre: pode ter ficado pela metade
 
 step "4/7 Instalando Python e bibliotecas (sem internet)"
 if [[ -d "$PKG/python" ]]; then
@@ -83,6 +92,7 @@ if [[ -d "$PKG/python" ]]; then
 else
   PY="${DEEPEDU_PYTHON:-python3.12}"   # pacote de teste sem Python embutido
 fi
+"$PY" -V >/dev/null 2>&1 || die "o Python do pacote não roda ($PY). Gere o pacote de novo."
 rm -rf "$TARGET/.venv"
 "$UV" venv --quiet --python "$PY" "$TARGET/.venv"
 UV_CACHE_DIR="$WORK/uv-cache" VIRTUAL_ENV="$TARGET/.venv" "$UV" pip install --quiet \
