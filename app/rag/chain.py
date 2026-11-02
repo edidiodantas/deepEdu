@@ -5,7 +5,14 @@ from langchain_core.runnables.history import RunnableWithMessageHistory
 from app.core.config import settings
 from app.core.langsmith_setup import configure_langsmith
 from app.core.llm_factory import build_chat_model
-from app.core.prompt_barrier import QUESTION_CLOSE, QUESTION_OPEN
+from app.core.prompt_barrier import (
+    MATERIAL_CLOSE,
+    MATERIAL_OPEN,
+    QUESTION_CLOSE,
+    QUESTION_OPEN,
+    neutralize,
+    shield_history,
+)
 from app.core.prompt_loader import load_system_prompt
 from app.core.token_budget import format_rag_context, truncate_to_tokens
 from app.memory.history import get_history
@@ -33,11 +40,20 @@ def _prepare_system_template() -> str:
     if placeholder in system_template:
         without = system_template.replace(placeholder, "")
         without = truncate_to_tokens(without, budget)
-        system_template = f"{without}\n\n<context>\n{placeholder}\n</context>"
+        system_template = f"{without}\n\n{MATERIAL_OPEN}\n{placeholder}\n{MATERIAL_CLOSE}"
     else:
         body = truncate_to_tokens(system_template, budget)
-        system_template = f"{body}\n\n<context>\n{placeholder}\n</context>"
+        system_template = f"{body}\n\n{MATERIAL_OPEN}\n{placeholder}\n{MATERIAL_CLOSE}"
     return system_template
+
+
+def _shield_payload(payload: dict) -> dict:
+    question, _ = neutralize(str(payload.get("question") or ""))
+    return {
+        **payload,
+        "question": question,
+        "history": shield_history(payload.get("history") or []),
+    }
 
 
 def build_tutor_chain(
@@ -64,7 +80,6 @@ def build_tutor_chain(
         [
             ("system", system_template),
             MessagesPlaceholder(variable_name="history"),
-            # Pergunta delimitada: o prompt instrui o modelo a tratá-la como dado.
             ("human", f"{QUESTION_OPEN}\n{{question}}\n{QUESTION_CLOSE}"),
         ]
     )
@@ -85,6 +100,7 @@ def build_tutor_chain(
             ),
             history=RunnableLambda(lambda x: _trim_history(x.get("history", []))),
         )
+        | RunnableLambda(_shield_payload)
         | prompt
         | llm
     )

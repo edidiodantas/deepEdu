@@ -6,7 +6,9 @@ class Settings(BaseSettings):
 
     APP_NAME: str = "DeepEdu"
     ENV: str = "development"
-    HOST: str = "127.0.0.1"
+    # 0.0.0.0: o chat abre no celular e nos outros PCs da mesma rede.
+    # 127.0.0.1 so responde nesta maquina.
+    HOST: str = "0.0.0.0"
     PORT: int = 8000
 
     # LLM — Amadeus-Verbo 0,5B (Qwen2.5 PT-BR) via Hugging Face.

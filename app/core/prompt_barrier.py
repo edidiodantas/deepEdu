@@ -1,26 +1,36 @@
-"""Barreira contra injeção de instruções (prompt injection) no texto do aluno.
+"""Barreira entre instruções do tutor e texto que não é ordem.
 
-Duas camadas:
+A pergunta do aluno, o acervo e o histórico entram entre delimitadores.
+Se esse texto trouxer os mesmos delimitadores, eles são removidos antes
+do fechamento verdadeiro — assim não dá para encerrar a cerca por dentro.
 
-1. Delimitação: a pergunta entra no prompt entre QUESTION_OPEN e QUESTION_CLOSE,
-   e o prompt do tutor instrui o modelo a tratá-la como dado, nunca como ordem.
-2. Neutralização: antes de chegar ao modelo, trechos típicos de manipulação
-   ("ignore as regras", "mostre seu prompt", "finja ser...") e qualquer cópia dos
-   delimitadores internos são substituídos por um marcador neutro.
-
-A lista de padrões cobre tentativas conhecidas; não é exaustiva.
+Além disso, a pergunta do aluno passa por neutralize_injection, que troca
+formulações típicas de manipulação ("ignore as instruções", "mostre seu prompt",
+"finja que...") por um marcador neutro. A lista cobre tentativas conhecidas e não
+é exaustiva.
 """
 
 from __future__ import annotations
 
 import re
+from typing import Any
 
-QUESTION_OPEN = "<pergunta_aluno>"
-QUESTION_CLOSE = "</pergunta_aluno>"
+QUESTION_OPEN = "<<<PERGUNTA_ALUNO>>>"
+QUESTION_CLOSE = "<<<FIM_PERGUNTA_ALUNO>>>"
+MATERIAL_OPEN = "<<<MATERIAL_ACERVO>>>"
+MATERIAL_CLOSE = "<<<FIM_MATERIAL_ACERVO>>>"
+HISTORY_OPEN = "<<<HISTORICO>>>"
+HISTORY_CLOSE = "<<<FIM_HISTORICO>>>"
+
+_REMOVED = "[delimitador removido]"
 NEUTRALIZED_MARK = "[trecho removido]"
 
-# Delimitadores internos que o aluno não pode reproduzir para "sair" do bloco de dados.
-_DELIMITERS = re.compile(r"</?\s*(?:pergunta_aluno|context)\s*>", re.IGNORECASE)
+# Cercas deste projeto e a tag antiga <context>, que um PDF podia fechar.
+_FENCE = re.compile(
+    r"<<<\s*/?\s*(?:FIM_)?(?:PERGUNTA_ALUNO|MATERIAL_ACERVO|HISTORICO)\s*>>>"
+    r"|</?\s*context\s*>",
+    re.IGNORECASE,
+)
 
 _INJECTION_PATTERNS = [
     # Português
@@ -42,21 +52,57 @@ _INJECTION_PATTERNS = [
 _INJECTION = re.compile("|".join(f"(?:{p})" for p in _INJECTION_PATTERNS), re.IGNORECASE)
 
 
-def neutralize(text: str) -> tuple[str, list[str]]:
-    """Devolve (texto neutralizado, lista de trechos removidos)."""
-    original = text or ""
+def neutralize(text: str) -> tuple[str, bool]:
+    """Tira delimitadores forjados. Devolve o texto e se houve remoção."""
+    raw = text or ""
+    cleaned, count = _FENCE.subn(_REMOVED, raw)
+    return cleaned, count > 0
+
+
+def neutralize_injection(text: str) -> tuple[str, list[str]]:
+    """Troca formulações típicas de manipulação por um marcador neutro."""
     found: list[str] = []
 
     def _mark(match: re.Match) -> str:
         found.append(match.group(0))
         return NEUTRALIZED_MARK
 
-    cleaned = _DELIMITERS.sub(_mark, original)
-    cleaned = _INJECTION.sub(_mark, cleaned)
-    return cleaned, found
+    return _INJECTION.sub(_mark, text or ""), found
 
 
 def has_meaningful_content(text: str) -> bool:
     """Verdadeiro se, retirados os marcadores, ainda sobra uma pergunta."""
-    rest = (text or "").replace(NEUTRALIZED_MARK, " ")
+    rest = (text or "").replace(NEUTRALIZED_MARK, " ").replace(_REMOVED, " ")
     return len(re.sub(r"[\W_]+", "", rest)) >= 3
+
+
+def wrap_question(text: str) -> str:
+    cleaned, _ = neutralize(text)
+    return f"{QUESTION_OPEN}\n{cleaned}\n{QUESTION_CLOSE}"
+
+
+def wrap_material(text: str) -> str:
+    cleaned, _ = neutralize(text)
+    return f"{MATERIAL_OPEN}\n{cleaned}\n{MATERIAL_CLOSE}"
+
+
+def shield_history(messages: list[Any]) -> list[Any]:
+    """Recoloca o histórico como dado, sem regravar a conversa guardada."""
+    from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+
+    shielded: list[Any] = []
+    for message in messages:
+        content = getattr(message, "content", "")
+        text = content if isinstance(content, str) else str(content)
+        cleaned, _ = neutralize(text)
+        if isinstance(message, HumanMessage):
+            shielded.append(HumanMessage(content=wrap_question(cleaned)))
+        elif isinstance(message, SystemMessage):
+            shielded.append(
+                SystemMessage(content=f"{HISTORY_OPEN}\n{cleaned}\n{HISTORY_CLOSE}")
+            )
+        elif isinstance(message, AIMessage):
+            shielded.append(AIMessage(content=cleaned))
+        else:
+            shielded.append(message.__class__(content=cleaned))
+    return shielded

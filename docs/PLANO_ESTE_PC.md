@@ -49,7 +49,7 @@ Ollama / Qwen2.5-Math e APIs externas ficam como **alternativas** no `.env`, nã
 | A2 | `bash scripts/install_hf_model.sh` | modelo em cache Hugging Face |
 | A3 | PDFs em `data/materials/` | ≥ 1 PDF |
 | A4 | `python scripts/run_indexing.py` | `data/chroma/` existe |
-| A5 | `uvicorn app.api.main:app --host 127.0.0.1 --port 8000` | API no ar |
+| A5 | `uvicorn app.api.main:app --host 0.0.0.0 --port 8000` | API no ar na rede local |
 | A6 | `curl http://127.0.0.1:8000/health` | OK |
 | A7 | 1 pergunta de matemática | Resposta **com citação** do material |
 
