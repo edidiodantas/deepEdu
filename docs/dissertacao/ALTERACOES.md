@@ -3,6 +3,10 @@
 Arquivo de origem: Dissertacao_final (1).docx. Arquivo revisado: Dissertacao_DeepEdu_revisada.docx (e o PDF correspondente).
 Os 39 trechos de código do Apêndice A não foram alterados e continuam idênticos ao repositório (commit 6d67901 / main 447364e).
 
+## Revisão de 2 nov. 2026: referência de Rizzi conferida com o PDF
+
+O autor localizou o PDF de RIZZI (2024): Master's Degree Thesis em Data Science and Engineering, Politecnico di Torino, out. 2024 (orientador: Paolo Garza). A referência passou de "[Conferir: Tese (Doutorado) ou Dissertação (Mestrado)]" para "Dissertação (Mestrado em Data Science and Engineering)". A menção na seção 5.8 (RAG e consultas SQL em chatbot corporativo) confere com o trabalho e não foi alterada.
+
 ## Revisão de 1º nov. 2026 (noite, 3): busca dos seis trabalhos não confirmados
 
 A pedido do autor, os seis trabalhos foram procurados em repositórios institucionais e em buscadores acadêmicos. Os não localizados foram retirados; os localizados tiveram a referência completada.
