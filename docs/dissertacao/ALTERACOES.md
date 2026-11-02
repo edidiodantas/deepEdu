@@ -9,6 +9,8 @@ O autor localizou o PDF de RIZZI (2024): Master's Degree Thesis em Data Science 
 
 Na mesma revisão, o autor localizou o PDF de HENRIQUES (2024): Pedro Duarte Santos Henriques, dissertação do Mestrado em Engenharia Informática (Sistemas Inteligentes), Faculdade de Ciências e Tecnologia da Universidade de Coimbra, jul. 2024. A referência passou a indicar o curso e a faculdade. O que a seção 5.8 atribui ao trabalho (seleção de contexto em duas fases) confere com o texto integral ("two-step approach" aplicado a Text-to-SQL; ganho de 2% na acurácia, cerca de 30% mais instâncias processadas).
 
+Ainda nesta revisão, a pedido do autor, foram retirados ROSSI (2024) e SYRJÄ (2024), cujas referências continuavam incompletas (sem tipo de trabalho, instituição e URL). Na seção 5.8, os dois saíram da lista de trabalhos internacionais; a expressão "desde estatísticas esportivas e chatbots corporativos" (Syrjä tratava de estatísticas esportivas) passou a "desde chatbots corporativos e atendimento ao cliente" (Rizzi e Maj et al.). As duas entradas foram removidas das referências.
+
 ## Revisão de 1º nov. 2026 (noite, 3): busca dos seis trabalhos não confirmados
 
 A pedido do autor, os seis trabalhos foram procurados em repositórios institucionais e em buscadores acadêmicos. Os não localizados foram retirados; os localizados tiveram a referência completada.
