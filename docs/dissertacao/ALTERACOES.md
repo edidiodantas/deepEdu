@@ -7,6 +7,8 @@ Os 39 trechos de código do Apêndice A não foram alterados e continuam idênti
 
 O autor localizou o PDF de RIZZI (2024): Master's Degree Thesis em Data Science and Engineering, Politecnico di Torino, out. 2024 (orientador: Paolo Garza). A referência passou de "[Conferir: Tese (Doutorado) ou Dissertação (Mestrado)]" para "Dissertação (Mestrado em Data Science and Engineering)". A menção na seção 5.8 (RAG e consultas SQL em chatbot corporativo) confere com o trabalho e não foi alterada.
 
+Na mesma revisão, o autor localizou o PDF de HENRIQUES (2024): Pedro Duarte Santos Henriques, dissertação do Mestrado em Engenharia Informática (Sistemas Inteligentes), Faculdade de Ciências e Tecnologia da Universidade de Coimbra, jul. 2024. A referência passou a indicar o curso e a faculdade. O que a seção 5.8 atribui ao trabalho (seleção de contexto em duas fases) confere com o texto integral ("two-step approach" aplicado a Text-to-SQL; ganho de 2% na acurácia, cerca de 30% mais instâncias processadas).
+
 ## Revisão de 1º nov. 2026 (noite, 3): busca dos seis trabalhos não confirmados
 
 A pedido do autor, os seis trabalhos foram procurados em repositórios institucionais e em buscadores acadêmicos. Os não localizados foram retirados; os localizados tiveram a referência completada.
