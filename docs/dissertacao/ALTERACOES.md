@@ -3,6 +3,14 @@
 Arquivo de origem: Dissertacao_final (1).docx. Arquivo revisado: Dissertacao_DeepEdu_revisada.docx (e o PDF correspondente).
 Os 39 trechos de código do Apêndice A não foram alterados e continuam idênticos ao repositório (commit 6d67901 / main 447364e).
 
+## Revisão de 2 nov. 2026: referência de Rizzi conferida com o PDF
+
+O autor localizou o PDF de RIZZI (2024): Master's Degree Thesis em Data Science and Engineering, Politecnico di Torino, out. 2024 (orientador: Paolo Garza). A referência passou de "[Conferir: Tese (Doutorado) ou Dissertação (Mestrado)]" para "Dissertação (Mestrado em Data Science and Engineering)". A menção na seção 5.8 (RAG e consultas SQL em chatbot corporativo) confere com o trabalho e não foi alterada.
+
+Na mesma revisão, o autor localizou o PDF de HENRIQUES (2024): Pedro Duarte Santos Henriques, dissertação do Mestrado em Engenharia Informática (Sistemas Inteligentes), Faculdade de Ciências e Tecnologia da Universidade de Coimbra, jul. 2024. A referência passou a indicar o curso e a faculdade. O que a seção 5.8 atribui ao trabalho (seleção de contexto em duas fases) confere com o texto integral ("two-step approach" aplicado a Text-to-SQL; ganho de 2% na acurácia, cerca de 30% mais instâncias processadas).
+
+Ainda nesta revisão, a pedido do autor, foram retirados ROSSI (2024) e SYRJÄ (2024), cujas referências continuavam incompletas (sem tipo de trabalho, instituição e URL). Na seção 5.8, os dois saíram da lista de trabalhos internacionais; a expressão "desde estatísticas esportivas e chatbots corporativos" (Syrjä tratava de estatísticas esportivas) passou a "desde chatbots corporativos e atendimento ao cliente" (Rizzi e Maj et al.). As duas entradas foram removidas das referências.
+
 ## Revisão de 1º nov. 2026 (noite, 3): busca dos seis trabalhos não confirmados
 
 A pedido do autor, os seis trabalhos foram procurados em repositórios institucionais e em buscadores acadêmicos. Os não localizados foram retirados; os localizados tiveram a referência completada.
