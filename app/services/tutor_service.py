@@ -5,8 +5,8 @@ from app.audit.repository import get_enrollment
 from app.audit.service import log_event
 from app.memory.history import clear_session_history
 from app.core.config import settings
-from app.core.output_guard import SAFE_REFUSAL_FULL, validate_tutor_output
-from app.core.prompt_barrier import has_meaningful_content, neutralize
+from app.core.output_guard import SAFE_REFUSAL, validate_tutor_output
+from app.core.prompt_barrier import has_meaningful_content, neutralize, neutralize_injection
 from app.core.token_budget import count_tokens, truncate_to_tokens
 from app.rag.abstinence import evaluate_retrieval
 from app.rag.chain import build_tutor_chain
@@ -54,8 +54,9 @@ def answer_question_detailed(
     trimmed_question = truncate_to_tokens(question, settings.USER_MESSAGE_MAX_TOKENS)
     # Versão da base de conhecimento usada nesta resposta (registrada na auditoria).
     index_version = current_version()
-    # Barreira contra injeção de instruções: neutraliza antes de qualquer uso da pergunta.
-    trimmed_question, injected = neutralize(trimmed_question)
+    # Barreira de entrada: tira delimitadores forjados e neutraliza tentativas de manipulação.
+    shielded_question, delimiter_stripped = neutralize(trimmed_question)
+    shielded_question, injected = neutralize_injection(shielded_question)
 
     log_event(
         correlation_id=correlation_id,
@@ -65,7 +66,12 @@ def answer_question_detailed(
         action="rag.started",
         resource="rag_pipeline",
         outcome="success",
-        metadata={"question_tokens": count_tokens(trimmed_question)},
+        metadata={
+            "question_tokens": count_tokens(shielded_question),
+            "input_barrier": "pergunta_aluno",
+            "delimiter_stripped": delimiter_stripped,
+            "injection_fragments": len(injected),
+        },
         fail_closed=True,
     )
 
@@ -81,9 +87,9 @@ def answer_question_detailed(
             metadata={"fragments": len(injected)},
             fail_closed=True,
         )
-        if not has_meaningful_content(trimmed_question):
+        if not has_meaningful_content(shielded_question):
             return {
-                "answer": SAFE_REFUSAL_FULL,
+                "answer": SAFE_REFUSAL,
                 "abstained": False,
                 "blocked": True,
                 "max_score": 0.0,
@@ -92,7 +98,7 @@ def answer_question_detailed(
             }
 
     gate = evaluate_retrieval(
-        trimmed_question,
+        shielded_question,
         correlation_id=correlation_id,
         actor_id=hashed,
         session_id=session_id,
@@ -133,7 +139,7 @@ def answer_question_detailed(
     try:
         with collect_runs() as runs_cb:
             response = chain.invoke(
-                {"question": trimmed_question},
+                {"question": shielded_question},
                 config={
                     "configurable": {"session_id": session_id},
                     "metadata": {
@@ -146,11 +152,14 @@ def answer_question_detailed(
             )
         if runs_cb.traced_runs:
             langsmith_run_id = str(runs_cb.traced_runs[0].id)
-        answer = _content_to_text(getattr(response, "content", response))
+        model_text = _content_to_text(getattr(response, "content", response))
+        checked = validate_tutor_output(
+            model_text,
+            max_chars=max(500, settings.LLM_MAX_NEW_TOKENS * 8),
+        )
+        answer = checked.text
 
-        # Validação de saída: nada chega ao aluno sem passar pelo filtro.
-        check = validate_tutor_output(answer)
-        if not check.accepted:
+        if not checked.accepted:
             log_event(
                 correlation_id=correlation_id,
                 actor_type="system",
@@ -160,7 +169,7 @@ def answer_question_detailed(
                 resource="output_guard",
                 outcome="blocked",
                 metadata={
-                    "reason": check.reason,
+                    "reason": checked.reason,
                     "max_retrieval_score": gate.max_score,
                     "index_version": index_version,
                 },
@@ -169,16 +178,8 @@ def answer_question_detailed(
             )
             # A resposta bloqueada não pode permanecer na memória da conversa.
             clear_session_history(session_id)
-            return {
-                "answer": check.text,
-                "abstained": False,
-                "blocked": True,
-                "max_score": round(gate.max_score, 3),
-                "min_score": settings.RETRIEVAL_MIN_SCORE,
-                "sources": [],
-            }
 
-        verification = verify_numeric_answer(trimmed_question, answer)
+        verification = verify_numeric_answer(shielded_question, model_text if checked.accepted else "")
         if verification.get("verified") is False and verification.get("expected"):
             log_event(
                 correlation_id=correlation_id,
@@ -199,9 +200,11 @@ def answer_question_detailed(
             session_id=session_id,
             action="llm.invoked",
             resource=settings.LLM_MODEL,
-            outcome="success",
+            outcome="success" if checked.accepted else "rejected",
             metadata={
                 "answer_length": len(answer),
+                "output_accepted": checked.accepted,
+                "output_reason": checked.reason,
                 "sympy_verified": verification.get("verified"),
                 "sympy_reason": verification.get("reason"),
                 "max_retrieval_score": gate.max_score,
@@ -211,13 +214,17 @@ def answer_question_detailed(
             fail_closed=True,
         )
 
-        if verification.get("verified") is False and verification.get("expected"):
+        if (
+            checked.accepted
+            and verification.get("verified") is False
+            and verification.get("expected")
+        ):
             answer = (
                 f"{answer}\n\n"
                 f"(Verificacao: resultado esperado ~ {verification['expected']}. "
                 "Revise os calculos.)"
             )
-        elif verification.get("verified") is True:
+        elif checked.accepted and verification.get("verified") is True:
             log_event(
                 correlation_id=correlation_id,
                 actor_type="system",
@@ -241,6 +248,8 @@ def answer_question_detailed(
             outcome="success",
             metadata={
                 "answer_length": len(answer),
+                "output_accepted": checked.accepted,
+                "output_reason": checked.reason,
                 "parental_consent_ref": (enrollment or {}).get("parental_consent_ref"),
                 "max_retrieval_score": gate.max_score,
                 "index_version": index_version,
@@ -251,6 +260,7 @@ def answer_question_detailed(
         return {
             "answer": answer,
             "abstained": False,
+            "blocked": not checked.accepted,
             "max_score": round(gate.max_score, 3),
             "min_score": settings.RETRIEVAL_MIN_SCORE,
             "index_version": index_version,

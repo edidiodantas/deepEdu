@@ -3,6 +3,7 @@ from __future__ import annotations
 from functools import lru_cache
 
 from app.core.config import settings
+from app.core.prompt_barrier import neutralize
 
 
 # Tags Ollama (legado) → ids HuggingFace do tokenizer.
@@ -75,6 +76,7 @@ def format_rag_context(docs: list, max_tokens: int | None = None) -> str:
         source = meta.get("source_file") or meta.get("source") or "acervo"
         page = meta.get("page")
         header = f"Fonte: {source}" + (f", p.{page}" if page not in (None, "") else "")
-        parts.append(f"{header}\n{doc.page_content}")
+        body, _ = neutralize(f"{header}\n{doc.page_content}")
+        parts.append(body)
     parts = trim_context_chunks(parts, limit)
     return "\n\n---\n\n".join(parts)
