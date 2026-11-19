@@ -10,7 +10,7 @@ Na pasta do projeto, com o `.venv` já funcionando e o modelo baixado
 (`bash scripts/install_hf_model.sh`):
 
 ```bash
-bash scripts/preparar_pendrive.sh                      # cria ~/DeepEdu-pendrive
+bash scripts/preparar_pendrive.sh                      # cria ~/DeepEdu-pendrive-<versão> (tag do git)
 bash scripts/preparar_pendrive.sh /media/$USER/PENDRIVE/DeepEdu-pendrive
 bash scripts/preparar_pendrive.sh --sem-materiais      # sem PDFs nem índice
 ```
@@ -27,7 +27,7 @@ fica aberto na rede (porta 8501) e liga junto com a máquina. Passo a passo para
 `offline/LEIA-ME.txt` (vai para o pendrive).
 
 ```bash
-bash "$(find /media /run/media -maxdepth 4 -path '*DeepEdu-pendrive/INSTALAR.sh' 2>/dev/null | head -n 1)"
+bash "$(find /media /run/media -maxdepth 4 -path '*DeepEdu-pendrive*/INSTALAR.sh' 2>/dev/null | sort -V | tail -n 1)"
 ```
 
 O instalador confere se o pacote está íntegro, instala em `~/deepEdu`, gera

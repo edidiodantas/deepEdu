@@ -122,7 +122,7 @@ Aparece **DeepEdu** no menu de aplicativos e na Área de Trabalho. Ele abre uma 
 ## Pendrive: instalar em outro notebook ou servidor (sem internet)
 
 ```bash
-bash scripts/preparar_pendrive.sh        # no PC com internet → ~/DeepEdu-pendrive
+bash scripts/preparar_pendrive.sh        # no PC com internet → ~/DeepEdu-pendrive-<versão> (ex.: v1.0.0, tag do git)
 ```
 
 No destino, siga o `LEIA-ME.txt` do pendrive: abra um terminal e cole a linha que acha o pendrive e roda o instalador. Detalhes em [offline/INSTALAR_OFFLINE.md](offline/INSTALAR_OFFLINE.md).

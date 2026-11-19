@@ -2,7 +2,7 @@
 # Gera o pacote do DeepEdu para pendrive: instala em outro Linux (x86_64) SEM internet.
 #
 # Rode no PC COM internet, dentro da pasta do projeto:
-#   bash scripts/preparar_pendrive.sh                 # cria ~/DeepEdu-pendrive
+#   bash scripts/preparar_pendrive.sh                 # cria ~/DeepEdu-pendrive-<versão>
 #   bash scripts/preparar_pendrive.sh /media/$USER/PENDRIVE/DeepEdu
 #   bash scripts/preparar_pendrive.sh --sem-materiais # não leva PDFs nem índice
 #
@@ -14,7 +14,9 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-DEST="$HOME/DeepEdu-pendrive"
+# Versão = tag do git (ex.: v1.0.0); fora de uma tag, git describe indica os commits a mais.
+VERSION="$(git -C "$ROOT" describe --tags --always --dirty 2>/dev/null || echo sem-versao)"
+DEST="$HOME/DeepEdu-pendrive-$VERSION"
 INCLUDE_DATA=1
 for arg in "$@"; do
   case "$arg" in
@@ -53,6 +55,7 @@ WORK="$DEST/.montagem"
 PKG="$WORK/deepedu-pacote"
 echo "== DeepEdu | Gerar pacote para pendrive =="
 echo "Projeto: $ROOT"
+echo "Versão:  $VERSION"
 echo "Destino: $DEST"
 rm -rf "$WORK" "$DEST/pacote"
 mkdir -p "$PKG" "$DEST/pacote"
@@ -137,6 +140,7 @@ done
 
 {
   echo "Pacote DeepEdu gerado em $(date '+%d/%m/%Y %H:%M')"
+  echo "Versão: $VERSION"
   echo "Commit: $(git -C "$ROOT" rev-parse --short HEAD 2>/dev/null || echo '?')"
   echo "Modelos incluídos:"; ls "$PKG/hf_hub" | sed 's/^models--/  /; s/--/\//g'
   echo "Reranker ativo: $RERANK_ENABLED"
@@ -150,6 +154,7 @@ tar -C "$WORK" -cf - deepedu-pacote | split -b "$PART_SIZE" -d -a 2 - "$DEST/pac
 cp "$ROOT/offline/INSTALAR.sh" "$DEST/INSTALAR.sh"
 cp "$ROOT/offline/LEIA-ME.txt" "$DEST/LEIA-ME.txt"
 cp "$PKG/PACOTE.txt" "$DEST/PACOTE.txt"
+echo "DeepEdu $VERSION" >"$DEST/VERSAO.txt"
 rm -rf "$WORK"
 
 echo
