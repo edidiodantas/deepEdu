@@ -51,7 +51,7 @@ bash "$(find /media /run/media -maxdepth 4 -path '*DeepEdu-pendrive*/INSTALAR.sh
 Servidor sem tela: monte o pendrive antes e rode o arquivo
 pelo caminho completo:
       sudo mount /dev/sdb1 /mnt
-      bash /mnt/DeepEdu-pendrive-v1.0.0/INSTALAR.sh --servidor   (troque v1.0.0 pela versão da pasta)
+      bash /mnt/DeepEdu-pendrive-v1.0.0/INSTALAR.sh --servidor   # troque v1.0.0 pela versão da pasta
 
 No final aparece o endereço, algo como http://192.168.0.50:8501
 Abra esse endereço no navegador de qualquer computador da mesma
