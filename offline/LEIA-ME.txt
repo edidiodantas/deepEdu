@@ -22,7 +22,7 @@ ANTES DE COMEÇAR
 3. Copie a linha abaixo INTEIRA, cole no terminal
    (Ctrl + Shift + V) e aperte Enter:
 
-bash "$(find /media /run/media -maxdepth 4 -path '*DeepEdu-pendrive/INSTALAR.sh' 2>/dev/null | head -n 1)"
+bash "$(find /media /run/media -maxdepth 4 -path '*DeepEdu-pendrive*/INSTALAR.sh' 2>/dev/null | sort -V | tail -n 1)"
 
    Essa linha encontra o pendrive sozinha e começa a instalação.
 
@@ -46,12 +46,12 @@ SE APARECER "Arquivo ou diretório inexistente" ou
 Mesma linha do passo 3, com --servidor no fim (vai pedir a
 senha do usuário):
 
-bash "$(find /media /run/media -maxdepth 4 -path '*DeepEdu-pendrive/INSTALAR.sh' 2>/dev/null | head -n 1)" --servidor
+bash "$(find /media /run/media -maxdepth 4 -path '*DeepEdu-pendrive*/INSTALAR.sh' 2>/dev/null | sort -V | tail -n 1)" --servidor
 
 Servidor sem tela: monte o pendrive antes e rode o arquivo
 pelo caminho completo:
       sudo mount /dev/sdb1 /mnt
-      bash /mnt/DeepEdu-pendrive/INSTALAR.sh --servidor
+      bash /mnt/DeepEdu-pendrive-v1.0.0/INSTALAR.sh --servidor   # troque v1.0.0 pela versão da pasta
 
 No final aparece o endereço, algo como http://192.168.0.50:8501
 Abra esse endereço no navegador de qualquer computador da mesma
@@ -68,7 +68,7 @@ rede. O DeepEdu liga sozinho quando o servidor reinicia.
 --------------------------------------------------------------
 Instale em outro disco acrescentando --destino e a pasta, ex.:
 
-bash "$(find /media /run/media -maxdepth 4 -path '*DeepEdu-pendrive/INSTALAR.sh' 2>/dev/null | head -n 1)" --destino /caminho/do/disco/deepEdu
+bash "$(find /media /run/media -maxdepth 4 -path '*DeepEdu-pendrive*/INSTALAR.sh' 2>/dev/null | sort -V | tail -n 1)" --destino /caminho/do/disco/deepEdu
 
 
 --------------------------------------------------------------
