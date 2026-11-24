@@ -6,8 +6,8 @@
 
 | Arquivo | Descrição |
 |---------|-----------|
-| **[output/DOCUMENTO_FINAL.pdf](output/DOCUMENTO_FINAL.pdf)** | Documento consolidado **v3.0** (requisitos + casos de uso + conformidade) |
-| [output/DOCUMENTO_FINAL.html](output/DOCUMENTO_FINAL.html) | Versão HTML do mesmo conteúdo |
+| `output/DOCUMENTO_FINAL.pdf` | Documento consolidado **v3.0** (requisitos + casos de uso + conformidade). Não fica no repositório: é gerado pelo comando abaixo |
+| `output/DOCUMENTO_FINAL.html` | Versão HTML do mesmo conteúdo, gerada junto com o PDF |
 
 **Regenerar PDF:**
 ```bash
